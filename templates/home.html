@@ -3,45 +3,47 @@
 {% block title %}Início | Cverde{% endblock %}
 
 {% block content %}
-<section class="py-5 bg-light rounded-3">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-lg-6">
-        <p class="badge bg-success mb-3">Marketplace agrícola</p>
-        <h1 class="display-5 fw-bold">Produtos frescos, directos do produtor.</h1>
-        <p class="lead text-muted">A Cverde conecta produtores locais a consumidores e empresas, promovendo comércio sustentável e justo.</p>
-        <div class="d-flex gap-2 flex-wrap">
-          <a class="btn btn-success btn-lg" href="{% url 'products:list' %}">Explorar Produtos</a>
-          <a class="btn btn-outline-secondary btn-lg" href="{% url 'orders:cart' %}">Ver Carrinho</a>
+<section class="hero is-light is-medium">
+  <div class="hero-body">
+    <div class="container">
+      <div class="columns is-vcentered">
+        <div class="column is-6">
+          <span class="tag is-success is-medium mb-3">Marketplace agrícola</span>
+          <h1 class="title is-1 has-text-weight-bold">Produtos frescos, directos do produtor.</h1>
+          <p class="subtitle is-5 has-text-grey">A Cverde conecta produtores locais a consumidores e empresas, promovendo comércio sustentável e justo.</p>
+          <div class="buttons">
+            <a class="button is-success is-large" href="{% url 'products:list' %}">Explorar Produtos</a>
+            <a class="button is-light is-large" href="{% url 'orders:cart' %}">Ver Carrinho</a>
+          </div>
         </div>
-      </div>
-      <div class="col-lg-6 mt-4 mt-lg-0">
-        <div class="p-4 bg-white rounded-4 shadow-sm">
-          <h5 class="mb-3">Cresça com a Cverde</h5>
-          <p class="text-muted">Encontre produtores de confiança, produtos orgânicos e soluções de entrega local.</p>
-          <div class="row g-3">
-            <div class="col-6">
-              <div class="border rounded-3 p-3 text-center">
-                <div class="fs-2">🍓</div>
-                <strong>Frutas</strong>
+        <div class="column is-6">
+          <div class="box">
+            <h5 class="title is-5 mb-3">Cresça com a Cverde</h5>
+            <p class="has-text-grey mb-4">Encontre produtores de confiança, produtos orgânicos e soluções de entrega local.</p>
+            <div class="columns is-multiline">
+              <div class="column is-6">
+                <div class="has-text-centered">
+                  <div class="is-size-2 mb-2">🍓</div>
+                  <strong>Frutas</strong>
+                </div>
               </div>
-            </div>
-            <div class="col-6">
-              <div class="border rounded-3 p-3 text-center">
-                <div class="fs-2">🥦</div>
-                <strong>Legumes</strong>
+              <div class="column is-6">
+                <div class="has-text-centered">
+                  <div class="is-size-2 mb-2">🥦</div>
+                  <strong>Legumes</strong>
+                </div>
               </div>
-            </div>
-            <div class="col-6">
-              <div class="border rounded-3 p-3 text-center">
-                <div class="fs-2">🥬</div>
-                <strong>Verduras</strong>
+              <div class="column is-6">
+                <div class="has-text-centered">
+                  <div class="is-size-2 mb-2">🥬</div>
+                  <strong>Verduras</strong>
+                </div>
               </div>
-            </div>
-            <div class="col-6">
-              <div class="border rounded-3 p-3 text-center">
-                <div class="fs-2">🌾</div>
-                <strong>Orgânicos</strong>
+              <div class="column is-6">
+                <div class="has-text-centered">
+                  <div class="is-size-2 mb-2">🌾</div>
+                  <strong>Orgânicos</strong>
+                </div>
               </div>
             </div>
           </div>
@@ -50,79 +52,113 @@
     </div>
   </div>
 </section>
+  </div>
+</section>
 
 <section class="py-5">
   <div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <div>
-        <h2>Produtos em Destaque</h2>
-        <p class="text-muted mb-0">Os últimos produtos adicionados à nossa plataforma.</p>
+    <div class="level mb-5">
+      <div class="level-left">
+        <div>
+          <h2 class="title is-4 mb-1">Produtos em Destaque</h2>
+          <p class="subtitle is-6 has-text-grey mb-0">Os últimos produtos adicionados à nossa plataforma.</p>
+        </div>
       </div>
-      <a href="{% url 'products:list' %}" class="text-success">Ver todos</a>
+      <div class="level-right">
+        <a href="{% url 'products:list' %}" class="has-text-success">Ver todos</a>
+      </div>
     </div>
-    <div class="row g-4">
+
+    <div class="columns is-multiline">
       {% for product in featured_products %}
-      <div class="col-md-6 col-xl-3">
-        <div class="card h-100 shadow-sm border-0">
-          <div class="product-card-image product-{{ product.image_class }}">
-            <span class="badge bg-success position-absolute top-0 end-0 m-3">Bio</span>
+      <div class="column is-6-tablet is-3-desktop">
+        <div class="card">
+          <div class="card-image">
+            <figure class="image is-4by3 product-{{ product.image_class }}">
+              <span class="tag is-success is-pulled-right m-3">Bio</span>
+            </figure>
           </div>
-          <div class="card-body">
-            <h5 class="card-title">{{ product.name }}</h5>
-            <p class="card-text text-muted">{{ product.description|default:"Produto agrícola de qualidade." }}</p>
-          </div>
-          <div class="card-footer bg-white border-0">
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="fw-bold text-success">€{{ product.price }}</span>
-              <a href="{% url 'products:list' %}" class="btn btn-sm btn-outline-success">Adicionar</a>
+          <div class="card-content">
+            <div class="media">
+              <div class="media-content">
+                <p class="title is-5">{{ product.name }}</p>
+                <p class="subtitle is-6 has-text-grey">{{ product.description|default:"Produto agrícola de qualidade." }}</p>
+              </div>
             </div>
           </div>
+          <footer class="card-footer">
+            <div class="level">
+              <div class="level-left">
+                <span class="has-text-weight-bold has-text-success">€{{ product.price }}</span>
+              </div>
+              <div class="level-right">
+                <a href="{% url 'products:list' %}" class="button is-success is-small is-outlined">Adicionar</a>
+              </div>
+            </div>
+          </footer>
         </div>
       </div>
       {% empty %}
-      <div class="col-12">
-        <div class="alert alert-warning mb-0">Ainda não existem produtos disponíveis. <a href="{% url 'products:list' %}" class="alert-link">Veja a lista completa</a>.</div>
+      <div class="column is-12">
+        <div class="notification is-warning">
+          Ainda não existem produtos disponíveis. <a href="{% url 'products:list' %}" class="has-text-link">Veja a lista completa</a>.
+        </div>
       </div>
       {% endfor %}
     </div>
   </div>
 </section>
 
-<section class="py-5 bg-success text-white rounded-4">
+<section class="section is-medium has-background-success has-text-white">
   <div class="container">
-    <div class="row align-items-center">
-      <div class="col-lg-8">
-        <h2>É um produtor agrícola?</h2>
-        <p class="mb-0">Junte-se à nossa comunidade e venda os seus produtos diretamente aos consumidores.</p>
+    <div class="columns is-vcentered">
+      <div class="column is-8">
+        <h2 class="title is-3 has-text-white">É um produtor agrícola?</h2>
+        <p class="subtitle is-5 has-text-white">Junte-se à nossa comunidade e venda os seus produtos diretamente aos consumidores.</p>
       </div>
-      <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
-        <a href="{% url 'products:list' %}" class="btn btn-light btn-lg">Comece agora</a>
+      <div class="column is-4">
+        <a href="{% url 'products:list' %}" class="button is-light is-large">Comece agora</a>
       </div>
     </div>
   </div>
 </section>
 
-<section class="py-5">
+<section class="section">
   <div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <div>
-        <h2>Produtores Locais</h2>
-        <p class="text-muted mb-0">Parceiros comprometidos com produção sustentável.</p>
+    <div class="level mb-5">
+      <div class="level-left">
+        <div>
+          <h2 class="title is-4 mb-1">Produtores Locais</h2>
+          <p class="subtitle is-6 has-text-grey mb-0">Parceiros comprometidos com produção sustentável.</p>
+        </div>
       </div>
-      <a href="{% url 'products:list' %}" class="text-success">Ver produtores</a>
+      <div class="level-right">
+        <a href="{% url 'products:list' %}" class="has-text-success">Ver produtores</a>
+      </div>
     </div>
-    <div class="row g-4">
+
+    <div class="columns is-multiline">
       {% for producer in local_producers %}
-      <div class="col-md-6 col-lg-4">
-        <div class="card h-100 shadow-sm border-0">
-          <div class="card-body">
-            <h5 class="card-title">{{ producer.name }}</h5>
-            <p class="card-text text-muted">{{ producer.description }}</p>
+      <div class="column is-6-tablet is-4-desktop">
+        <div class="card">
+          <div class="card-content">
+            <div class="media">
+              <div class="media-content">
+                <p class="title is-5">{{ producer.name }}</p>
+                <p class="subtitle is-6 has-text-grey">{{ producer.description }}</p>
+              </div>
+            </div>
           </div>
-          <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center">
-            <small><strong>{{ producer.rating }}</strong> ★</small>
-            <small>{{ producer.products_count }} produtos</small>
-          </div>
+          <footer class="card-footer">
+            <div class="level">
+              <div class="level-left">
+                <small><strong>{{ producer.rating }}</strong> ★</small>
+              </div>
+              <div class="level-right">
+                <small>{{ producer.products_count }} produtos</small>
+              </div>
+            </div>
+          </footer>
         </div>
       </div>
       {% endfor %}

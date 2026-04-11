@@ -1,0 +1,9 @@
+<svg width="120" height="40" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+  <!-- Folha verde -->
+  <path d="M15 20 Q15 10 25 10 Q35 10 35 20 Q35 30 25 30 Q15 30 15 20 Z" fill="#48c774"/>
+  <path d="M20 15 Q20 12 23 12 Q26 12 26 15 Q26 18 23 18 Q20 18 20 15 Z" fill="#38a169"/>
+  <circle cx="23" cy="15" r="1" fill="#ffffff"/>
+
+  <!-- Texto Cverde -->
+  <text x="45" y="25" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1e824c">Cverde</text>
+</svg>

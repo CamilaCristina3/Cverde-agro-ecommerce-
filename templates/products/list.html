@@ -1,54 +1,74 @@
 {% extends "base.html" %}
 {% block title %}Produtos | Cverde{% endblock %}
 {% block content %}
-<div class="py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-      <h1 class="h3 mb-1">Produtos Agrícolas</h1>
-      <p class="text-muted mb-0">Descubra produtos frescos, locais e orgânicos, carregados diretamente pelos produtores.</p>
-    </div>
-    <div class="text-muted">{{ total_products }} produtos</div>
-  </div>
-
-  {% if producers %}
-    {% for producer in producers %}
-      <section class="mb-5">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <div>
-            <h2 class="h5 mb-1">{{ producer.name }}</h2>
-            <p class="text-muted small mb-0">{{ producer.location }} • {{ producer.rating }}/5 • {{ producer.product_count }} produtos disponíveis</p>
-          </div>
-          <span class="badge bg-success">Produtor ativo</span>
+<section class="section">
+  <div class="container">
+    <div class="level mb-5">
+      <div class="level-left">
+        <div>
+          <h1 class="title is-3 mb-1">Produtos Agrícolas</h1>
+          <p class="subtitle is-6 has-text-grey">Descubra produtos frescos, locais e orgânicos, carregados diretamente pelos produtores.</p>
         </div>
+      </div>
+      <div class="level-right">
+        <span class="has-text-grey">{{ total_products }} produtos</span>
+      </div>
+    </div>
 
-        <div class="row g-4">
-          {% for product in producer.available_products %}
-          <div class="col-sm-6 col-lg-4">
-            <div class="card product-card h-100 shadow-sm border-0">
-              <div class="product-card-image product-{{ product.image_class }}">
-                {% if product.is_organic %}
-                <span class="badge bg-success position-absolute top-0 end-0 m-3">Orgânico</span>
-                {% else %}
-                <span class="badge bg-secondary position-absolute top-0 end-0 m-3">Fresco</span>
-                {% endif %}
+    {% if producers %}
+      {% for producer in producers %}
+        <section class="mb-6">
+          <div class="level mb-4">
+            <div class="level-left">
+              <div>
+                <h2 class="title is-5 mb-1">{{ producer.name }}</h2>
+                <p class="has-text-grey is-small mb-0">{{ producer.location }} • {{ producer.rating }}/5 • {{ producer.product_count }} produtos disponíveis</p>
               </div>
-              <div class="card-body">
-                <h5 class="card-title">{{ product.name }}</h5>
-                <p class="text-muted mb-2">{{ product.description|default:"Produto agrícola de qualidade." }}</p>
-                <p class="text-muted small mb-2">Categoria: {{ product.category|default:"Sem categoria" }} • {{ product.unit }} • Estoque: {{ product.stock }}</p>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="fw-bold text-success">€{{ product.price }}</span>
-                  <a href="{% url 'products:list' %}" class="btn btn-sm btn-success">Adicionar</a>
+            </div>
+            <div class="level-right">
+              <span class="tag is-success">Produtor ativo</span>
+            </div>
+          </div>
+
+          <div class="columns is-multiline">
+            {% for product in producer.available_products %}
+            <div class="column is-6-tablet is-4-desktop">
+              <div class="card product-card">
+                <div class="card-image">
+                  <figure class="image is-4by3 product-{{ product.image_class }}">
+                    {% if product.is_organic %}
+                    <span class="tag is-success is-pulled-right m-3">Orgânico</span>
+                    {% else %}
+                    <span class="tag is-light is-pulled-right m-3">Fresco</span>
+                    {% endif %}
+                  </figure>
+                </div>
+                <div class="card-content">
+                  <div class="media">
+                    <div class="media-content">
+                      <p class="title is-5">{{ product.name }}</p>
+                      <p class="subtitle is-6 has-text-grey">{{ product.description|default:"Produto agrícola de qualidade." }}</p>
+                      <p class="has-text-grey is-small mb-2">Categoria: {{ product.category|default:"Sem categoria" }} • {{ product.unit }} • Estoque: {{ product.stock }}</p>
+                    </div>
+                  </div>
+                  <div class="level">
+                    <div class="level-left">
+                      <span class="has-text-weight-bold has-text-success">€{{ product.price }}</span>
+                    </div>
+                    <div class="level-right">
+                      <a href="{% url 'products:list' %}" class="button is-success is-small">Adicionar</a>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
+            {% endfor %}
           </div>
-          {% endfor %}
-        </div>
-      </section>
-    {% endfor %}
-  {% else %}
-    <div class="alert alert-warning">Ainda não existem produtores com produtos disponíveis.</div>
+        </section>
+      {% endfor %}
+    {% else %}
+    <div class="notification is-warning">Ainda não existem produtores com produtos disponíveis.</div>
   {% endif %}
-</div>
+  </div>
+</section>
 {% endblock %}
