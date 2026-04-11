@@ -39,6 +39,6 @@ class HomeView(TemplateView):
             if category["category"]
         ]
         context["local_producers"] = Producer.objects.filter(active=True).annotate(
-            products=Count("products", filter=models.Q(products__available=True))
+            products_count=Count("products", filter=models.Q(products__available=True))
         )[:3]
         return context
