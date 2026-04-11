@@ -1,6 +1,6 @@
 # Cverde Agro E-commerce
 
-Plataforma de e-commerce agrícola de impacto social que conecta produtores rurais a consumidores, empresas e logística local.
+Plataforma de e-commerce agrícola de impacto social que conecta produtores rurais a consumidores, empresas e logística local. Projeto académico desenvolvido em Django/Python.
 
 ## Missão
 Promover desenvolvimento económico sustentável e inclusivo digitalizando o comércio local e aproximando produtor e consumidor final.
@@ -8,7 +8,8 @@ Promover desenvolvimento económico sustentável e inclusivo digitalizando o com
 ## Stack
 - Backend: Python + Django
 - Frontend: HTML, CSS, JavaScript, Bootstrap
-- Base de dados: PostgreSQL (desenvolvimento padrão em SQLite)
+- Base de dados: SQLite (desenvolvimento), PostgreSQL (produção)
+- ORM: Django ORM
 
 ## Como iniciar (dev)
 1) Crie um virtualenv e instale dependências:
@@ -22,8 +23,26 @@ python manage.py runserver
 ```
 
 ## Estrutura
-- apps/: apps de domínio (produtores, produtos, encomendas, logística, pagamentos, notificações)
+- apps/: apps de domínio (utilizadores, produtores, produtos, encomendas, pagamentos, notificações)
 - cverde/: configuração do projeto Django (settings, urls, wsgi)
 - templates/ e static/: assets frontend
 - docs/: documentação
 - tests/: testes automatizados
+
+## Funcionalidades
+
+### Página Inicial
+- Hero com call-to-action
+- Categorias de produtos
+- Produtos em destaque
+- Listagem de produtores locais
+
+### Painel de Produtor
+- Métricas de vendas, encomendas, produtos e avaliações
+- Gestão de produtos disponíveis
+- Acompanhamento de encomendas
+
+### Listagem de Produtos
+- Produtos agrupados por produtor
+- Detalhes de categoria, unidade, stock e preço
+- Filtragem por disponibilidade
