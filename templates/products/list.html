@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Produtos | Cverde{% endblock %}
+{% block content %}
+<div class="py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-1">Produtos Agrícolas</h1>
+      <p class="text-muted mb-0">Descubra produtos frescos, locais e orgânicos, carregados diretamente pelos produtores.</p>
+    </div>
+    <div class="text-muted">{{ total_products }} produtos</div>
+  </div>
+
+  {% if producers %}
+    {% for producer in producers %}
+      <section class="mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div>
+            <h2 class="h5 mb-1">{{ producer.name }}</h2>
+            <p class="text-muted small mb-0">{{ producer.location }} • {{ producer.rating }}/5 • {{ producer.product_count }} produtos disponíveis</p>
+          </div>
+          <span class="badge bg-success">Produtor ativo</span>
+        </div>
+
+        <div class="row g-4">
+          {% for product in producer.available_products %}
+          <div class="col-sm-6 col-lg-4">
+            <div class="card product-card h-100 shadow-sm border-0">
+              <div class="product-card-image product-{{ product.image_class }}">
+                {% if product.is_organic %}
+                <span class="badge bg-success position-absolute top-0 end-0 m-3">Orgânico</span>
+                {% else %}
+                <span class="badge bg-secondary position-absolute top-0 end-0 m-3">Fresco</span>
+                {% endif %}
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="text-muted mb-2">{{ product.description|default:"Produto agrícola de qualidade." }}</p>
+                <p class="text-muted small mb-2">Categoria: {{ product.category|default:"Sem categoria" }} • {{ product.unit }} • Estoque: {{ product.stock }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="fw-bold text-success">€{{ product.price }}</span>
+                  <a href="{% url 'products:list' %}" class="btn btn-sm btn-success">Adicionar</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+    {% endfor %}
+  {% else %}
+    <div class="alert alert-warning">Ainda não existem produtores com produtos disponíveis.</div>
+  {% endif %}
+</div>
+{% endblock %}

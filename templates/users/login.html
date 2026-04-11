@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Login | Cverde{% endblock %}
+{% block content %}
+<h2>Entrar</h2>
+<form method="post">
+  {% csrf_token %}
+  <!-- Campos de login vão aqui -->
+  <button class="btn btn-success mt-2" type="submit">Login</button>
+</form>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Registar | Cverde{% endblock %}
+{% block content %}
+<h2>Criar conta</h2>
+<form method="post">
+  {% csrf_token %}
+  <!-- Campos de registo vão aqui -->
+  <button class="btn btn-primary mt-2" type="submit">Registar</button>
+</form>
+{% endblock %}

@@ -1,0 +1,65 @@
+/* Product images are loaded via CSS classes from static/images/ */
+body {
+  background: #f9fafb;
+}
+
+.navbar-brand {
+  color: #1e824c;
+}
+
+.logo-img {
+  max-height: 36px;
+}
+
+.product-card {
+  overflow: hidden;
+}
+
+.product-card-image {
+  position: relative;
+  min-height: 180px;
+  background-size: cover;
+  background-position: center;
+  background-color: #e9f6ea;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.product-card-image::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.05), rgba(0,0,0,0.05));
+}
+
+.product-tomate-cereja {
+  background-image: url("../images/tomate-cereja-organico.jpg");
+}
+
+.product-alface-romana {
+  background-image: url("../images/alface-romana.jpg");
+}
+
+.product-cenouras-bio {
+  background-image: url("../images/cenouras-bio.jpg");
+}
+
+.product-macas-golden {
+  background-image: url("../images/macas-golden.jpg");
+}
+
+.product-espinafres-frescos {
+  background-image: url("../images/espinafres-frescos.jpg");
+}
+
+.product-batatas-novas {
+  background-image: url("../images/batatas-novas.jpg");
+}
+
+.product-morangos-bio,
+.product-morango-bio {
+  background-image: url("../images/morangos-bio.jpg");
+}
+
+.product-courgettes {
+  background-image: url("../images/courgettes.jpg");
+}
