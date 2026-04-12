@@ -7,6 +7,7 @@ app_name = "users"
 urlpatterns = [
     path("login/", views.CustomLoginView.as_view(), name="login"),
     path("logout/", views.CustomLogoutView.as_view(), name="logout"),
+    path("dashboard/", views.dashboard, name="dashboard"),
     path("verify-email/<uuid:token>/", views.verify_email, name="verify_email"),
     path("two-factor/", views.two_factor_verify, name="two_factor_verify"),
     path("register/", views.register_choice, name="register"),

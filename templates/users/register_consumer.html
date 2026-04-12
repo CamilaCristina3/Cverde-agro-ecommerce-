@@ -19,6 +19,9 @@
 
           <form method="post" novalidate>
             {% csrf_token %}
+            {% if next_url %}
+              <input type="hidden" name="next" value="{{ next_url }}">
+            {% endif %}
 
             <div class="columns is-multiline">
               <div class="column is-6">
@@ -162,6 +165,10 @@
           </form>
 
           <div class="has-text-centered mt-4">
+            <p class="mb-2">
+              Já tem conta?
+              <a href="{% url 'users:login' %}{% if next_url %}?next={{ next_url|urlencode }}{% endif %}">Entrar</a>
+            </p>
             <p>Quer criar outro tipo de conta? <a href="{% url 'users:register' %}">Voltar</a></p>
           </div>
         </div>

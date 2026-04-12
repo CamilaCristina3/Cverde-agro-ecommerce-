@@ -86,6 +86,12 @@ class User(AbstractUser):
     locked_until = models.DateTimeField('Bloqueado até', null=True, blank=True)
     last_login_ip = models.GenericIPAddressField('Último IP de login', null=True, blank=True)
     two_factor_enabled = models.BooleanField('2FA por email', default=False)
+
+    def save(self, *args, **kwargs):
+        # Garantir consistência do tipo de utilizador para superusers
+        if getattr(self, "is_superuser", False):
+            self.user_type = "admin"
+        return super().save(*args, **kwargs)
     
     class Meta:
         verbose_name = 'Utilizador'
@@ -156,7 +162,7 @@ class Producer(models.Model):
     
     user = models.OneToOneField(
         User,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name='producer',
         verbose_name='Utilizador'
     )

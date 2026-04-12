@@ -19,6 +19,9 @@
 
           <form method="post" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
+            {% if next_url %}
+              <input type="hidden" name="next" value="{{ next_url }}">
+            {% endif %}
 
             <div class="notification is-light is-size-7">
               <p class="mb-1"><strong>Dica:</strong> preencha apenas os dados essenciais agora. O NIF e documentos de verificação são opcionais e podem ser enviados mais tarde.</p>
@@ -314,6 +317,10 @@
           </form>
 
           <div class="has-text-centered mt-4">
+            <p class="mb-2">
+              Já tem conta?
+              <a href="{% url 'users:login' %}{% if next_url %}?next={{ next_url|urlencode }}{% endif %}">Entrar</a>
+            </p>
             <p>Quer criar outro tipo de conta? <a href="{% url 'users:register' %}">Voltar</a></p>
           </div>
         </div>

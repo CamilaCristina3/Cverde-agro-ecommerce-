@@ -9,12 +9,14 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.utils import timezone
+from django.db.models import Q
 from datetime import timedelta
 from django.contrib.auth import login, logout
 from django.conf import settings
 import secrets
+from urllib.parse import urlencode
 
-from .models import Product, Producer, EmailVerificationToken, TwoFactorCode
+from .models import Product, Producer, EmailVerificationToken, TwoFactorCode, Order, OrderItem
 from forms import (
     LoginForm,
     TwoFactorVerifyForm,
@@ -39,51 +41,72 @@ def _send_email_verification(request, user):
     )
 
 
+def _auto_verify_user_if_disabled(user):
+    """
+    Em ambientes onde os emails são fictícios/indisponíveis, permite criar contas
+    sem confirmação por email quando REQUIRE_EMAIL_VERIFICATION=False.
+    """
+    if getattr(settings, "REQUIRE_EMAIL_VERIFICATION", True):
+        return
+    if getattr(user, "is_verified", False):
+        return
+    user.is_verified = True
+    user.email_verified_at = timezone.now()
+    user.save(update_fields=["is_verified", "email_verified_at"])
+
+
+def _dashboard_url_for_user(user):
+    if user is None or not getattr(user, "is_authenticated", False):
+        return reverse("users:login")
+    if getattr(user, "is_staff", False) or getattr(user, "is_superuser", False) or getattr(user, "user_type", None) == "admin":
+        return reverse("admin:index")
+    if getattr(user, "user_type", None) == "producer" or hasattr(user, "producer"):
+        return reverse("users:producer_panel")
+    return reverse("users:profile")
+
+
+def _safe_next_url(request):
+    next_url = request.GET.get("next") or request.POST.get("next")
+    if next_url and url_has_allowed_host_and_scheme(
+        url=next_url,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        return next_url
+    return None
+
+
+@login_required
+def dashboard(request):
+    """Dashboard isolado por tipo de utilizador."""
+    return redirect(_dashboard_url_for_user(request.user))
+
+
 class CustomLoginView(LoginView):
     template_name = 'users/login.html'
     form_class = LoginForm
     redirect_authenticated_user = True
     
     def get_success_url(self):
-        """Handle redirect after successful login, including 'next' parameter"""
-        next_url = self.request.GET.get('next') or self.request.POST.get('next')
-        
-        # Validate the next URL to prevent redirect attacks
-        if next_url and url_has_allowed_host_and_scheme(
-            url=next_url,
-            allowed_hosts={self.request.get_host()},
-            require_https=self.request.is_secure()
-        ):
+        next_url = _safe_next_url(self.request)
+        if next_url:
             return next_url
-
-        user = getattr(self.request, "user", None)
-        if user and user.is_authenticated and hasattr(user, "producer"):
-            return reverse("users:producer_panel")
-
-        return reverse("users:profile")
+        return reverse("users:dashboard")
     
     def form_valid(self, form):
         """Handle remember me functionality"""
         remember_me = self.request.POST.get('remember_me')
 
         user = form.get_user()
+        # Nota: o login não é condicionado por confirmação de email.
+        # Em ambientes com email real, pode-se manter o fluxo de verificação como
+        # um passo recomendado, mas não bloqueante.
         if getattr(settings, "REQUIRE_EMAIL_VERIFICATION", True) and user and not getattr(user, "is_verified", False):
             _send_email_verification(self.request, user)
-            messages.warning(self.request, "Confirme o seu email para iniciar sessão. Enviámos um novo link de verificação.")
-            return redirect("users:login")
+            messages.info(self.request, "Recomendamos confirmar o seu email. Enviámos um link de verificação.")
 
         if user and getattr(user, "two_factor_enabled", False):
-            next_url = self.request.GET.get("next") or self.request.POST.get("next")
-            if next_url and url_has_allowed_host_and_scheme(
-                url=next_url,
-                allowed_hosts={self.request.get_host()},
-                require_https=self.request.is_secure(),
-            ):
-                success_url = next_url
-            elif hasattr(user, "producer"):
-                success_url = reverse("users:producer_panel")
-            else:
-                success_url = reverse("users:profile")
+            success_url = _safe_next_url(self.request) or reverse("users:dashboard")
 
             code = f"{secrets.randbelow(1000000):06d}"
             TwoFactorCode.issue(user, code, ttl_seconds=600)
@@ -147,19 +170,28 @@ def register_choice(request):
 
 
 def register_consumer(request):
+    next_url = _safe_next_url(request)
     if request.method == 'POST':
         form = ConsumerRegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
+            _auto_verify_user_if_disabled(user)
             _send_email_verification(request, user)
-            messages.success(request, 'Conta criada com sucesso! Enviámos um link de confirmação para o seu email.')
-            return redirect('users:login')
+            if getattr(settings, "REQUIRE_EMAIL_VERIFICATION", True):
+                messages.success(request, 'Conta criada com sucesso! Enviámos um link de confirmação para o seu email.')
+            else:
+                messages.success(request, 'Conta criada com sucesso! Já pode iniciar sessão.')
+            login_url = reverse("users:login")
+            if next_url:
+                login_url = f"{login_url}?{urlencode({'next': next_url})}"
+            return redirect(login_url)
     else:
         form = ConsumerRegisterForm()
-    return render(request, 'users/register_consumer.html', {'form': form})
+    return render(request, 'users/register_consumer.html', {'form': form, 'next_url': next_url})
 
 
 def register_producer(request):
+    next_url = _safe_next_url(request)
     if request.method == 'POST':
         form = ProducerRegisterForm(request.POST, request.FILES)
         if form.is_valid():
@@ -172,12 +204,19 @@ def register_producer(request):
                 nif=form.cleaned_data.get('nif', ''),
                 verification_document=form.cleaned_data.get('verification_document'),
             )
+            _auto_verify_user_if_disabled(user)
             _send_email_verification(request, user)
-            messages.success(request, 'Conta de produtor criada com sucesso! Enviámos um link de confirmação para o seu email.')
-            return redirect('users:login')
+            if getattr(settings, "REQUIRE_EMAIL_VERIFICATION", True):
+                messages.success(request, 'Conta de produtor criada com sucesso! Enviámos um link de confirmação para o seu email.')
+            else:
+                messages.success(request, 'Conta de produtor criada com sucesso! Já pode iniciar sessão.')
+            login_url = reverse("users:login")
+            if next_url:
+                login_url = f"{login_url}?{urlencode({'next': next_url})}"
+            return redirect(login_url)
     else:
         form = ProducerRegisterForm()
-    return render(request, 'users/register_producer.html', {'form': form})
+    return render(request, 'users/register_producer.html', {'form': form, 'next_url': next_url})
 
 
 def verify_email(request, token):
@@ -248,6 +287,10 @@ def two_factor_verify(request):
 
 @login_required
 def profile(request):
+    if getattr(request.user, "is_staff", False) or getattr(request.user, "is_superuser", False) or getattr(request.user, "user_type", None) == "admin":
+        return redirect("admin:index")
+    if getattr(request.user, "user_type", None) == "producer" or hasattr(request.user, "producer"):
+        return redirect("users:producer_panel")
     return render(request, "users/profile.html", {
         "user_name": request.user.get_full_name() or request.user.username,
         "is_producer": hasattr(request.user, "producer"),
@@ -272,6 +315,9 @@ def edit_profile(request):
 
 @login_required
 def delete_account(request):
+    if getattr(request.user, "is_staff", False) or getattr(request.user, "is_superuser", False) or getattr(request.user, "user_type", None) == "admin":
+        messages.error(request, "Por segurança, contas de administração não podem ser eliminadas a partir do painel do utilizador.")
+        return redirect("users:dashboard")
     if request.method == "POST":
         request.user.delete_account()
         logout(request)
@@ -283,32 +329,145 @@ def delete_account(request):
 @login_required
 def producer_panel(request):
     producer = getattr(request.user, "producer", None)
+    if getattr(request.user, "is_staff", False) or getattr(request.user, "is_superuser", False) or getattr(request.user, "user_type", None) == "admin":
+        return redirect("admin:index")
     if producer is None:
         messages.warning(request, "A sua conta não tem perfil de produtor.")
-        return redirect("users:profile")
-    products = []
-    if producer is not None:
-        products = Product.objects.filter(is_active=True, producer=producer).order_by("-created_at")
+        return redirect("users:dashboard")
+
+    from decimal import Decimal
+    from django.db.models import DecimalField, ExpressionWrapper, F, Sum, Value
+    from django.db.models.functions import Coalesce
+    from django.utils import timezone
+
+    products = Product.objects.filter(is_active=True, producer=producer).select_related("category").order_by("-created_at")
+    in_stock_products = products.filter(stock__gt=0).count()
+
+    # Encomendas associadas a este produtor (por itens)
+    orders_qs = (
+        Order.objects.filter(items__product__producer=producer)
+        .select_related("user")
+        .distinct()
+    )
+
+    # Definição pragmática de "vendas" nesta fase: somatório dos itens (preço * quantidade)
+    # em encomendas não canceladas.
+    sales_statuses = ("pending", "confirmed", "paid", "preparing", "shipped", "delivered")
+    today = timezone.localdate()
+    yesterday = today - timedelta(days=1)
+
+    line_total_expr = ExpressionWrapper(
+        F("quantity") * F("price"),
+        output_field=DecimalField(max_digits=12, decimal_places=2),
+    )
+
+    def _sales_for(day):
+        agg = (
+            OrderItem.objects.filter(
+                product__producer=producer,
+                order__status__in=sales_statuses,
+                order__created_at__date=day,
+            )
+            .aggregate(total=Sum(line_total_expr))
+        )
+        return (agg.get("total") or Decimal("0.00")).quantize(Decimal("0.01"))
+
+    sales_today = _sales_for(today)
+    sales_yesterday = _sales_for(yesterday)
+
+    if sales_yesterday > 0:
+        delta = ((sales_today - sales_yesterday) / sales_yesterday) * Decimal("100")
+        sign = "+" if delta >= 0 else ""
+        sales_detail = f"{sign}{delta.quantize(Decimal('1'))}% vs ontem"
+    else:
+        sales_detail = "— vs ontem"
+
+    # Encomendas "ativas" (não canceladas)
+    active_orders = orders_qs.filter(status__in=sales_statuses)
+    active_orders_count = active_orders.count()
+    new_orders_today = active_orders.filter(created_at__date=today, status="pending").count()
+
+    recent_order_ids = (
+        active_orders.order_by("-created_at").values_list("id", flat=True)[:10]
+    )
+    recent_items = (
+        OrderItem.objects.filter(order_id__in=list(recent_order_ids), product__producer=producer)
+        .select_related("order", "order__user")
+    )
+
+    per_order_totals = {}
+    per_order_meta = {}
+    for it in recent_items:
+        per_order_totals[it.order_id] = per_order_totals.get(it.order_id, Decimal("0.00")) + (it.price * it.quantity)
+        if it.order_id not in per_order_meta:
+            user = it.order.user
+            customer = user.get_full_name() or user.username or user.email
+            per_order_meta[it.order_id] = {
+                "id": f"#{it.order_id}",
+                "customer": customer,
+                "status": it.order.get_status_display(),
+                "created_at": it.order.created_at,
+            }
+
+    recent_orders = []
+    for order_id in recent_order_ids:
+        meta = per_order_meta.get(order_id)
+        if not meta:
+            continue
+        amount = (per_order_totals.get(order_id) or Decimal("0.00")).quantize(Decimal("0.01"))
+        recent_orders.append(
+            {
+                "id": meta["id"],
+                "customer": meta["customer"],
+                "status": meta["status"],
+                "amount": f"€{amount:.2f}",
+            }
+        )
+        if len(recent_orders) >= 3:
+            break
+
+    top_products_qs = (
+        Product.objects.filter(is_active=True, producer=producer)
+        .annotate(
+            sales_qty=Coalesce(
+                Sum(
+                    "order_items__quantity",
+                    filter=Q(order_items__order__status__in=("paid", "shipped", "delivered")),
+                ),
+                Value(0),
+            )
+        )
+        .order_by("-sales_qty", "-created_at")[:3]
+    )
+    top_products = []
+    for idx, p in enumerate(top_products_qs, start=1):
+        top_products.append(
+            {
+                "rank": idx,
+                "name": p.name,
+                "price": f"€{Decimal(str(p.price)):.2f}",
+                "sales": int(p.sales_qty or 0),
+            }
+        )
 
     data = {
         "producer": producer,
         "products": products,
+        "require_producer_verification": getattr(settings, "REQUIRE_PRODUCER_VERIFICATION", False),
         "stats": [
-            {"label": "Vendas Hoje", "value": "€192.50", "detail": "+12% vs ontem", "icon": "📈", "class": "border-success"},
-            {"label": "Encomendas", "value": "12", "detail": "4 novas encomendas", "icon": "🛒", "class": "border-primary"},
-            {"label": "Produtos", "value": str(products.count()), "detail": f"{products.count()} em stock", "icon": "📦", "class": "border-info"},
-            {"label": "Avaliação", "value": "4.8", "detail": "127 avaliações", "icon": "⭐", "class": "border-warning"},
+            {"label": "Vendas Hoje", "value": f"€{sales_today:.2f}", "detail": sales_detail, "icon": "📈", "class": "border-success"},
+            {"label": "Encomendas", "value": str(active_orders_count), "detail": f"{new_orders_today} novas encomendas", "icon": "🛒", "class": "border-primary"},
+            {"label": "Produtos", "value": str(products.count()), "detail": f"{in_stock_products} em stock", "icon": "📦", "class": "border-info"},
+            {
+                "label": "Avaliação",
+                "value": f"{Decimal(str(getattr(producer, 'rating', 0) or 0)):.1f}",
+                "detail": f"{int(getattr(producer, 'total_ratings', 0) or 0)} avaliações",
+                "icon": "⭐",
+                "class": "border-warning",
+            },
         ],
-        "recent_orders": [
-            {"id": "#2001", "customer": "Maria Santos", "amount": "€42.50", "status": "Novo", "status_class": "badge bg-success"},
-            {"id": "#2002", "customer": "Pedro Costa", "amount": "€67.80", "status": "Em preparação", "status_class": "badge bg-warning text-dark"},
-            {"id": "#2003", "customer": "Ana Silva", "amount": "€28.40", "status": "Enviado", "status_class": "badge bg-primary"},
-        ],
-        "top_products": [
-            {"rank": 1, "name": "Tomate Cereja Orgânico", "price": "€8.50", "sales": 45},
-            {"rank": 2, "name": "Alface Romana", "price": "€2.30", "sales": 40},
-            {"rank": 3, "name": "Cenouras Bio", "price": "€3.20", "sales": 35},
-        ],
+        "recent_orders": recent_orders,
+        "top_products": top_products,
     }
     return render(request, "users/producer_panel.html", data)
 

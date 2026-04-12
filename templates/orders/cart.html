@@ -49,10 +49,12 @@
                 </td>
                 <td class="has-text-right">€{{ it.unit_price }}</td>
                 <td class="has-text-centered">
-                  <form class="is-flex is-justify-content-center is-align-items-center" method="post" action="{% url 'orders:update_cart_item' it.product.id %}">
+                  <form class="is-flex is-justify-content-center is-align-items-center cart-update-form" method="post" action="{% url 'orders:update_cart_item' it.product.id %}">
                     {% csrf_token %}
-                    <input class="input is-small mr-2" style="max-width: 90px;" type="number" name="quantity" min="1" max="{{ it.product.stock }}" value="{{ it.quantity }}">
-                    <button class="button is-small is-light" type="submit">Atualizar</button>
+                    <button class="button is-small is-light mr-2 cart-qty-btn" type="button" data-delta="-1" aria-label="Diminuir quantidade">−</button>
+                    <input class="input is-small mr-2 cart-qty-input" style="max-width: 90px;" type="number" name="quantity" min="1" max="{{ it.product.stock }}" value="{{ it.quantity }}" inputmode="numeric">
+                    <button class="button is-small is-light mr-2 cart-qty-btn" type="button" data-delta="1" aria-label="Aumentar quantidade">+</button>
+                    <button class="button is-small is-light cart-update-submit" type="submit">Atualizar</button>
                   </form>
                   <p class="is-size-7 has-text-grey mt-1">Stock: {{ it.product.stock }}</p>
                 </td>
@@ -124,5 +126,40 @@
     <a class="button is-success" href="{% url 'products:list' %}">Ver produtos</a>
   {% endif %}
 </div>
-{% endblock %}
 
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const forms = document.querySelectorAll('.cart-update-form');
+
+    forms.forEach((form) => {
+      const qtyInput = form.querySelector('.cart-qty-input');
+      const submitBtn = form.querySelector('.cart-update-submit');
+      const buttons = form.querySelectorAll('.cart-qty-btn');
+      if (!qtyInput) return;
+
+      let timer = null;
+      const submitSoon = () => {
+        if (submitBtn) submitBtn.disabled = true;
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => form.requestSubmit ? form.requestSubmit() : form.submit(), 250);
+      };
+
+      qtyInput.addEventListener('change', submitSoon);
+
+      buttons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const delta = parseInt(btn.dataset.delta || '0', 10);
+          const current = parseInt(qtyInput.value || '1', 10);
+          const min = parseInt(qtyInput.getAttribute('min') || '1', 10);
+          const max = parseInt(qtyInput.getAttribute('max') || '999999', 10);
+          const next = Math.max(min, Math.min(max, current + delta));
+          qtyInput.value = String(next);
+          submitSoon();
+        });
+      });
+    });
+  });
+</script>
+{% endblock %}
+{% endblock %}

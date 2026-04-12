@@ -23,9 +23,9 @@
           <span class="icon"><i class="fas fa-shopping-bag"></i></span>
           <span>Produtos</span>
         </a>
-        <a class="navbar-item" href="{% url 'users:profile' %}">
+        <a class="navbar-item" href="{% url 'users:dashboard' %}">
           <span class="icon"><i class="fas fa-user"></i></span>
-          <span>Minha Conta</span>
+          <span>Painel</span>
         </a>
       </div>
 
@@ -34,11 +34,16 @@
           {% if user.is_authenticated %}
             <div class="buttons">
               <span class="has-text-white">Olá, {{ user.username }}!</span>
-              <a class="button is-light" href="{% url 'users:profile' %}" title="Minha Conta">
+              <a class="button is-light" href="{% url 'users:dashboard' %}" title="Painel">
                 <span class="icon"><i class="fas fa-user-circle"></i></span>
               </a>
               <a class="button is-light" href="{% url 'orders:cart' %}" title="Carrinho">
-                <span class="icon"><i class="fas fa-shopping-cart"></i></span>
+                <span class="icon cart-icon">
+                  <i class="fas fa-shopping-cart"></i>
+                  {% if nav_cart_count %}
+                    <span class="cart-badge">{{ nav_cart_count }}</span>
+                  {% endif %}
+                </span>
               </a>
               <a class="button is-primary is-small" href="{% url 'users:logout' %}">
                 <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
@@ -50,6 +55,14 @@
               <a class="button is-light" href="{% url 'users:login' %}">
                 <span class="icon"><i class="fas fa-sign-in-alt"></i></span>
                 <span>Entrar</span>
+              </a>
+              <a class="button is-light" href="{% url 'orders:cart' %}" title="Carrinho">
+                <span class="icon cart-icon">
+                  <i class="fas fa-shopping-cart"></i>
+                  {% if nav_cart_count %}
+                    <span class="cart-badge">{{ nav_cart_count }}</span>
+                  {% endif %}
+                </span>
               </a>
               <a class="button is-primary" href="{% url 'users:register' %}">
                 <span class="icon"><i class="fas fa-user-plus"></i></span>

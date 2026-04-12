@@ -86,6 +86,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# ========== DEV/TEST FLAGS ==========
+# Para testes locais rápidos (não usar em produção).
+DISABLE_CSRF = config("DISABLE_CSRF", default=False, cast=_parse_debug)
+if DISABLE_CSRF:
+    MIDDLEWARE = [m for m in MIDDLEWARE if m != "django.middleware.csrf.CsrfViewMiddleware"]
+
 ROOT_URLCONF = 'cverde.urls'
 
 # ========== TEMPLATES ==========
@@ -102,6 +108,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
+                'apps.orders.context_processors.nav_cart_count',
             ],
         },
     },
@@ -180,13 +187,14 @@ AUTHENTICATION_BACKENDS = [
 
 # ========== LOGIN/LOGOUT URLs ==========
 LOGIN_URL = 'users:login'
-LOGIN_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'users:dashboard'
 LOGOUT_REDIRECT_URL = 'home'
 
 # ========== EMAIL CONFIGURATION (development) ==========
 EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@cverde.co.mz')
 REQUIRE_EMAIL_VERIFICATION = config("REQUIRE_EMAIL_VERIFICATION", default=True, cast=_parse_debug)
+REQUIRE_PRODUCER_VERIFICATION = config("REQUIRE_PRODUCER_VERIFICATION", default=False, cast=_parse_debug)
 
 # ========== SESSION SETTINGS ==========
 SESSION_COOKIE_AGE = 1209600  # 2 weeks

@@ -25,11 +25,17 @@
         Não existe um perfil de produtor associado à sua conta.
       </div>
     {% else %}
-      {% if not producer.is_verified %}
+      {% if require_producer_verification and not producer.is_verified %}
         <div class="notification is-warning is-light">
           <strong>Conta não verificada.</strong>
           Para publicar produtos, envie os documentos de verificação.
           <a href="{% url 'users:producer_verification' %}">Submeter verificação</a>.
+        </div>
+      {% elif not producer.is_verified %}
+        <div class="notification is-info is-light">
+          <strong>Verificação opcional.</strong>
+          Nesta fase pode publicar produtos sem verificação. Se quiser, pode
+          <a href="{% url 'users:producer_verification' %}">submeter documentos</a> para validar a conta mais tarde.
         </div>
       {% endif %}
     {% endif %}
@@ -147,7 +153,7 @@
                     <tr>
                       <td class="has-text-weight-semibold">{{ product.name }}</td>
                       <td>{{ product.category|default:"Sem categoria" }}</td>
-                      <td>{{ product.unit }}</td>
+                      <td>{{ product.get_unit_display }}</td>
                       <td>
                         {% if product.stock > 0 %}
                           <span class="tag is-success is-light">{{ product.stock }}</span>

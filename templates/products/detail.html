@@ -5,10 +5,17 @@
 <div class="container mt-5 mb-6">
     <div class="breadcrumb">
         <ul>
-            <li><a href="{% url 'homepage' %}">Home</a></li>
+            <li><a href="{% url 'home' %}">Home</a></li>
             <li><a href="{% url 'products:list' %}">Produtos</a></li>
             <li class="is-active"><a href="#" aria-current="page">{{ product.name }}</a></li>
         </ul>
+    </div>
+
+    <div class="mb-4">
+        <a class="button is-light" href="{{ back_url }}">
+            <span class="icon"><i class="fas fa-arrow-left"></i></span>
+            <span>Continuar a comprar</span>
+        </a>
     </div>
 
     <div class="columns is-variable is-6 mt-5">
@@ -16,21 +23,39 @@
         <div class="column is-6-desktop is-12-tablet">
             <div class="product-image mb-5">
                 <figure class="image is-square">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Crect fill='%23e8f5e9' width='400' height='400'/%3E%3C/svg%3E" 
-                         alt="{{ product.name }}" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); object-fit: cover;">
+                    {% if product.main_image %}
+                        <img src="{{ product.main_image.url }}" alt="{{ product.name }}" style="object-fit: cover;">
+                    {% else %}
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Crect fill='%23e8f5e9' width='400' height='400'/%3E%3C/svg%3E"
+                             alt="{{ product.name }}" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); object-fit: cover;">
+                    {% endif %}
                 </figure>
             </div>
-            {% if product.is_organic %}
-            <div class="notification is-success is-light">
-                <p><strong>🌿 Produto Orgânico Certificado</strong></p>
+            <div class="tags">
+                {% if product.certification %}
+                    <span class="tag is-success">{{ product.get_certification_display }}</span>
+                {% else %}
+                    <span class="tag is-light">✓ Fresco</span>
+                {% endif %}
+                {% if product.producer.is_verified %}
+                    <span class="tag is-info">Produtor verificado</span>
+                {% endif %}
             </div>
-            {% endif %}
         </div>
 
         <!-- Product Details -->
         <div class="column is-6-desktop is-12-tablet">
             <!-- Header -->
             <h1 class="title is-3 mb-2">{{ product.name }}</h1>
+
+            <p class="is-size-7 has-text-grey mb-4">
+                {% if product.total_reviews > 0 %}
+                    <span class="has-text-warning">★ {{ product.average_rating|floatformat:1 }}/5</span>
+                    <span class="ml-1">({{ product.total_reviews }} avaliação{{ product.total_reviews|pluralize:"ão,ões" }})</span>
+                {% else %}
+                    Sem avaliações ainda
+                {% endif %}
+            </p>
             
             <!-- Producer Info -->
             <div class="box mb-4" style="background: #f5f5f5; border-left: 4px solid #2e7d32;">
@@ -39,16 +64,18 @@
                         <div>
                             <p class="has-text-weight-bold">{{ product.producer.name }}</p>
                             <p class="is-size-7 has-text-grey">
-                                <i class="fas fa-map-marker-alt mr-1"></i>{{ product.producer.location }}
+                                {% if product.producer.location %}<i class="fas fa-map-marker-alt mr-1"></i>{{ product.producer.location }}{% else %}Localização não indicada{% endif %}
                             </p>
                         </div>
                     </div>
                     <div class="level-right">
-                        <div class="stars has-text-warning">
-                            {% for i in "12345" %}
-                                {% if forloop.counter <= product.producer.rating %}<i class="fas fa-star"></i>{% else %}<i class="far fa-star"></i>{% endif %}
-                            {% endfor %}
-                            <span class="ml-2 has-text-grey">({{ product.producer.rating }}/5)</span>
+                        <div class="is-size-7 has-text-grey has-text-right">
+                            {% if product.producer.total_ratings > 0 %}
+                                <span class="has-text-warning">★ {{ product.producer.rating|floatformat:1 }}/5</span>
+                                <span class="ml-1">({{ product.producer.total_ratings }})</span>
+                            {% else %}
+                                Sem avaliações
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -66,7 +93,7 @@
                     <div class="level-right">
                         <div class="has-text-centered">
                             <p class="is-size-7 has-text-grey">Embalagem</p>
-                            <p class="is-size-5 has-text-weight-bold">{{ product.unit }}</p>
+                            <p class="is-size-5 has-text-weight-bold">{{ product.get_unit_display }}</p>
                         </div>
                     </div>
                 </div>
@@ -91,12 +118,23 @@
 
             <!-- Action Buttons -->
             <div class="field is-grouped mb-6">
-                {% if product.stock > 0 and product.available %}
+                {% if product.stock > 0 %}
                 <p class="control is-expanded">
-                    <button class="button is-success is-size-5 is-fullwidth">
-                        <span class="icon"><i class="fas fa-shopping-basket"></i></span>
-                        <span>Adicionar ao Carrinho</span>
-                    </button>
+                    <form method="post" action="{% url 'orders:add_to_cart' product.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ back_url }}">
+                        <div class="field has-addons">
+                            <div class="control">
+                                <input class="input" type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" style="max-width: 110px;">
+                            </div>
+                            <div class="control is-expanded">
+                                <button type="submit" class="button is-success is-size-5 is-fullwidth">
+                                    <span class="icon"><i class="fas fa-shopping-basket"></i></span>
+                                    <span>Adicionar ao Carrinho</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </p>
                 {% else %}
                 <p class="control is-expanded">
@@ -105,10 +143,14 @@
                     </button>
                 </p>
                 {% endif %}
-                <p class="control">
-                    <button class="button is-outlined">
-                        <span class="icon"><i class="far fa-heart"></i></span>
-                    </button>
+            </div>
+
+            <div class="notification is-light mb-6" style="border-left: 4px solid #2e7d32;">
+                <p class="is-size-7 has-text-grey mb-2"><strong>Compra com confiança</strong></p>
+                <p class="is-size-7 has-text-grey">
+                    <span class="icon-text mr-3"><span class="icon is-small"><i class="fas fa-lock"></i></span><span>Checkout seguro</span></span>
+                    <span class="icon-text mr-3"><span class="icon is-small"><i class="fas fa-user-shield"></i></span><span>RGPD</span></span>
+                    <span class="icon-text"><span class="icon is-small"><i class="fas fa-truck"></i></span><span>Encomenda rastreável</span></span>
                 </p>
             </div>
 
@@ -128,19 +170,19 @@
                 <table class="table is-fullwidth">
                     <tr>
                         <td class="has-text-grey"><strong>Categoria</strong></td>
-                        <td>{{ product.category|default:"Sem categoria" }}</td>
+                        <td>{% if product.category %}{{ product.category.name }}{% else %}Sem categoria{% endif %}</td>
                     </tr>
                     <tr>
                         <td class="has-text-grey"><strong>Tipo de Embalagem</strong></td>
-                        <td>{{ product.unit }}</td>
+                        <td>{{ product.get_unit_display }}</td>
                     </tr>
                     <tr>
-                        <td class="has-text-grey"><strong>Tipo de Produção</strong></td>
+                        <td class="has-text-grey"><strong>Certificação</strong></td>
                         <td>
-                            {% if product.is_organic %}
-                            <span class="tag is-success">Orgânico</span>
+                            {% if product.certification %}
+                                <span class="tag is-success">{{ product.get_certification_display }}</span>
                             {% else %}
-                            <span class="tag is-info">Convencional</span>
+                                <span class="tag is-light">Sem certificação</span>
                             {% endif %}
                         </td>
                     </tr>
@@ -163,8 +205,12 @@
                 <div class="card product-card">
                     <div class="card-image">
                         <figure class="image is-4by3">
-                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%23e8f5e9' width='400' height='300'/%3E%3C/svg%3E" 
-                                 alt="{{ related.name }}" loading="lazy" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);">
+                            {% if related.main_image %}
+                                <img src="{{ related.main_image.url }}" alt="{{ related.name }}" loading="lazy" style="object-fit: cover;">
+                            {% else %}
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%23e8f5e9' width='400' height='300'/%3E%3C/svg%3E"
+                                     alt="{{ related.name }}" loading="lazy" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);">
+                            {% endif %}
                         </figure>
                     </div>
                     <div class="card-content">
@@ -176,7 +222,7 @@
                             </div>
                             <div class="level-right">
                                 {% if related.stock > 0 %}
-                                <a href="{% url 'products:detail' related.id %}" class="button is-success is-small">Ver</a>
+                                <a href="{% url 'products:detail' related.id %}?back={{ back_url|urlencode }}" class="button is-success is-small">Ver</a>
                                 {% else %}
                                 <span class="has-text-danger is-small">Esgotado</span>
                                 {% endif %}

@@ -7,6 +7,8 @@ from django.core.mail import send_mail
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils.http import url_has_allowed_host_and_scheme
+from urllib.parse import urlencode
 from django.views.decorators.http import require_POST
 
 from apps.users.models import Cart, Order, OrderItem, Product
@@ -40,10 +42,11 @@ def cart(request):
 def add_to_cart(request, product_id: int):
     cart_obj = _get_or_create_cart(request)
     product = get_object_or_404(Product, pk=product_id, is_active=True)
+    next_url = (request.POST.get("next") or "").strip()
 
     if product.stock <= 0:
         messages.error(request, "Este produto está esgotado.")
-        return redirect("products:list")
+        return _safe_redirect_next(request, next_url, fallback="products:list")
 
     quantity = _safe_int(request.POST.get("quantity"), default=1)
     if quantity < 1:
@@ -58,11 +61,20 @@ def add_to_cart(request, product_id: int):
     new_qty = min(product.stock, current_qty + quantity)
     if new_qty <= current_qty:
         messages.warning(request, "Quantidade máxima em stock já adicionada ao carrinho.")
-        return redirect("orders:cart")
+        return _safe_redirect_next(request, next_url, fallback="orders:cart")
 
     cart_obj.add_item(product.id, quantity=new_qty - current_qty)
     messages.success(request, f'"{product.name}" adicionado ao carrinho.')
-    return redirect("orders:cart")
+
+    if not request.user.is_authenticated:
+        messages.info(
+            request,
+            "Para finalizar a compra, registe-se como consumidor ou inicie sessão.",
+        )
+        register_url = reverse("users:register_consumer")
+        return redirect(f"{register_url}?{urlencode({'next': reverse('orders:cart')})}")
+
+    return _safe_redirect_next(request, next_url, fallback="orders:cart")
 
 
 @require_POST
@@ -102,13 +114,24 @@ def clear_cart(request):
     return redirect("orders:cart")
 
 
-@login_required
 def checkout(request):
     cart_obj = _get_or_create_cart(request)
     items, subtotal = _cart_items_and_subtotal(cart_obj)
     if not items:
         messages.warning(request, "O carrinho está vazio.")
         return redirect("products:list")
+
+    if not request.user.is_authenticated:
+        messages.info(request, "Para finalizar a compra, crie uma conta de consumidor ou inicie sessão.")
+        register_url = reverse("users:register_consumer")
+        next_target = request.get_full_path()
+        if not url_has_allowed_host_and_scheme(
+            url=next_target,
+            allowed_hosts={request.get_host()},
+            require_https=request.is_secure(),
+        ):
+            next_target = reverse("orders:cart")
+        return redirect(f"{register_url}?{urlencode({'next': next_target})}")
 
     shipping_cost = _shipping_cost(subtotal)
     vat = _vat_cost(subtotal)
@@ -261,6 +284,16 @@ def _send_order_emails(order: Order):
         )
     except Exception:
         pass
+
+
+def _safe_redirect_next(request, next_url: str, fallback: str):
+    if next_url and url_has_allowed_host_and_scheme(
+        url=next_url,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        return redirect(next_url)
+    return redirect(fallback)
 
     # Email aos produtores (um email por produtor)
     producer_emails = set()
