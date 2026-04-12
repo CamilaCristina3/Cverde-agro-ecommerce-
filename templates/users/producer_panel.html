@@ -3,124 +3,180 @@
 {% block title %}Painel do Produtor | Cverde{% endblock %}
 
 {% block content %}
-<div class="py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-      <h1 class="h3 mb-1">Painel do Produtor</h1>
-      <p class="text-muted mb-0">Gerir os seus produtos e encomendas.</p>
-    </div>
-    <a href="{% url 'products:list' %}" class="btn btn-success">+ Adicionar Produto</a>
-  </div>
-
-  <div class="row g-3 mb-4">
-    {% for stat in stats %}
-    <div class="col-sm-6 col-xl-3">
-      <div class="card h-100 shadow-sm {{ stat.class }}">
-        <div class="card-body">
-          <div class="d-flex align-items-start justify-content-between mb-3">
-            <div>
-              <h6 class="text-uppercase text-muted mb-1">{{ stat.label }}</h6>
-              <h4 class="mb-0">{{ stat.value }}</h4>
-            </div>
-            <div class="fs-2">{{ stat.icon }}</div>
-          </div>
-          <small class="text-muted">{{ stat.detail }}</small>
+<section class="section">
+  <div class="container">
+    <div class="level mb-5">
+      <div class="level-left">
+        <div>
+          <h1 class="title is-3 mb-1">Painel do Produtor</h1>
+          <p class="subtitle is-6 has-text-grey">Gerir os seus produtos e encomendas.</p>
         </div>
       </div>
+      <div class="level-right">
+        <a href="{% url 'products:create' %}" class="button is-primary">
+          <span class="icon"><i class="fas fa-plus"></i></span>
+          <span>Adicionar produto</span>
+        </a>
+      </div>
     </div>
-    {% endfor %}
-  </div>
 
-  <div class="card shadow-sm border-0">
-    <div class="card-body">
-      <ul class="nav nav-tabs mb-4" role="tablist">
-        <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">Visão Geral</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="products-tab" data-bs-toggle="tab" data-bs-target="#products" type="button" role="tab">Meus Produtos</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="orders-tab" data-bs-toggle="tab" data-bs-target="#orders" type="button" role="tab">Encomendas</button>
-        </li>
-      </ul>
-
-      <div class="tab-content">
-        <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
-          <div class="row g-4">
-            <div class="col-lg-7">
-              <div class="card border-0 shadow-sm h-100">
-                <div class="card-body">
-                  <h5 class="card-title">Encomendas Recentes</h5>
-                  <div class="list-group list-group-flush">
-                    {% for order in recent_orders %}
-                    <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
-                      <div>
-                        <strong>{{ order.id }}</strong>
-                        <div class="text-muted">{{ order.customer }}</div>
-                      </div>
-                      <div class="text-end">
-                        <span class="badge rounded-pill {{ order.status_class }}">{{ order.status }}</span>
-                        <div class="fw-bold text-success">{{ order.amount }}</div>
-                      </div>
-                    </div>
-                    {% endfor %}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-lg-5">
-              <div class="card border-0 shadow-sm h-100">
-                <div class="card-body">
-                  <h5 class="card-title">Produtos Mais Vendidos</h5>
-                  <div class="list-group list-group-flush">
-                    {% for item in top_products %}
-                    <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
-                      <div>
-                        <span class="badge bg-success rounded-pill me-2">{{ item.rank }}</span>
-                        <strong>{{ item.name }}</strong>
-                        <div class="text-muted">{{ item.price }}</div>
-                      </div>
-                      <div class="text-muted">{{ item.sales }} vendas</div>
-                    </div>
-                    {% endfor %}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+    {% if not producer %}
+      <div class="notification is-warning is-light">
+        Não existe um perfil de produtor associado à sua conta.
+      </div>
+    {% else %}
+      {% if not producer.is_verified %}
+        <div class="notification is-warning is-light">
+          <strong>Conta não verificada.</strong>
+          Para publicar produtos, envie os documentos de verificação.
+          <a href="{% url 'users:producer_verification' %}">Submeter verificação</a>.
         </div>
+      {% endif %}
+    {% endif %}
 
-        <div class="tab-pane fade" id="products" role="tabpanel" aria-labelledby="products-tab">
-          {% if producer %}
-            {% if products %}
-            <div class="list-group">
-              {% for product in products %}
-              <div class="list-group-item">
-                <div class="d-flex justify-content-between align-items-center">
+    <div class="columns is-multiline is-variable is-4 mb-5">
+      {% for stat in stats %}
+        <div class="column is-6-tablet is-3-desktop">
+          <div class="card coverde-stat-card">
+            <div class="card-content">
+              <div class="level is-mobile mb-2">
+                <div class="level-left">
                   <div>
-                    <strong>{{ product.name }}</strong>
-                    <div class="text-muted">{{ product.category|default:"Sem categoria" }} • {{ product.unit }} • Estoque: {{ product.stock }}</div>
+                    <p class="is-size-7 has-text-grey is-uppercase has-text-weight-semibold">{{ stat.label }}</p>
+                    <p class="title is-4 mb-0">{{ stat.value }}</p>
                   </div>
-                  <span class="badge bg-success">€{{ product.price }}</span>
+                </div>
+                <div class="level-right">
+                  <span class="coverde-stat-icon">{{ stat.icon }}</span>
                 </div>
               </div>
-              {% endfor %}
+              <p class="is-size-7 has-text-grey">{{ stat.detail }}</p>
             </div>
-            {% else %}
-            <div class="alert alert-secondary">Ainda não existem produtos ativos no seu perfil.</div>
-            {% endif %}
-          {% else %}
-            <div class="alert alert-warning">Não existe um perfil de produtor associado à sua conta.</div>
-          {% endif %}
+          </div>
         </div>
+      {% endfor %}
+    </div>
 
-        <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
-          <div class="alert alert-secondary">Acompanhe o estado das encomendas aqui.</div>
+    <div class="columns is-variable is-5">
+      <div class="column is-7-desktop">
+        <div class="card coverde-panel-card">
+          <header class="card-header">
+            <p class="card-header-title">
+              <span class="icon mr-2 has-text-success"><i class="fas fa-receipt"></i></span>
+              Encomendas recentes
+            </p>
+          </header>
+          <div class="card-content">
+            {% for order in recent_orders %}
+              <div class="level is-mobile py-2">
+                <div class="level-left">
+                  <div>
+                    <p class="has-text-weight-semibold mb-0">{{ order.id }}</p>
+                    <p class="is-size-7 has-text-grey">{{ order.customer }}</p>
+                  </div>
+                </div>
+                <div class="level-right has-text-right">
+                  <span class="tag is-light">{{ order.status }}</span>
+                  <p class="has-text-success has-text-weight-semibold mt-1">{{ order.amount }}</p>
+                </div>
+              </div>
+              {% if not forloop.last %}<hr class="my-2">{% endif %}
+            {% empty %}
+              <p class="has-text-grey">Sem encomendas para mostrar.</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="column is-5-desktop">
+        <div class="card coverde-panel-card">
+          <header class="card-header">
+            <p class="card-header-title">
+              <span class="icon mr-2 has-text-success"><i class="fas fa-chart-line"></i></span>
+              Produtos mais vendidos
+            </p>
+          </header>
+          <div class="card-content">
+            {% for item in top_products %}
+              <div class="level is-mobile py-2">
+                <div class="level-left">
+                  <div>
+                    <p class="has-text-weight-semibold mb-0">
+                      <span class="tag is-success is-light mr-2">{{ item.rank }}</span>
+                      {{ item.name }}
+                    </p>
+                    <p class="is-size-7 has-text-grey">{{ item.price }}</p>
+                  </div>
+                </div>
+                <div class="level-right">
+                  <span class="is-size-7 has-text-grey">{{ item.sales }} vendas</span>
+                </div>
+              </div>
+              {% if not forloop.last %}<hr class="my-2">{% endif %}
+            {% empty %}
+              <p class="has-text-grey">Sem dados ainda.</p>
+            {% endfor %}
+          </div>
         </div>
       </div>
     </div>
+
+    <div class="card coverde-panel-card mt-5">
+      <header class="card-header">
+        <p class="card-header-title">
+          <span class="icon mr-2 has-text-success"><i class="fas fa-box"></i></span>
+          Meus produtos
+        </p>
+      </header>
+      <div class="card-content">
+        {% if producer %}
+          {% if products %}
+            <div class="table-container">
+              <table class="table is-fullwidth is-striped">
+                <thead>
+                  <tr>
+                    <th>Produto</th>
+                    <th>Categoria</th>
+                    <th>Unidade</th>
+                    <th>Stock</th>
+                    <th class="has-text-right">Preço</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for product in products %}
+                    <tr>
+                      <td class="has-text-weight-semibold">{{ product.name }}</td>
+                      <td>{{ product.category|default:"Sem categoria" }}</td>
+                      <td>{{ product.unit }}</td>
+                      <td>
+                        {% if product.stock > 0 %}
+                          <span class="tag is-success is-light">{{ product.stock }}</span>
+                        {% else %}
+                          <span class="tag is-warning is-light">0</span>
+                        {% endif %}
+                      </td>
+                      <td class="has-text-right has-text-success has-text-weight-semibold">€{{ product.price }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <div class="notification is-light">
+              Ainda não existem produtos ativos no seu perfil.
+              <a href="{% url 'products:create' %}">Adicionar o primeiro produto</a>.
+            </div>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
   </div>
-</div>
+</section>
+
+<style>
+  .coverde-stat-card { border-radius: 16px; border: 1px solid #e9f3ea; box-shadow: 0 8px 18px rgba(0,0,0,0.06); }
+  .coverde-stat-icon { font-size: 1.75rem; line-height: 1; }
+  .coverde-panel-card { border-radius: 16px; border: 1px solid #e9f3ea; box-shadow: 0 10px 22px rgba(0,0,0,0.06); overflow: hidden; }
+  .card-header { background: linear-gradient(135deg, #ffffff 0%, #f6faf6 100%); }
+</style>
 {% endblock %}

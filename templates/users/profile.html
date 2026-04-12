@@ -18,8 +18,20 @@
           <h5 class="title is-5">Dados do perfil</h5>
           <div class="content">
             <p><strong>Nome:</strong> {{ user_name }}</p>
+            <p><strong>Email:</strong> {{ request.user.email }}</p>
+            <p><strong>Localização:</strong> {{ request.user.district }}{% if request.user.county %}, {{ request.user.county }}{% endif %}{% if request.user.parish %}, {{ request.user.parish }}{% endif %}</p>
             <p><strong>Encomendas:</strong> {{ orders_count }}</p>
             <p><strong>Total gasto:</strong> {{ spent }}</p>
+          </div>
+          <div class="buttons mt-4">
+            <a class="button is-primary is-light" href="{% url 'users:profile_edit' %}">
+              <span class="icon"><i class="fas fa-user-edit"></i></span>
+              <span>Editar perfil</span>
+            </a>
+            <a class="button is-danger is-light" href="{% url 'users:delete_account' %}">
+              <span class="icon"><i class="fas fa-user-slash"></i></span>
+              <span>Eliminar conta</span>
+            </a>
           </div>
         </div>
       </div>
@@ -31,7 +43,9 @@
             <ul>
               <li><a href="{% url 'products:list' %}">Ver produtos</a></li>
               <li><a href="{% url 'orders:cart' %}">Ver carrinho</a></li>
-              <li><a href="{% url 'users:producer_panel' %}">Aceder ao painel de produtor</a></li>
+              {% if is_producer %}
+                <li><a href="{% url 'users:producer_panel' %}">Aceder ao painel de produtor</a></li>
+              {% endif %}
             </ul>
           </div>
         </div>

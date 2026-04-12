@@ -1,10 +1,12 @@
-from django import forms
-from django.contrib.auth import get_user_model
+"""
+ATENÇÃO: Os formulários foram consolidados em forms.py na raiz do projeto.
+Para importar, use: from forms import LoginForm, ConsumerRegisterForm, ProducerRegisterForm
 
+Este ficheiro é mantido vazio para compatibilidade.
+"""
 
-class RegisterForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
+# Imports para compatibilidade retrógrada (se necessário)
+from forms import LoginForm, BaseRegisterForm, ConsumerRegisterForm, ProducerRegisterForm
 
-    class Meta:
-        model = get_user_model()
-        fields = ["username", "email", "password"]
+__all__ = ['LoginForm', 'BaseRegisterForm', 'ConsumerRegisterForm', 'ProducerRegisterForm']
+

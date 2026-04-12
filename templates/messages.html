@@ -1,0 +1,22 @@
+{% if messages %}
+  <div class="mt-3">
+    {% for message in messages %}
+      <div class="notification is-{{ message.tags|default:'info' }} is-light">
+        <button class="delete" type="button" aria-label="Fechar"></button>
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.notification .delete').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const notification = btn.closest('.notification');
+          if (notification) notification.remove();
+        });
+      });
+    });
+  </script>
+{% endif %}
+

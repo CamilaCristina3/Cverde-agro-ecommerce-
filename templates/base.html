@@ -8,79 +8,22 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+  {% block extra_css %}{% endblock %}
 </head>
 <body>
-  <nav class="navbar is-light" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-      <a class="navbar-item" href="/">
-        <img src="{% static 'images/logo.svg' %}" alt="Cverde" height="40">
-      </a>
+  {% include "navbar.html" %}
 
-      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasic">
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </a>
-    </div>
-
-    <div id="navbarBasic" class="navbar-menu">
-      <div class="navbar-start">
-        <a class="navbar-item" href="/">
-          <span class="icon"><i class="fas fa-home"></i></span>
-          <span>Início</span>
-        </a>
-        <a class="navbar-item" href="{% url 'products:list' %}">
-          <span class="icon"><i class="fas fa-shopping-bag"></i></span>
-          <span>Produtos</span>
-        </a>
-        <a class="navbar-item" href="{% url 'users:profile' %}">
-          <span class="icon"><i class="fas fa-user"></i></span>
-          <span>Minha Conta</span>
-        </a>
-        <a class="navbar-item has-text-success has-text-weight-semibold" href="{% url 'users:producer_panel' %}">
-          <span class="icon"><i class="fas fa-store"></i></span>
-          <span>Painel Produtor</span>
-        </a>
-      </div>
-
-      <div class="navbar-end">
-        <div class="navbar-item">
-          {% if user.is_authenticated %}
-            <div class="buttons">
-              <span class="has-text-grey mr-3">Olá, {{ user.username }}!</span>
-              <a class="button is-light" href="{% url 'users:profile' %}">
-                <span class="icon"><i class="fas fa-user-circle"></i></span>
-              </a>
-              <a class="button is-light" href="{% url 'orders:cart' %}">
-                <span class="icon"><i class="fas fa-shopping-cart"></i></span>
-              </a>
-              <a class="button is-primary is-small" href="{% url 'logout' %}">
-                <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
-                <span>Sair</span>
-              </a>
-            </div>
-          {% else %}
-            <div class="buttons">
-              <a class="button is-light" href="{% url 'users:login' %}">
-                <span class="icon"><i class="fas fa-sign-in-alt"></i></span>
-                <span>Entrar</span>
-              </a>
-              <a class="button is-primary" href="{% url 'users:register' %}">
-                <span class="icon"><i class="fas fa-user-plus"></i></span>
-                <span>Registar-se</span>
-              </a>
-            </div>
-          {% endif %}
-        </div>
-      </div>
-    </div>
-  </nav>
-
-  <section class="section">
+  <section class="main-content section">
     <div class="container">
+      {% block messages %}
+        {% include "messages.html" %}
+      {% endblock %}
       {% block content %}{% endblock %}
     </div>
   </section>
+
+  {% include "footer.html" %}
 
   <script src="{% static 'js/main.js' %}"></script>
   <script>
@@ -99,5 +42,6 @@
       }
     });
   </script>
+  {% block extra_js %}{% endblock %}
 </body>
 </html>

@@ -22,6 +22,18 @@ python manage.py migrate
 python manage.py runserver
 ```
 
+## Dados de demonstração
+
+- Criar/atualizar 6 produtores de exemplo:
+```
+python manage.py seed_producers
+```
+
+## Requisitos SRS (utilizadores)
+
+- Verificação de email: após registo é enviado link; login só após confirmar.
+- 2FA opcional por email: pode ativar em `Minha Conta -> Editar perfil`.
+
 ## Estrutura
 - apps/: apps de domínio (utilizadores, produtores, produtos, encomendas, pagamentos, notificações)
 - cverde/: configuração do projeto Django (settings, urls, wsgi)

@@ -1,0 +1,324 @@
+{% extends "base.html" %}
+{% block title %}Registar Produtor | Cverde{% endblock %}
+{% block messages %}{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="box">
+          <h2 class="title is-4 has-text-centered mb-5">Registar como Produtor</h2>
+
+          {% if messages %}
+            {% for message in messages %}
+              <div class="notification is-{{ message.tags }}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+
+            <div class="notification is-light is-size-7">
+              <p class="mb-1"><strong>Dica:</strong> preencha apenas os dados essenciais agora. O NIF e documentos de verificação são opcionais e podem ser enviados mais tarde.</p>
+              <p class="mb-0">O telefone aceita formatos como <code>912345678</code> ou <code>+351912345678</code>.</p>
+            </div>
+
+            <div class="columns is-multiline">
+              <div class="column is-6">
+                <div class="field">
+                  <label for="{{ form.username.id_for_label }}" class="label">{{ form.username.label }}</label>
+                  <div class="control">
+                    {{ form.username }}
+                  </div>
+                  {% if form.username.errors %}
+                    <p class="help is-danger">
+                      {% for error in form.username.errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </p>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="column is-6">
+                <div class="field">
+                  <label for="{{ form.email.id_for_label }}" class="label">{{ form.email.label }}</label>
+                  <div class="control">
+                    {{ form.email }}
+                  </div>
+                  {% if form.email.errors %}
+                    <p class="help is-danger">
+                      {% for error in form.email.errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </p>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="column is-6">
+                <div class="field">
+                  <label for="{{ form.password.id_for_label }}" class="label">{{ form.password.label }}</label>
+                  <div class="control">
+                    {{ form.password }}
+                  </div>
+                  {% if form.password.errors %}
+                    <p class="help is-danger">
+                      {% for error in form.password.errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </p>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="column is-6">
+                <div class="field">
+                  <label for="{{ form.phone.id_for_label }}" class="label">{{ form.phone.label }}</label>
+                  <div class="control">
+                    {{ form.phone }}
+                  </div>
+                  {% if form.phone.help_text %}<p class="help">{{ form.phone.help_text }}</p>{% endif %}
+                  {% if form.phone.errors %}
+                    <p class="help is-danger">
+                      {% for error in form.phone.errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </p>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="column is-6">
+                <div class="field">
+                  <label for="{{ form.first_name.id_for_label }}" class="label">{{ form.first_name.label }}</label>
+                  <div class="control">
+                    {{ form.first_name }}
+                  </div>
+                  {% if form.first_name.errors %}
+                    <p class="help is-danger">
+                      {% for error in form.first_name.errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </p>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="column is-6">
+                <div class="field">
+                  <label for="{{ form.last_name.id_for_label }}" class="label">{{ form.last_name.label }}</label>
+                  <div class="control">
+                    {{ form.last_name }}
+                  </div>
+                  {% if form.last_name.errors %}
+                    <p class="help is-danger">
+                      {% for error in form.last_name.errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </p>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="column is-4">
+                <div class="field">
+                  <label for="{{ form.district.id_for_label }}" class="label">{{ form.district.label }}</label>
+                  <div class="control">
+                    {{ form.district }}
+                  </div>
+                  {% if form.district.errors %}
+                    <p class="help is-danger">
+                      {% for error in form.district.errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </p>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="column is-4">
+                <div class="field">
+                  <label for="{{ form.county.id_for_label }}" class="label">{{ form.county.label }}</label>
+                  <div class="control">
+                    {{ form.county }}
+                  </div>
+                  {% if form.county.errors %}
+                    <p class="help is-danger">
+                      {% for error in form.county.errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </p>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="column is-4">
+                <div class="field">
+                  <label for="{{ form.parish.id_for_label }}" class="label">{{ form.parish.label }}</label>
+                  <div class="control">
+                    {{ form.parish }}
+                  </div>
+                  {% if form.parish.errors %}
+                    <p class="help is-danger">
+                      {% for error in form.parish.errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <div class="box" style="max-height: 360px; overflow-y: auto;">
+              <h3 class="title is-5">Dados do Produtor</h3>
+              <p class="is-size-7 mb-4">Preencha estas informações para criar o perfil de produtor.</p>
+
+              <div class="field">
+                <label for="{{ form.producer_name.id_for_label }}" class="label">{{ form.producer_name.label }}</label>
+                <div class="control">
+                  {{ form.producer_name }}
+                </div>
+                {% if form.producer_name.errors %}
+                  <p class="help is-danger">
+                    {% for error in form.producer_name.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </p>
+                {% endif %}
+              </div>
+
+              <div class="field">
+                <label for="{{ form.producer_description.id_for_label }}" class="label">{{ form.producer_description.label }}</label>
+                <div class="control">
+                  {{ form.producer_description }}
+                </div>
+                {% if form.producer_description.errors %}
+                  <p class="help is-danger">
+                    {% for error in form.producer_description.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </p>
+                {% endif %}
+              </div>
+
+              <div class="field">
+                <label for="{{ form.producer_location.id_for_label }}" class="label">{{ form.producer_location.label }}</label>
+                <div class="control">
+                  {{ form.producer_location }}
+                </div>
+                {% if form.producer_location.errors %}
+                  <p class="help is-danger">
+                    {% for error in form.producer_location.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </p>
+                {% endif %}
+              </div>
+
+              <details class="mt-4">
+                <summary class="has-text-weight-semibold">Verificação (opcional)</summary>
+                <div class="mt-3">
+                  <div class="field">
+                    <label for="{{ form.nif.id_for_label }}" class="label">{{ form.nif.label }}</label>
+                    <div class="control">
+                      {{ form.nif }}
+                    </div>
+                    {% if form.nif.help_text %}<p class="help">{{ form.nif.help_text }}</p>{% endif %}
+                    {% if form.nif.errors %}
+                      <p class="help is-danger">
+                        {% for error in form.nif.errors %}
+                          {{ error }}
+                        {% endfor %}
+                      </p>
+                    {% endif %}
+                  </div>
+
+                  <div class="field">
+                    <label for="{{ form.verification_document.id_for_label }}" class="label">{{ form.verification_document.label }}</label>
+                    <div class="control">
+                      {{ form.verification_document }}
+                    </div>
+                    {% if form.verification_document.help_text %}<p class="help">{{ form.verification_document.help_text }}</p>{% endif %}
+                    {% if form.verification_document.errors %}
+                      <p class="help is-danger">
+                        {% for error in form.verification_document.errors %}
+                          {{ error }}
+                        {% endfor %}
+                      </p>
+                    {% endif %}
+                  </div>
+                </div>
+              </details>
+            </div>
+
+            <hr>
+
+            <div class="content is-size-7 has-text-grey">
+              Para criar a sua conta, precisamos do mínimo de dados necessário. O nome/marca e a localização podem ser apresentados
+              a consumidores para facilitar compras e entregas. Consulte a <a href="{% url 'pages:privacy_policy' %}">Política de Privacidade</a>
+              e os <a href="{% url 'pages:terms_of_use' %}">Termos de Utilização</a>.
+            </div>
+
+            <div class="field">
+              <div class="control">
+                <label class="checkbox">
+                  {{ form.accept_privacy_policy }} {{ form.accept_privacy_policy.label }}
+                </label>
+              </div>
+              {% if form.accept_privacy_policy.errors %}
+                <p class="help is-danger">{{ form.accept_privacy_policy.errors.0 }}</p>
+              {% endif %}
+            </div>
+
+            <div class="field">
+              <div class="control">
+                <label class="checkbox">
+                  {{ form.accept_terms }} {{ form.accept_terms.label }}
+                </label>
+              </div>
+              {% if form.accept_terms.errors %}
+                <p class="help is-danger">{{ form.accept_terms.errors.0 }}</p>
+              {% endif %}
+            </div>
+
+            <div class="field">
+              <div class="control">
+                <label class="checkbox">
+                  {{ form.producer_public_profile_consent }} {{ form.producer_public_profile_consent.label }}
+                </label>
+              </div>
+              {% if form.producer_public_profile_consent.errors %}
+                <p class="help is-danger">{{ form.producer_public_profile_consent.errors.0 }}</p>
+              {% endif %}
+            </div>
+
+            <div class="field">
+              <div class="control">
+                <label class="checkbox">
+                  {{ form.marketing_opt_in }} {{ form.marketing_opt_in.label }}
+                </label>
+              </div>
+              {% if form.marketing_opt_in.errors %}
+                <p class="help is-danger">{{ form.marketing_opt_in.errors.0 }}</p>
+              {% endif %}
+            </div>
+
+            <div class="field mt-4">
+              <div class="control">
+                <button type="submit" class="button is-primary is-fullwidth">Registar como Produtor</button>
+              </div>
+            </div>
+          </form>
+
+          <div class="has-text-centered mt-4">
+            <p>Quer criar outro tipo de conta? <a href="{% url 'users:register' %}">Voltar</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

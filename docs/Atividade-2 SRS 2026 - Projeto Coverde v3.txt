@@ -1,0 +1,783 @@
+
+
+===== PAGE 1 =====
+ 
+ 
+ 
+ 
+ 
+ 
+ Coverde: Plataforma E-commerce Agrícola 
+ 
+ 
+ 
+Autores: 
+Camila Esteves (a2023110951@alumni.iscac.pt) 
+ 
+ 
+ 
+ 
+ 
+ 
+Licenciatura em Informática de Gestão 
+Projeto e Desenvolvimento Informático 
+
+
+===== PAGE 2 =====
+2025/2026 
+  
+
+===== PAGE 3 =====
+ 
+Índice 
+1. Introdução ................................ ................................ ................................ ... 1 
+1.1. Objetivo do Projeto ................................ ................................ ................. 1 
+1.2. Âmbito do Projeto ................................ ................................ ................... 1 
+1.3. Audiência Pretendida ................................ ................................ .............. 1 
+2.1. Perspetiva do Produto ................................ ................................ ............. 3 
+2.2. Características do Produto................................ ................................ ...... 3 
+2.3.  Classes e Características de Utilizador ................................ ................... 3 
+2.4.  Ambiente Operativo ................................ ................................ ............... 4 
+2.5. Restrições de Desenho e Implementação ................................ ................ 4 
+➢ Linguagem obrigatória: Python para o backend; ................................ ....... 4 
+➢ Framework obrigatória: Django 4.2 LTS; ................................ ................... 4 
+➢ Base de Dados obrigatória: PostgreSQL (requisito para geolocalização com 
+PostGIS); ................................ ................................ ................................ ...... 4 
+➢ Frontend: HTML5, CSS3, JavaScript com Bulma (framework CSS baseado 
+em Flexbox, design responsivo, sem dependência de JavaScript) 
+complementado com Font Awesome,  para ícones e django-crispy-forms com 
+template pack Bulma para renderização de formulários; ................................ . 4 
+➢ Segurança: Conformidade com RGPD desde a conceção (privacy by 
+design); ................................ ................................ ................................ ........ 5 
+➢ Controlo de versão: Git com repositório público no GitHub; ..................... 5 
+➢ Licenciamento: MIT License (código aberto); ................................ ........... 5 
+➢ Código: Deve seguir PEP 8 e boas práticas de documentação. .................. 5 
+2.6. Assunções e Dependências ................................ ................................ .... 5 
+3.1. Requisitos Funcionais (RF) ................................ ................................ ...... 5 
+Módulo de Gestão de Utilizadores e Acessos ................................ ............... 5 
+3.2. Requisitos de Interface Externo ................................ ...............................  6 
+3.3. Requisitos Não Funcionais (RNF) ................................ .............................  7 
+3.4. Regras de Negócio ................................ ................................ .................. 9 
+4. Modelação de Casos de Uso ................................ ................................ ....... 10 
+4.1. Diagrama de Caso de Uso ................................ ................................ ..... 10 
+4.2. Especificação do Caso de Uso Principal — Efetuar compra ..................... 10 
+4.2.1. Nome do Caso de Uso ................................ ................................ .... 10 
+4.2.2. Atores ................................ ................................ ............................  10 
+4.2.3. Objetivo ................................ ................................ .........................  10 
+
+===== PAGE 4 =====
+4.2.4. Pré-condições ................................ ................................ ................ 10 
+4.2.5. Fluxo Principal (Cenário de Sucesso) ................................ ............... 10 
+4.2.6. Fluxos de Exceção / Alternativos ................................ ...................... 11 
+4.2.7. Pós-condições ................................ ................................ ............... 11 
+5. Modelo de Dados................................ ................................ ........................ 12 
+5.1. Diagrama Entidade-Relação (DER) ................................ .........................  12 
+5.2. Dicionário de Dados ................................ ................................ ............. 12 
+6.1. Ligações para Repositórios e Ferramentas de Trabalho ...........................  15 
+6.2. Imagens e Material Complementar ................................ ........................ 16 
+ 
+ 
+ 
+  
+
+===== PAGE 5 =====
+ 
+Lista de Acrónimos 
+ 
+ 
+Acrónimo Significado 
+2FA Autenticação de Dois Fatores (Two-Factor Authentication) 
+API Interface de Programação de Aplicações 
+AT Autoridade Tributária 
+CTT Correios de Portugal 
+DOP Denominação de Origem Protegida 
+GDPR General Data Protection Regulation 
+IGP Indicação Geográfica Protegida 
+IVA Imposto sobre o Valor Acrescentado 
+MB WAY Serviço de pagamentos móvel português 
+RGPD Regulamento Geral sobre a Proteção de Dados 
+SRS Software Requirements Specification 
+UML Unified Modeling Language 
+ 
+  
+
+===== PAGE 6 =====
+ 
+Lista de Figuras e Tabelas 
+ 
+ 
+Lista de Figuras e Tabelas 
+Figuras: 
+• Figura 1 – Diagrama de Caso de Uso (Efetuar Compra) 
+• Figura 2 – Diagrama Entidade-Relação (DER) 
+Tabelas: 
+• Tabela 1 – Classes e Características de Utilizador 
+• Tabela 2 – Requisitos Funcionais (RF) 
+• Tabela 3 – Requisitos de Interface Externo 
+• Tabela 4 – Requisitos Não Funcionais (RNF) 
+• Tabela 5 – Regras de Negócio 
+• Tabela 6 – Dicionário de Dados (principais entidades) 
+• Tabela 7 – Recursos e Ferramentas 
+ 
+ 
+
+===== PAGE 7 =====
+Pág. 1 
+"What you plant today, you harvest tomorrow. Keep growing, keep believing." 
+1. Introdução 
+1.1. Objetivo do Projeto 
+O setor agrícola português enfrenta desafios estruturais 
+significativos: intermediação excessiva, falta de transparência na cadeia de 
+valor, dificuldade de acesso a mercados por parte dos pequenos produtores 
+e baixa digitalização do setor. Os agricultores veem os seus lucros reduzidos por 
+sucessivos intermediários, enquanto os consumidores pagam preços elevados 
+sem conhecer a origem dos produtos. O projeto Coverde resolve este problema 
+através de uma plataforma digital de comércio eletrónico que conecta 
+diretamente produtores agrícolas e consumidores finais. O valor acrescentado da 
+solução reside na: 
+✓ Eliminação de intermediários – transações diretas entre quem produz e 
+quem consome; 
+✓ Transparência total – consumidores conhecem a origem dos produtos e o 
+preço pago ao agricultor; 
+✓ Acessibilidade – modelo de negócio sem custos fixos para pequenos 
+produtores. 
+1.2. Âmbito do Projeto 
+O software a especificar é uma plataforma web de e-commerce agrícola, que 
+permite: 
+✓ Registo e gestão de perfis de produtores, consumidores e empresas; 
+✓ Publicação e gestão de produtos com imagens, descrições, preços e 
+stock; 
+✓ Pesquisa e filtros avançados por categoria, preço, certificação e 
+localização; 
+✓ Carrinho de compras e checkout com cálculo automático de totais e 
+portes; 
+✓ Painel administrativo para gestão e moderação. 
+O que fica fora do âmbito da versão 1.0: 
+✓ Aplicação móvel nativa (a plataforma é web responsiva); 
+✓ Integração com outros operadores logísticos além dos CTT; 
+✓ Módulo de financiamento agrícola. 
+1.3. Audiência Pretendida 
+A plataforma Coverde destina-se aos seguintes perfis de utilizadores: 
+Produtores Agrícolas – Agricultores, pequenos e médios produtores, 
+cooperativas que pretendem vender diretamente ao consumidor. Literacia digital 
+variável (assume-se básica). 
+Consumidores Finais – Pessoas singulares que desejam comprar produtos 
+agrícolas frescos e de proximidade. Literacia digital média. 
+
+===== PAGE 8 =====
+Pág. 2 
+"What you plant today, you harvest tomorrow. Keep growing, keep believing." 
+Empresas / Restaurantes – Estabelecimentos comerciais que necessitam de 
+adquirir produtos agrícolas em quantidade. Literacia digital média/alta. 
+Administradores – Gestores da plataforma responsáveis pela moderação e 
+manutenção. Literacia digital alta. 
+ 
+
+===== PAGE 9 =====
+Pág. 3 
+"What you plant today, you harvest tomorrow. Keep growing, keep believing." 
+2. Descrição Geral 
+2.1. Perspetiva do Produto 
+O Coverde é um marketplace agrícola que conecta produtores e consumidores 
+sem intermediários. A sua ideia central surgiu no âmbito da unidade 
+curricular Projeto e Desenvolvimento Informático (PDI), durante o ano letivo 
+anterior, como um projeto académico focado no mercado português. Embora o 
+desenvolvimento não tenha sido concluído dentro daquele ano letivo – por razões 
+de escopo e tempo a pertinência e o potencial da solução levaram o autor a 
+continuar o projeto de forma autónoma. Essa continuidade evoluiu para 
+o lançamento de um negócio real em Moçambique, onde a plataforma opera 
+atualmente com utilizadores, transações e produtores locais. Assim, o Coverde 
+não é um produto puramente académico nem um sistema herdado de terceiros. É 
+um projeto real, com tração comercial num país (Moçambique), que é agora 
+formalmente documentado e melhorado como trabalho de conclusão da UC 
+PDI, servindo também como estudo de caso sobre a viabilidade de transformar 
+um projeto universitário numa iniciativa empreendedora. 
+2.2. Características do Produto 
+A plataforma Coverde oferece as seguintes características principais: 
+✓ Marketplace agrícola que conecta produtores e consumidores sem 
+intermediários; 
+✓ Autenticação segura com verificação de email e opção de autenticação 
+de dois fatores (2FA); 
+✓ Catálogo inteligente com filtros por localização (distrito/concelho), preço 
+e certificações (Biológico, DOP, IGP); 
+✓ Checkout completo com cálculo dinâmico de portes via CTT; 
+✓ Múltiplos métodos de pagamento adaptados à realidade portuguesa; 
+✓ Faturação certificada automática com IVA destacado; 
+✓ Comunicação integrada (chat e notificações); 
+✓ Sistema de reputação através de avaliações e comentários; 
+✓ Painel administrativo para gestão da plataforma. 
+ 
+2.3.  Classes e Características de Utilizador 
+Tabela 1 – Classes e Características de Utilizador 
+Classe Características Literacia 
+Digital 
+Visitante Utilizador não autenticado. Apenas pode visualizar catálogo e 
+pesquisar produtos. 
+Básica 
+Consumidor Utilizador registado. Pode comprar, avaliar, comunicar via 
+chat e gerir perfil. 
+Média 
+
+===== PAGE 10 =====
+Pág. 4 
+"What you plant today, you harvest tomorrow. Keep growing, keep believing." 
+Produtor Utilizador registado e verificado. Pode publicar produtos, gerir 
+stock, processar encomendas e emitir faturas. 
+Média 
+   
+Administrador Utilizador com permissões totais. Gere utilizadores, 
+produtos, modera conteúdos e vê relatórios. 
+Alta 
+ 
+2.4.  Ambiente Operativo 
+Componente Especificação 
+Servidor Linux (Ubuntu 22.04 LTS) com Python 3.11+ e Django 4.2 LTS 
+Base de 
+Dados 
+PostgreSQL 15 
+Cliente (Web) Navegadores modernos: Google Chrome (versão 120+), Mozilla Firefox 
+(120+), Microsoft Edge (120+), Safari (17+) 
+Dispositivos Desktop, tablet e smartphone (design responsivo) 
+Conectividade Ligação à Internet (HTTPS) 
+ 
+2.5. Restrições de Desenho e Implementação 
+ 
+➢ Linguagem obrigatória: Python para o backend; 
+➢ Framework obrigatória: Django 4.2 LTS; 
+➢ Base de Dados obrigatória: PostgreSQL (requisito para geolocalização com PostGIS); 
+➢ Frontend: HTML5, CSS3, JavaScript com Bulma (framework CSS baseado em Flexbox, 
+design responsivo, sem dependência de JavaScript) complementado com Font 
+
+===== PAGE 11 =====
+Pág. 5 
+"What you plant today, you harvest tomorrow. Keep growing, keep believing." 
+Awesome,  para ícones e django-crispy-forms com template pack Bulma para 
+renderização de formulários; 
+➢ Segurança: Conformidade com RGPD desde a conceção (privacy by design); 
+➢ Controlo de versão: Git com repositório público no GitHub; 
+➢ Licenciamento: MIT License (código aberto); 
+➢ Código: Deve seguir PEP 8 e boas práticas de documentação. 
+ 
+2.6. Assunções e Dependências 
+Assunções: 
+✓ Os utilizadores possuem conhecimentos básicos de navegação na web; 
+✓ Os produtores têm acesso a um smartphone ou câmara para fotografar 
+produtos; 
+✓ Os utilizadores dispõem de email válido e (para 2FA) de acesso ao mesmo; 
+✓ A plataforma será acedida maioritariamente a partir de Portugal. 
+Dependências: 
+✓ Disponibilidade e estabilidade das APIs externas (Easypay/IfthenPay, 
+PayPal, CTT); 
+✓ Conformidade com alterações na legislação fiscal portuguesa (taxas de 
+IVA, requisitos de faturação); 
+✓ Servidor com requisitos mínimos (2GB RAM, 20GB disco); 
+✓ Acesso a serviço de envio de email (SMTP/SendGrid). 
+ 
+3. Requisitos do Sistema 
+3.1. Requisitos Funcionais (RF) 
+ Módulo de Gestão de Utilizadores e Acessos 
+Tabela 2 – Requisitos Funcionais (RF) 
+
+===== PAGE 12 =====
+Pág. 6 
+"What you plant today, you harvest tomorrow. Keep growing, keep believing." 
+ID Nome Descrição Prioridade 
+RF01 Registo 
+O sistema deve permitir o registo de novos 
+utilizadores com nome, email, password, 
+telefone, morada (distrito/concelho/freguesia) 
+e tipo de perfil (consumidor/produtor). 
+Alta 
+RF02 Validação de 
+Email 
+O sistema deve enviar um link de confirmação 
+para o email do utilizador após o registo. Alta 
+RF03 Login O sistema deve autenticar utilizadores através 
+de email e password. Alta 
+RF04 Autenticação 
+2FA 
+O sistema deve oferecer autenticação de dois 
+fatores opcional, com envio de código por 
+email. 
+Média 
+RF05 Recuperação 
+de Password 
+O sistema deve permitir a recuperação de 
+password através de envio de link por email. Alta 
+RF06 Gestão de 
+Perfil 
+O sistema deve permitir ao utilizador editar os 
+seus dados pessoais (exceto email). Média 
+RF07 Verificação de 
+Produtor 
+O sistema deve permitir ao produtor solicitar 
+verificação de conta mediante upload de NIF e 
+documento de atividade agrícola. 
+Média 
+RF08 Eliminação de 
+Conta 
+O sistema deve permitir ao utilizador eliminar 
+a sua conta (direito ao esquecimento – RGPD). Alta 
+ 
+3.2. Requisitos de Interface Externo 
+Tabela 3 – Requisitos de Interface Externo 
+ 
+Categoria Subcategoria / Interface Descrição / Utilização 
+Interfaces de 
+Utilizador 
+Lógica de interação e 
+mensagens 
+• Interface intuitiva com navegação clara e 
+consistente 
+• Mensagens de erro/sucesso destacadas e 
+com linguagem clara 
+• Feedback imediato às ações do utilizador 
+• Navegação possível sem recurso exclusivo 
+ao rato (teclas de tabulação) 
+Interfaces de 
+Hardware 
+Câmara Upload de fotos de produtos via browser 
+ 
+GPS Não utilizado (localização inserida 
+manualmente)  
+Impressora Impressão de faturas (PDF) 
+
+===== PAGE 13 =====
+Pág. 7 
+"What you plant today, you harvest tomorrow. Keep growing, keep believing." 
+ 
+Dispositivos Móveis Plataforma responsiva e otimizada para 
+touch 
+Interfaces de 
+Software 
+PayPal (API REST) Pagamentos internacionais 
+ 
+PostgreSQL (Base de 
+Dados) 
+Armazenamento persistente de dados 
+ 
+Redis (Cache) Sessões, caching de consultas  
+SMTP/SendGrid (Email) Envio de emails transacionais 
+ 
+3.3. Requisitos Não Funcionais (RNF) 
+Tabela 4 – Requisitos Não Funcionais (RNF) 
+ 
+ID Requisito Métrica 
+ 
+ 
+ 
+Desempenho 
+RNF01 Resposta em menos de 
+2 segundos para 95% 
+dos pedidos 
+Teste com 100 
+utilizadores 
+RNF02 Suportar 100 
+utilizadores 
+simultâneos 
+Teste de stress 
+RNF03 Páginas carregam em 
+menos de 3 segundos 
+PageSpeed > 80 
+RNF04 Imagens otimizadas 
+(compressão, lazy 
+loading) 
+Auditoria de 
+performance 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+RNF05 
+ 
+Passwords com hash 
+seguro (PBKDF2) 
+ 
+ 
+Auditoria de 
+código 
+RNF06 Comunicações 
+encriptadas HTTPS (TLS 
+1.3) 
+SSL Labs (A+) 
+RNF07 Proteção contra SQL 
+Injection (ORM) 
+Teste de 
+penetração 
+RNF08 Proteção contra XSS 
+(escape de templates) 
+Auditoria de 
+código 
+
+===== PAGE 14 =====
+Pág. 8 
+"What you plant today, you harvest tomorrow. Keep growing, keep believing." 
+Segurança e 
+Privacidade 
+RNF09 Proteção CSRF (tokens) Teste 
+automatizado 
+RNF10 Registo de tentativas de 
+acesso suspeitas 
+Verificação de 
+logs 
+RNF11 Bloquear contas após 5 
+tentativas falhadas 
+Teste funcional 
+ 
+ 
+ 
+Disponibilidade, 
+Fiabilidade e 
+Backups 
+RNF12 Cumprimento integral 
+do RGPD 
+Auditoria de 
+conformidade 
+RNF13 Disponibilidade de 
+99.5% em horário 
+comercial 
+Monitorização 
+contínua 
+RNF14 Backups automáticos 
+diários da BD 
+Verificação de 
+configuração 
+RNF15 Recuperação sem 
+perda de dados (RPO < 
+24h) 
+Teste de 
+recuperação 
+RNF16 Registo de logs de erro Auditoria de logs 
+ 
+ 
+Usabilidade e 
+Acessibilidade 
+RNF17 Interface intuitiva e de 
+fácil navegação 
+Testes com 
+utilizadores (SUS 
+> 70) 
+RNF18 Sistema totalmente 
+responsivo 
+Teste em 
+múltiplos 
+dispositivos 
+RNF19 Seguir diretrizes WCAG 
+2.1 (nível A) 
+Auditoria de 
+acessibilidade 
+RNF20 Mensagens de erro 
+claras e orientadoras 
+Revisão de UX 
+ 
+ 
+Portabilidade e 
+Compatibilidade 
+RNF21 Funcionar em Chrome, 
+Firefox, Edge, Safari 
+Teste cross-
+browser 
+RNF22 Compatível com Linux 
+(Ubuntu 22.04 LTS) 
+Teste de 
+instalação 
+RNF23 Contentorizável com 
+Docker 
+Teste com Docker 
+Compose 
+ 
+ 
+
+===== PAGE 15 =====
+Pág. 9 
+"What you plant today, you harvest tomorrow. Keep growing, keep believing." 
+3.4. Regras de Negócio 
+Tabela 5 – Regras de Negócio 
+ID Nome da Regra Descrição 
+RN01 Maioridade Idade igual ou superior a 18 anos para registo 
+RN02 Stock Mínimo Impedir compra se quantidade > stock disponível 
+RN03 Cancelamento Permitido apenas com status "pendente" 
+RN04 Comissão 5% a 10% sobre o valor de cada venda 
+RN05 Faturação 
+Obrigatória Todas as transações pagas geram fatura eletrónica 
+RN06 Verificação de 
+Produtor Apenas produtores verificados publicam produtos 
+RN07 Avaliação Pós-
+Entrega Avaliações apenas após status "entregue" 
+RN08 Portes Mínimos Portes grátis para compras ≥ 50€ 
+RN09 Prazo de Entrega Produtor tem 2 dias úteis para processar 
+RN10 Retenção de Dados Dados mantidos por 5 anos (legislação fiscal) 
+  
+
+===== PAGE 16 =====
+Pág. 10 
+"What you plant today, you harvest tomorrow. Keep growing, keep believing." 
+4. Modelação de Casos de Uso 
+4.1. Diagrama de Caso de Uso 
+Figura 1 – Diagrama de Caso de Uso (Efetuar Compra) 
+ 
+4.2. Especificação do Caso de Uso Principal — Efetuar compra 
+4.2.1. Nome do Caso de Uso 
+Efetuar Compra 
+4.2.2. Atores 
+• Consumidor – utilizador registado e autenticado na plataforma. 
+4.2.3. Objetivo 
+Permitir que um consumidor autenticado finalize a compra de produtos 
+adicionados ao carrinho, selecione produtos, confirme a encomenda e receba 
+confirmação da mesma. 
+4.2.4. Pré-condições 
+✓ O consumidor encontra-se autenticado no sistema. 
+✓ O consumidor possui pelo menos um produto no carrinho de compras. 
+✓ O stock dos produtos selecionados é suficiente. 
+✓ O sistema está funcional e acessível. 
+4.2.5. Fluxo Principal (Cenário de Sucesso) 
+Passo Ação 
+1. O consumidor pesquisa produtos, adiciona ao carrinho e acede ao carrinho de 
+compras. 
+2. O sistema exibe a lista de produtos, quantidades, preços e subtotal. 
+3. O consumidor confirma a morada de entrega e finaliza a compra. 
+4. O sistema processa a encomenda, cria o pedido com status "Confirmada" e notifica 
+o consumidor por email. 
+5. O sistema notifica o produtor sobre a nova encomenda e redireciona o consumidor 
+para a página de detalhe da encomenda. 
+ 
+
+
+===== PAGE 17 =====
+Pág. 11 
+"What you plant today, you harvest tomorrow. Keep growing, keep believing." 
+ 
+ 
+4.2.6. Fluxos de Exceção / Alternativos 
+ 
+ 
+Fluxo Descrição 
+E1 – Stock insuficiente O sistema deteta stock insuficiente e exige ajuste no 
+carrinho. 
+E2 – Consumidor não 
+autenticado 
+O sistema redireciona para login e restaura o carrinho 
+após autenticação. 
+E3 – Morada incompleta O sistema destaca campos em falta e solicita 
+preenchimento. 
+E4 – Carrinho vazio O sistema exibe mensagem e redireciona para o 
+catálogo. 
+E5 – Falha de comunicação O sistema exibe mensagem de erro e termina sem 
+sucesso. 
+ 
+4.2.7. Pós-condições 
+• Encomenda criada com status "Confirmada". Consumidor e produtor 
+notificados. Stock atualizado, ação com sucesso 
+• Encomenda não é criada. Carrinho mantém os produtos, sem sucesso. 
+  
+
+===== PAGE 18 =====
+Pág. 12 
+"What you plant today, you harvest tomorrow. Keep growing, keep believing." 
+5. Modelo de Dados 
+ 
+5.1. Diagrama Entidade-Relação (DER) 
+Figura 2 – Diagrama Entidade-Relação (DER) 
+ 
+ 
+ 
+5.2. Dicionário de Dados 
+Tabela 6 – Dicionário de Dados (principais entidades) 
+Tabela Nome do 
+Campo 
+Tipo de Dado Obrigatóri
+o 
+Descrição 
+ 
+ 
+ 
+ 
+ 
+id INT Sim Chave primária, identificador 
+único do utilizador 
+username VARCHAR(100) Sim Nome de utilizador único para 
+login 
+email VARCHAR(255) Sim Email único do utilizador 
+password VARCHAR(255) Sim Password encriptada (hash) 
+
+
+===== PAGE 19 =====
+Pág. 13 
+"What you plant today, you harvest tomorrow. Keep growing, keep believing." 
+ 
+ 
+ 
+ 
+ 
+User 
+user_type ENUM Sim Tipo: 'consumer', 'producer', 
+'admin' 
+phone VARCHAR(20) Não Número de telefone para 
+contacto 
+district VARCHAR(100) Não Distrito de residência 
+county VARCHAR(100) Não Município/Concelho de 
+residência 
+parish VARCHAR(100) Não Freguesia de residência 
+is_verified BOOLEAN Sim Conta verificada (True/False) - 
+padrão FALSE 
+nif VARCHAR(20) Não Número de Identificação Fiscal 
+(para produtores) 
+profile_ima
+ge 
+VARCHAR(500) Não Caminho/URL da imagem de 
+perfil 
+date_joined TIMESTAMP Sim Data e hora do registo - padrão 
+CURRENT_TIMESTAMP 
+Category id INT Sim Chave primária, identificador 
+único da categoria 
+name VARCHAR(100) Sim Nome da categoria (ex: 
+"Frutas", "Legumes") 
+slug VARCHAR(100) Sim Identificador amigável para 
+URLs (ex: "frutas") 
+parent_id INT Não Chave estrangeira para 
+categoria pai (NULL = categoria 
+principal) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+id INT Sim Chave primária, identificador 
+único do produto 
+name VARCHAR(255) Sim Nome do produto 
+description TEXT Não Descrição detalhada do 
+produto 
+price DECIMAL(10,2) Sim Preço do produto (ex: 15.99) 
+stock INT Sim Quantidade disponível em 
+estoque - padrão 0 
+
+===== PAGE 20 =====
+Pág. 14 
+"What you plant today, you harvest tomorrow. Keep growing, keep believing." 
+ 
+ 
+ 
+ 
+Product 
+unit VARCHAR(20) Não Unidade de medida (ex: "kg", 
+"unidade", "litro") - padrão 
+"unidade" 
+certificatio
+n 
+VARCHAR(255) Não Certificações do produto (ex: 
+"Biológico", "DOP") 
+main_imag
+e 
+VARCHAR(500) Não Caminho/URL da imagem 
+principal do produto 
+is_active BOOLEAN Sim Produto ativo para venda - 
+padrão TRUE 
+created_at TIMESTAMP Sim Data e hora de criação do 
+produto - padrão 
+CURRENT_TIMESTAMP 
+producer_i
+d 
+INT Sim Chave estrangeira: ID do 
+produtor (User.id) 
+category_id INT Sim Chave estrangeira: ID da 
+categoria (Category.id) 
+Order id INT Sim Chave primária, identificador 
+único da encomenda 
+ 
+user_id INT Sim Chave estrangeira: ID do 
+consumidor (User.id) 
+ 
+status ENUM Sim Status: 'pending', 'confirmed', 
+'completed', 'cancelled' - 
+padrão 'pending' 
+ 
+total DECIMAL(10,2) Sim Valor total da encomenda 
+ 
+created_at TIMESTAMP Sim Data e hora da criação da 
+encomenda - padrão 
+CURRENT_TIMESTAMP 
+ 
+items_coun
+t 
+INT Sim Número total de itens na 
+encomenda - padrão 0 
+ 
+ 
+ 
+OrderItem 
+id INT Sim Chave primária, identificador 
+único do item 
+order_id INT Sim Chave estrangeira: ID da 
+encomenda (Order.id) 
+product_id INT Sim Chave estrangeira: ID do 
+produto (Product.id) 
+
+===== PAGE 21 =====
+Pág. 15 
+"What you plant today, you harvest tomorrow. Keep growing, keep believing." 
+quantity INT Sim Quantidade do produto 
+comprada 
+price DECIMAL(10,2) Sim Preço do produto no momento 
+da compra 
+ 
+ 
+ 
+ 
+Review 
+id INT Sim Chave primária, identificador 
+único da avaliação 
+user_id INT Sim Chave estrangeira: ID do 
+consumidor (User.id) 
+product_id INT Sim Chave estrangeira: ID do 
+produto (Product.id) 
+rating INT Sim Classificação de 1 a 5 estrelas 
+comment TEXT Não Comentário textual da 
+avaliação 
+created_at TIMESTAMP Sim Data e hora da avaliação - 
+padrão CURRENT_TIMESTAMP 
+ 
+6. Recursos Externos e Anexos 
+6.1. Ligações para Repositórios e Ferramentas de Trabalho 
+Tabela 7 – Recursos e Ferramentas 
+Recurso Link Descrição 
+GitHub https://github.com/CamilaCristina3/Projeto-Coverde  Repositório 
+público do 
+código 
+fonte 
+Trello Coverde - Desenvolvimento | Trello 
+ 
+Quadro de 
+gestão de 
+projeto 
+(Scrum) 
+Figma https://www.figma.com/make/QZJvjjuu9o9y5PnxJF5wQN/Ecommerce-
+Agricola-Prototype?p=f&t=ywGoBMFCZwDkAqhR-0  
+Protótipos 
+de 
+interface 
+(mockups) 
+   
+ 
+
+===== PAGE 22 =====
+Pág. 16 
+"What you plant today, you harvest tomorrow. Keep growing, keep believing." 
+6.2. Imagens e Material Complementar 
+Logótipo Coverde: 
+• Cores: Verde (milho, fartura), Castanho (família, união, trabalho), Amarelo 
+(vida, riqueza). 
+ 
+• Slogan: "Da terra para si, com um clique!" 
+ 
+ 
+  
+ 
+  

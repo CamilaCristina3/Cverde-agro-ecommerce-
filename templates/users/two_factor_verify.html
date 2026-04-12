@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Verificação 2FA | Cverde{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-5">
+        <div class="box">
+          <h1 class="title is-4">Confirme o código</h1>
+          <p class="subtitle is-6 has-text-grey">
+            Enviámos um código para <strong>{{ email }}</strong>.
+          </p>
+
+          <form method="post" novalidate>
+            {% csrf_token %}
+
+            <div class="field">
+              <label class="label">{{ form.code.label }}</label>
+              <div class="control">
+                {{ form.code }}
+              </div>
+              {% if form.code.errors %}<p class="help is-danger">{{ form.code.errors.0 }}</p>{% endif %}
+              <p class="help">O código expira em 10 minutos.</p>
+            </div>
+
+            <div class="field mt-4">
+              <button type="submit" class="button is-primary is-fullwidth">Verificar</button>
+            </div>
+          </form>
+
+          <div class="has-text-centered mt-4">
+            <a href="{% url 'users:login' %}" class="is-size-7">Voltar ao login</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+

@@ -1,0 +1,60 @@
+:root {
+  --coverde-green: #2e7d32;
+  --coverde-green-dark: #1b5e20;
+  --coverde-bg: #f6faf6;
+}
+
+body {
+  background: var(--coverde-bg);
+}
+
+.card {
+  border-radius: 16px;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.06);
+}
+
+.card .card-header {
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.card:hover {
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.08);
+}
+
+.navbar.is-link {
+  background: linear-gradient(135deg, var(--coverde-green) 0%, var(--coverde-green-dark) 100%);
+}
+
+.navbar-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.button.is-primary {
+  background-color: var(--coverde-green);
+  border-color: var(--coverde-green);
+}
+
+.button.is-primary:hover {
+  background-color: var(--coverde-green-dark);
+  border-color: var(--coverde-green-dark);
+}
+
+.notification.is-success.is-light {
+  border-left: 4px solid var(--coverde-green);
+}
+
+.main-content.section {
+  padding-top: 5.25rem;
+}
+
+.footer {
+  background: #ffffff;
+  border-top: 1px solid #e9f3ea;
+}
+
+@media (max-width: 768px) {
+  .main-content.section {
+    padding-top: 4.75rem;
+  }
+}

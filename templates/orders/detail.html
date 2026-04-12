@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Encomenda #{{ order.id }} | Cverde{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="level mb-5">
+    <div class="level-left">
+      <div>
+        <h1 class="title is-3 mb-1">Encomenda #{{ order.id }}</h1>
+        <p class="subtitle is-6 has-text-grey">Estado: {{ order.get_status_display }}</p>
+      </div>
+    </div>
+    <div class="level-right">
+      <a class="button is-light" href="{% url 'products:list' %}">
+        <span class="icon"><i class="fas fa-store"></i></span>
+        <span>Ver produtos</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="columns is-variable is-6">
+    <div class="column is-7">
+      <div class="box">
+        <h2 class="title is-5">Itens</h2>
+        <div class="table-container">
+          <table class="table is-fullwidth is-striped">
+            <thead>
+              <tr>
+                <th>Produto</th>
+                <th class="has-text-right">Preço</th>
+                <th class="has-text-centered">Qtd</th>
+                <th class="has-text-right">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in order.items.all %}
+                <tr>
+                  <td>{{ item.product_name|default:item.product }}</td>
+                  <td class="has-text-right">€{{ item.price }}</td>
+                  <td class="has-text-centered">{{ item.quantity }}</td>
+                  <td class="has-text-right">€{{ item.total }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="box">
+        <h2 class="title is-5">Entrega</h2>
+        <p><strong>Morada:</strong> {{ order.shipping_address }}</p>
+        <p><strong>Contacto:</strong> {{ order.shipping_contact }}</p>
+        {% if order.tracking_code %}
+          <p><strong>Rastreio:</strong> {{ order.tracking_code }}</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="column is-5">
+      <div class="box">
+        <h2 class="title is-5">Resumo</h2>
+        <div class="is-flex is-justify-content-space-between mb-2">
+          <span>Subtotal</span>
+          <span>€{{ order.subtotal }}</span>
+        </div>
+        <div class="is-flex is-justify-content-space-between mb-2">
+          <span>Portes</span>
+          <span>€{{ order.shipping_cost }}</span>
+        </div>
+        <div class="is-flex is-justify-content-space-between mb-3">
+          <span>IVA</span>
+          <span>€{{ order.vat }}</span>
+        </div>
+        <hr class="my-3">
+        <div class="is-flex is-justify-content-space-between">
+          <span class="has-text-weight-bold">Total</span>
+          <span class="has-text-weight-bold has-text-success">€{{ order.total }}</span>
+        </div>
+
+        {% if order.invoice_number %}
+          <hr class="my-3">
+          <p><strong>Fatura:</strong> {{ order.invoice_number }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

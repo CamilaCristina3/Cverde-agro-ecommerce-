@@ -1,74 +1,138 @@
 {% extends "base.html" %}
 {% block title %}Produtos | Cverde{% endblock %}
+
 {% block content %}
-<section class="section">
-  <div class="container">
-    <div class="level mb-5">
-      <div class="level-left">
-        <div>
-          <h1 class="title is-3 mb-1">Produtos Agrícolas</h1>
-          <p class="subtitle is-6 has-text-grey">Descubra produtos frescos, locais e orgânicos, carregados diretamente pelos produtores.</p>
+<div class="container mt-5">
+    <!-- Header -->
+    <div class="level mb-6">
+        <div class="level-left">
+            <div>
+                <h1 class="title is-2 mb-2">Produtos Agrícolas</h1>
+                <p class="subtitle is-6 has-text-grey">Descubra produtos frescos, locais e orgânicos</p>
+            </div>
         </div>
-      </div>
-      <div class="level-right">
-        <span class="has-text-grey">{{ total_products }} produtos</span>
-      </div>
+        <div class="level-right">
+            <span class="tag is-success is-size-6">{{ total_products }} produtos</span>
+        </div>
     </div>
 
     {% if producers %}
-      {% for producer in producers %}
-        <section class="mb-6">
-          <div class="level mb-4">
-            <div class="level-left">
-              <div>
-                <h2 class="title is-5 mb-1">{{ producer.name }}</h2>
-                <p class="has-text-grey is-small mb-0">{{ producer.location }} • {{ producer.rating }}/5 • {{ producer.product_count }} produtos disponíveis</p>
-              </div>
+        {% for producer in producers %}
+        <section class="mb-7">
+            <!-- Producer Header -->
+            <div class="level mb-4">
+                <div class="level-left">
+                    <div>
+                        <h2 class="title is-4 mb-1">{{ producer.name }}</h2>
+                        <p class="is-size-7 has-text-grey">
+                            <span class="icon-text">
+                                <span class="icon is-small"><i class="fas fa-map-marker-alt"></i></span>
+                                <span>{{ producer.location }}</span>
+                            </span>
+                            <span class="ml-3 icon-text">
+                                <span class="icon is-small has-text-warning"><i class="fas fa-star"></i></span>
+                                <span>{{ producer.rating }}/5</span>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <div class="level-right">
+                    <span class="tag is-success is-light">{{ producer.product_count }} produtos</span>
+                </div>
             </div>
-            <div class="level-right">
-              <span class="tag is-success">Produtor ativo</span>
-            </div>
-          </div>
 
-          <div class="columns is-multiline">
-            {% for product in producer.available_products %}
-            <div class="column is-6-tablet is-4-desktop">
-              <div class="card product-card">
-                <div class="card-image">
-                  <figure class="image is-4by3 product-{{ product.image_class }}">
-                    {% if product.is_organic %}
-                    <span class="tag is-success is-pulled-right m-3">Orgânico</span>
-                    {% else %}
-                    <span class="tag is-light is-pulled-right m-3">Fresco</span>
-                    {% endif %}
-                  </figure>
+            <!-- Produtos Grid -->
+            <div class="columns is-multiline is-variable is-6">
+                {% for product in producer.available_products %}
+                <div class="column is-6-desktop is-6-tablet is-12-mobile">
+                    <div class="card product-card h-100">
+                        <div class="card-image">
+                            <figure class="image is-4by3">
+                                {% if product.main_image %}
+                                  <img src="{{ product.main_image.url }}"
+                                       alt="{{ product.name }}" loading="lazy" style="object-fit: cover;">
+                                {% else %}
+                                  <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%23e8f5e9' width='400' height='300'/%3E%3C/svg%3E"
+                                       alt="{{ product.name }}" loading="lazy" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); object-fit: cover;">
+                                {% endif %}
+                            </figure>
+                            {% if product.certification %}
+                              <span class="tag is-success is-pulled-right m-3">{{ product.get_certification_display }}</span>
+                            {% else %}
+                              <span class="tag is-light is-pulled-right m-3">✓ Fresco</span>
+                            {% endif %}
+                        </div>
+                        <div class="card-content">
+                            <p class="title is-6 mb-1" title="{{ product.name }}">{{ product.name }}</p>
+                            
+                            <p class="is-size-7 has-text-grey mb-2" title="{{ product.description }}">
+                                {{ product.description|default:"Produto agrícola de qualidade."|truncatewords:15 }}
+                            </p>
+
+                            <div class="level is-mobile is-size-7 mb-2">
+                                <div class="level-left has-text-grey">
+                                    <div class="level-item">{% if product.category %}{{ product.category.name }}{% else %}Sem categoria{% endif %}</div>
+                                    <div class="level-item">•</div>
+                                    <div class="level-item">{{ product.get_unit_display }}</div>
+                                </div>
+                                <div class="level-right has-text-grey">
+                                    {% if product.stock > 0 %}
+                                        <span class="has-text-success">{{ product.stock }} em stock</span>
+                                    {% else %}
+                                        <span class="has-text-danger">Esgotado</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <hr class="my-2">
+
+                            <div class="level is-mobile">
+                                <div class="level-left">
+                                    <span class="has-text-success has-text-weight-bold is-size-5">€{{ product.price }}</span>
+                                </div>
+                                <div class="level-right">
+                                    {% if product.stock > 0 %}
+                                    <form method="post" action="{% url 'orders:add_to_cart' product.id %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="quantity" value="1">
+                                        <button type="submit" class="button is-success is-small" title="Adicionar ao carrinho">
+                                            <span class="icon"><i class="fas fa-shopping-basket"></i></span>
+                                        </button>
+                                    </form>
+                                    {% else %}
+                                    <button class="button is-light is-small" disabled title="Produto esgotado">Esgotado</button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-content">
-                  <div class="media">
-                    <div class="media-content">
-                      <p class="title is-5">{{ product.name }}</p>
-                      <p class="subtitle is-6 has-text-grey">{{ product.description|default:"Produto agrícola de qualidade." }}</p>
-                      <p class="has-text-grey is-small mb-2">Categoria: {{ product.category|default:"Sem categoria" }} • {{ product.unit }} • Estoque: {{ product.stock }}</p>
-                    </div>
-                  </div>
-                  <div class="level">
-                    <div class="level-left">
-                      <span class="has-text-weight-bold has-text-success">€{{ product.price }}</span>
-                    </div>
-                    <div class="level-right">
-                      <a href="{% url 'products:list' %}" class="button is-success is-small">Adicionar</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-          </div>
         </section>
-      {% endfor %}
+        {% endfor %}
     {% else %}
-    <div class="notification is-warning">Ainda não existem produtores com produtos disponíveis.</div>
-  {% endif %}
-  </div>
-</section>
+        <div class="notification is-warning">
+            <p><i class="fas fa-info-circle mr-2"></i>Ainda não existem produtos disponíveis.</p>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+.product-card { border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s ease; border: none; }
+.product-card:hover { box-shadow: 0 8px 16px rgba(0,0,0,0.12); transform: translateY(-4px); }
+.card-image { background: #f5f5f5; }
+.image.is-4by3 { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); }
+.h-100 { height: 100%; }
+.title.is-6 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.button.is-success { background-color: #2e7d32; }
+.button.is-success:hover { background-color: #1b5e20; }
+
+@media screen and (max-width: 768px) {
+    .column.is-6-desktop { width: 100%; }
+    .level { flex-direction: column; }
+    .title.is-2 { font-size: 1.5rem; }
+    .product-card .title.is-6 { font-size: 0.95rem; }
+}
+</style>
 {% endblock %}

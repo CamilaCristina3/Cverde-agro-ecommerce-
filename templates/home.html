@@ -1,168 +1,625 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Início | Cverde{% endblock %}
+{% block title %}Coverde - Produtos Locais e Sustentáveis{% endblock %}
 
 {% block content %}
-<section class="hero is-light is-medium">
-  <div class="hero-body">
-    <div class="container">
-      <div class="columns is-vcentered">
-        <div class="column is-6">
-          <span class="tag is-success is-medium mb-3">Marketplace agrícola</span>
-          <h1 class="title is-1 has-text-weight-bold">Produtos frescos, directos do produtor.</h1>
-          <p class="subtitle is-5 has-text-grey">A Cverde conecta produtores locais a consumidores e empresas, promovendo comércio sustentável e justo.</p>
-          <div class="buttons">
-            <a class="button is-success is-large" href="{% url 'products:list' %}">Explorar Produtos</a>
-            <a class="button is-light is-large" href="{% url 'orders:cart' %}">Ver Carrinho</a>
-          </div>
+<div class="container">
+    <!-- Hero Section -->
+    <div class="hero-section mb-5">
+        <div class="columns is-vcentered is-multiline">
+            <div class="column is-7">
+                <h1 class="title is-1 has-text-success" style="color: #2e7d32 !important;">
+                    🌱 Produtos Locais e Sustentáveis
+                </h1>
+                <p class="subtitle is-3 mt-3">Sabor autêntico direto do campo para sua casa</p>
+                <p class="is-size-5 has-text-grey mt-3">
+                    Conecte-se com produtores locais e desfrute de produtos frescos, orgânicos e sustentáveis.
+                </p>
+                <div class="buttons mt-5">
+                    <a href="{% url 'products:list' %}" class="button is-success is-large has-text-weight-bold">
+                        Explorar Produtos
+                    </a>
+                    <a href="{% url 'users:register_producer' %}" class="button is-outlined is-success is-large">
+                        Torne-se Produtor
+                    </a>
+                </div>
+            </div>
+            <div class="column is-5 has-text-centered">
+                <i class="fas fa-leaf fa-6x has-text-success"></i>
+            </div>
         </div>
-        <div class="column is-6">
-          <div class="box">
-            <h5 class="title is-5 mb-3">Cresça com a Cverde</h5>
-            <p class="has-text-grey mb-4">Encontre produtores de confiança, produtos orgânicos e soluções de entrega local.</p>
+    </div>
+
+    <div class="columns">
+        <!-- Sidebar Esquerda - Categorias -->
+        <div class="column is-3-desktop is-12-tablet is-12-mobile" id="sidebar">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-header-title">
+                        <i class="fas fa-list has-text-success"></i>
+                        <span class="ml-2 has-text-weight-bold">Categorias</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="categories-list">
+                        <a href="{% url 'products:list' %}?category=fruits" class="category-item is-block mb-3">
+                            <span class="icon-text">
+                                <span class="icon">
+                                    <i class="fas fa-apple-alt has-text-success"></i>
+                                </span>
+                                <span>Frutas</span>
+                                <span class="tag is-light is-pulled-right">45 produtos</span>
+                            </span>
+                        </a>
+                        <a href="{% url 'products:list' %}?category=vegetables" class="category-item is-block mb-3">
+                            <span class="icon-text">
+                                <span class="icon">
+                                    <i class="fas fa-carrot has-text-success"></i>
+                                </span>
+                                <span>Legumes</span>
+                                <span class="tag is-light is-pulled-right">16 produtos</span>
+                            </span>
+                        </a>
+                        <a href="{% url 'products:list' %}?category=greens" class="category-item is-block mb-3">
+                            <span class="icon-text">
+                                <span class="icon">
+                                    <i class="fas fa-leaf has-text-success"></i>
+                                </span>
+                                <span>Verduras</span>
+                                <span class="tag is-light is-pulled-right">52 produtos</span>
+                            </span>
+                        </a>
+                        <a href="{% url 'products:list' %}?category=herbs" class="category-item is-block mb-3">
+                            <span class="icon-text">
+                                <span class="icon">
+                                    <i class="fas fa-seedling has-text-success"></i>
+                                </span>
+                                <span>Hortaliças</span>
+                                <span class="tag is-light is-pulled-right">31 produtos</span>
+                            </span>
+                        </a>
+                        <a href="{% url 'products:list' %}?category=grains" class="category-item is-block mb-3">
+                            <span class="icon-text">
+                                <span class="icon">
+                                    <i class="fas fa-wheat-alt has-text-success"></i>
+                                </span>
+                                <span>Grãos</span>
+                                <span class="tag is-light is-pulled-right">24 produtos</span>
+                            </span>
+                        </a>
+                        <a href="{% url 'products:list' %}?category=organic" class="category-item is-block mb-3">
+                            <span class="icon-text">
+                                <span class="icon">
+                                    <i class="fas fa-certificate has-text-success"></i>
+                                </span>
+                                <span>Orgânicos</span>
+                                <span class="tag is-light is-pulled-right">07 produtos</span>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Produtores Locais Sidebar -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <div class="card-header-title">
+                        <i class="fas fa-tractor has-text-success"></i>
+                        <span class="ml-2 has-text-weight-bold">Produtores Locais</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="producers-list">
+                        <div class="producer-item mb-4">
+                            <div class="media">
+                                <div class="media-left">
+                                    <i class="fas fa-store fa-2x has-text-success"></i>
+                                </div>
+                                <div class="media-content">
+                                    <p class="has-text-weight-bold">Quinta do Sol</p>
+                                    <p class="is-size-7 has-text-grey">Sintra</p>
+                                    <p class="is-size-7">Agricultura familiar sustentável há 30 anos.</p>
+                                    <div class="rating">
+                                        <span class="has-text-warning">★★★★☆</span>
+                                        <span class="is-size-7 has-text-grey"> 4.8</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="producer-item mb-4">
+                            <div class="media">
+                                <div class="media-left">
+                                    <i class="fas fa-store fa-2x has-text-success"></i>
+                                </div>
+                                <div class="media-content">
+                                    <p class="has-text-weight-bold">Horta da Vila</p>
+                                    <p class="is-size-7 has-text-grey">Cascais</p>
+                                    <p class="is-size-7">Produtos frescos colhidos diariamente.</p>
+                                    <div class="rating">
+                                        <span class="has-text-warning">★★★★☆</span>
+                                        <span class="is-size-7 has-text-grey"> 4.6</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="producer-item mb-4">
+                            <div class="media">
+                                <div class="media-left">
+                                    <i class="fas fa-store fa-2x has-text-success"></i>
+                                </div>
+                                <div class="media-content">
+                                    <p class="has-text-weight-bold">Fazenda Verde</p>
+                                    <p class="is-size-7 has-text-grey">Óbidos</p>
+                                    <p class="is-size-7">Certificação biológica desde 2010.</p>
+                                    <div class="rating">
+                                        <span class="has-text-warning">★★★★★</span>
+                                        <span class="is-size-7 has-text-grey"> 4.9</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="has-text-centered mt-3">
+                        <a href="{% url 'products:list' %}" class="button is-small is-light is-fullwidth">
+                            Ver todos (25 produtores)
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conteúdo Principal - Produtos em Destaque -->
+        <div class="column is-9-desktop is-12-tablet is-12-mobile">
+            <div class="level mb-4">
+                <div class="level-left">
+                    <h2 class="title is-4">✨ Produtos em Destaque</h2>
+                </div>
+                <div class="level-right">
+                    <a href="{% url 'products:list' %}" class="has-text-success">Ver todos →</a>
+                </div>
+            </div>
+
             <div class="columns is-multiline">
-              <div class="column is-6">
-                <div class="has-text-centered">
-                  <div class="is-size-2 mb-2">🍓</div>
-                  <strong>Frutas</strong>
+                <!-- Produto 1 - Tomate Cereja Orgânico -->
+                <div class="column is-6-desktop is-12-tablet is-12-mobile">
+                    <div class="card product-card">
+                        <div class="card-image">
+                            <figure class="image is-4by3">
+                                <img src="{% static 'images/placeholder-product.jpg' %}" alt="Tomate Cereja Orgânico">
+                            </figure>
+                        </div>
+                        <div class="card-content">
+                            <p class="title is-6">Tomate Cereja Orgânico</p>
+                            <p class="subtitle is-7 has-text-grey">Quinta do Sol</p>
+                            <div class="rating-stars mb-2">
+                                <span class="has-text-warning">★★★★☆</span>
+                                <span class="is-size-7 has-text-grey">(23)</span>
+                            </div>
+                            <div class="level is-mobile">
+                                <div class="level-left">
+                                    <span class="product-price has-text-success has-text-weight-bold is-size-5">8,50€</span>
+                                    <span class="is-size-7 has-text-grey">/kg</span>
+                                </div>
+                                <div class="level-right">
+                                    <a href="{% url 'products:list' %}" class="button is-small is-success">Adicionar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div class="column is-6">
-                <div class="has-text-centered">
-                  <div class="is-size-2 mb-2">🥦</div>
-                  <strong>Legumes</strong>
+
+                <!-- Produto 2 - Cenouras Bio -->
+                <div class="column is-6-desktop is-12-tablet is-12-mobile">
+                    <div class="card product-card">
+                        <div class="card-image">
+                            <figure class="image is-4by3">
+                                <img src="{% static 'images/placeholder-product.jpg' %}" alt="Cenouras Bio">
+                            </figure>
+                        </div>
+                        <div class="card-content">
+                            <p class="title is-6">Cenouras Bio</p>
+                            <p class="subtitle is-7 has-text-grey">Fazenda Verde</p>
+                            <div class="rating-stars mb-2">
+                                <span class="has-text-warning">★★★★★</span>
+                                <span class="is-size-7 has-text-grey">(45)</span>
+                            </div>
+                            <div class="level is-mobile">
+                                <div class="level-left">
+                                    <span class="product-price has-text-success has-text-weight-bold is-size-5">3,20€</span>
+                                    <span class="is-size-7 has-text-grey">/kg</span>
+                                </div>
+                                <div class="level-right">
+                                    <a href="{% url 'products:list' %}" class="button is-small is-success">Adicionar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div class="column is-6">
-                <div class="has-text-centered">
-                  <div class="is-size-2 mb-2">🥬</div>
-                  <strong>Verduras</strong>
+
+                <!-- Produto 3 - Espinafres Frescos -->
+                <div class="column is-6-desktop is-12-tablet is-12-mobile">
+                    <div class="card product-card">
+                        <div class="card-image">
+                            <figure class="image is-4by3">
+                                <img src="{% static 'images/placeholder-product.jpg' %}" alt="Espinafres Frescos">
+                            </figure>
+                        </div>
+                        <div class="card-content">
+                            <p class="title is-6">Espinafres Frescos</p>
+                            <p class="subtitle is-7 has-text-grey">Horta da Vila</p>
+                            <div class="rating-stars mb-2">
+                                <span class="has-text-warning">★★★★☆</span>
+                                <span class="is-size-7 has-text-grey">(15)</span>
+                            </div>
+                            <div class="level is-mobile">
+                                <div class="level-left">
+                                    <span class="product-price has-text-success has-text-weight-bold is-size-5">5,80€</span>
+                                    <span class="is-size-7 has-text-grey">/maço</span>
+                                </div>
+                                <div class="level-right">
+                                    <a href="{% url 'products:list' %}" class="button is-small is-success">Adicionar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div class="column is-6">
-                <div class="has-text-centered">
-                  <div class="is-size-2 mb-2">🌾</div>
-                  <strong>Orgânicos</strong>
+
+                <!-- Produto 4 - Morangos Bio -->
+                <div class="column is-6-desktop is-12-tablet is-12-mobile">
+                    <div class="card product-card">
+                        <div class="card-image">
+                            <figure class="image is-4by3">
+                                <img src="{% static 'images/placeholder-product.jpg' %}" alt="Morangos Bio">
+                            </figure>
+                        </div>
+                        <div class="card-content">
+                            <p class="title is-6">Morangos Bio</p>
+                            <p class="subtitle is-7 has-text-grey">Pomar do Oeste</p>
+                            <div class="rating-stars mb-2">
+                                <span class="has-text-warning">★★★★★</span>
+                                <span class="is-size-7 has-text-grey">(67)</span>
+                            </div>
+                            <div class="level is-mobile">
+                                <div class="level-left">
+                                    <span class="product-price has-text-success has-text-weight-bold is-size-5">12,00€</span>
+                                    <span class="is-size-7 has-text-grey">/caixa</span>
+                                </div>
+                                <div class="level-right">
+                                    <a href="{% url 'products:list' %}" class="button is-small is-light" disabled>Esgotado</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-  </div>
-</section>
 
-<section class="py-5">
-  <div class="container">
-    <div class="level mb-5">
-      <div class="level-left">
-        <div>
-          <h2 class="title is-4 mb-1">Produtos em Destaque</h2>
-          <p class="subtitle is-6 has-text-grey mb-0">Os últimos produtos adicionados à nossa plataforma.</p>
-        </div>
-      </div>
-      <div class="level-right">
-        <a href="{% url 'products:list' %}" class="has-text-success">Ver todos</a>
-      </div>
-    </div>
-
-    <div class="columns is-multiline">
-      {% for product in featured_products %}
-      <div class="column is-6-tablet is-3-desktop">
-        <div class="card">
-          <div class="card-image">
-            <figure class="image is-4by3 product-{{ product.image_class }}">
-              <span class="tag is-success is-pulled-right m-3">Bio</span>
-            </figure>
-          </div>
-          <div class="card-content">
-            <div class="media">
-              <div class="media-content">
-                <p class="title is-5">{{ product.name }}</p>
-                <p class="subtitle is-6 has-text-grey">{{ product.description|default:"Produto agrícola de qualidade." }}</p>
-              </div>
+            <!-- Banner para Produtor -->
+            <div class="card mt-5 has-background-success-light">
+                <div class="card-content has-text-centered">
+                    <i class="fas fa-store fa-3x has-text-success mb-3"></i>
+                    <h3 class="title is-5">🌿 É um produtor agrícola?</h3>
+                    <p class="mb-4">Junte-se à nossa comunidade e venda os seus produtos diretamente aos consumidores.</p>
+                    <a href="{% url 'users:register_producer' %}" class="button is-success is-medium">
+                        <strong>Comece Agora</strong>
+                    </a>
+                </div>
             </div>
-          </div>
-          <footer class="card-footer">
-            <div class="level">
-              <div class="level-left">
-                <span class="has-text-weight-bold has-text-success">€{{ product.price }}</span>
-              </div>
-              <div class="level-right">
-                <a href="{% url 'products:list' %}" class="button is-success is-small is-outlined">Adicionar</a>
-              </div>
-            </div>
-          </footer>
-        </div>
-      </div>
-      {% empty %}
-      <div class="column is-12">
-        <div class="notification is-warning">
-          Ainda não existem produtos disponíveis. <a href="{% url 'products:list' %}" class="has-text-link">Veja a lista completa</a>.
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-</section>
 
-<section class="section is-medium has-background-success has-text-white">
-  <div class="container">
-    <div class="columns is-vcentered">
-      <div class="column is-8">
-        <h2 class="title is-3 has-text-white">É um produtor agrícola?</h2>
-        <p class="subtitle is-5 has-text-white">Junte-se à nossa comunidade e venda os seus produtos diretamente aos consumidores.</p>
-      </div>
-      <div class="column is-4">
-        <a href="{% url 'products:list' %}" class="button is-light is-large">Comece agora</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="container">
-    <div class="level mb-5">
-      <div class="level-left">
-        <div>
-          <h2 class="title is-4 mb-1">Produtores Locais</h2>
-          <p class="subtitle is-6 has-text-grey mb-0">Parceiros comprometidos com produção sustentável.</p>
-        </div>
-      </div>
-      <div class="level-right">
-        <a href="{% url 'products:list' %}" class="has-text-success">Ver produtores</a>
-      </div>
-    </div>
-
-    <div class="columns is-multiline">
-      {% for producer in local_producers %}
-      <div class="column is-6-tablet is-4-desktop">
-        <div class="card">
-          <div class="card-content">
-            <div class="media">
-              <div class="media-content">
-                <p class="title is-5">{{ producer.name }}</p>
-                <p class="subtitle is-6 has-text-grey">{{ producer.description }}</p>
-              </div>
+            <!-- Sobre a Coverde -->
+            <div class="card mt-4">
+                <div class="card-content">
+                    <h3 class="title is-5 has-text-success">Sobre a Coverde</h3>
+                    <p class="has-text-grey">
+                        Coverde é uma plataforma de produção de frutas e legumes para o consumo local. 
+                        A Coverde oferece produtos frescos e saudáveis, garantindo qualidade e confiabilidade.
+                    </p>
+                </div>
             </div>
-          </div>
-          <footer class="card-footer">
-            <div class="level">
-              <div class="level-left">
-                <small><strong>{{ producer.rating }}</strong> ★</small>
-              </div>
-              <div class="level-right">
-                <small>{{ producer.products_count }} produtos</small>
-              </div>
-            </div>
-          </footer>
         </div>
-      </div>
-      {% endfor %}
     </div>
-  </div>
-</section>
+</div>
+
+<style>
+    /* Estilos personalizados do Coverde */
+    .hero-section {
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        padding: 40px;
+        border-radius: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .product-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-radius: 12px;
+        overflow: hidden;
+        height: 100%;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    
+    .category-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #333;
+        padding: 10px 12px;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+    
+    .category-item:hover {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+        padding-left: 16px;
+    }
+    
+    .producer-item {
+        border-bottom: 1px solid #eee;
+        padding-bottom: 12px;
+    }
+    
+    .producer-item:last-child {
+        border-bottom: none;
+    }
+    
+    .rating-stars .has-text-warning {
+        color: #ffc107 !important;
+    }
+    
+    .button.is-outlined.is-success {
+        background-color: transparent;
+        border: 2px solid #2e7d32;
+        color: #2e7d32;
+    }
+    
+    .button.is-outlined.is-success:hover {
+        background-color: #2e7d32;
+        color: white;
+    }
+
+    .container {
+        padding: 20px;
+    }
+
+    /* Melhorias de espaçamento */
+    .card {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        border: none;
+    }
+
+    .card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
+    /* Tablet - até 1024px */
+    @media screen and (max-width: 1024px) {
+        .hero-section {
+            padding: 30px;
+        }
+
+        .hero-section .title.is-1 {
+            font-size: 2.5rem;
+        }
+
+        .hero-section .subtitle.is-3 {
+            font-size: 1.5rem;
+        }
+
+        .hero-section .column.is-5 {
+            display: none;
+        }
+
+        .product-card .title.is-6 {
+            font-size: 1rem;
+        }
+    }
+
+    /* Mobile - até 768px */
+    @media screen and (max-width: 768px) {
+        .container {
+            padding: 15px;
+        }
+
+        .hero-section {
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+        }
+
+        .hero-section .title.is-1 {
+            font-size: 1.8rem;
+            line-height: 1.3;
+        }
+
+        .hero-section .subtitle.is-3 {
+            font-size: 1.1rem;
+            line-height: 1.4;
+        }
+
+        .hero-section .is-size-5 {
+            font-size: 1rem !important;
+        }
+
+        .hero-section .buttons {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .hero-section .button {
+            width: 100%;
+        }
+
+        .hero-section .column.is-5 {
+            display: none !important;
+        }
+
+        #sidebar {
+            margin-bottom: 20px;
+        }
+
+        .card {
+            margin-bottom: 15px;
+        }
+
+        .card-header-title {
+            font-size: 0.9rem;
+        }
+
+        .category-item {
+            padding: 8px 10px;
+            font-size: 0.9rem;
+        }
+
+        .category-item .tag {
+            font-size: 0.7rem !important;
+        }
+
+        .producer-item {
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .producer-item .media-left {
+            margin-right: 10px;
+        }
+
+        .producer-item .media-left i {
+            font-size: 1.5rem !important;
+        }
+
+        .producer-item p {
+            margin: 2px 0;
+        }
+
+        .product-card {
+            margin-bottom: 15px;
+        }
+
+        .product-card .card-content {
+            padding: 15px;
+        }
+
+        .product-card .title.is-6 {
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+        }
+
+        .product-card .subtitle.is-7 {
+            font-size: 0.8rem;
+        }
+
+        .product-card .level {
+            margin-top: 10px;
+        }
+
+        .product-price {
+            font-size: 1.2rem !important;
+        }
+
+        .rating-stars {
+            font-size: 0.8rem;
+        }
+
+        .button.is-small {
+            padding: 4px 8px;
+            font-size: 0.75rem;
+        }
+
+        .level mb-4 {
+            margin-bottom: 15px;
+        }
+
+        .level .level-left > .level-item {
+            margin-right: 10px;
+        }
+
+        .title.is-4 {
+            font-size: 1.3rem;
+        }
+
+        .title.is-5 {
+            font-size: 1.1rem;
+        }
+
+        .has-text-centered {
+            text-align: center;
+        }
+
+        .button.is-medium {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+        }
+    }
+
+    /* Mobile pequeno - até 480px */
+    @media screen and (max-width: 480px) {
+        .container {
+            padding: 10px;
+        }
+
+        .hero-section {
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .hero-section .title.is-1 {
+            font-size: 1.5rem;
+        }
+
+        .hero-section .subtitle.is-3 {
+            font-size: 1rem;
+        }
+
+        .hero-section .is-size-5 {
+            font-size: 0.9rem !important;
+        }
+
+        .hero-section .buttons {
+            gap: 8px;
+        }
+
+        .hero-section .button {
+            padding: 8px 12px;
+            font-size: 0.85rem;
+        }
+
+        .card {
+            border-radius: 8px;
+        }
+
+        .card-header-title {
+            font-size: 0.85rem;
+        }
+
+        .product-card .image.is-4by3 {
+            padding-bottom: 75%;
+        }
+
+        .product-price {
+            font-size: 1rem !important;
+        }
+
+        .level {
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .level-left, .level-right {
+            width: 100%;
+        }
+
+        .title.is-4 {
+            font-size: 1.1rem;
+        }
+
+        .button.is-fullwidth {
+            width: 100%;
+        }
+    }
+</style>
 {% endblock %}

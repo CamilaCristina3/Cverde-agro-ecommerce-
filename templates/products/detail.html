@@ -1,6 +1,229 @@
 {% extends "base.html" %}
-{% block title %}Detalhe do produto | Cverde{% endblock %}
+{% block title %}{{ product.name }} | Cverde{% endblock %}
+
 {% block content %}
-<h2>Detalhe do produto</h2>
-<p>Informações do produto selecionado.</p>
+<div class="container mt-5 mb-6">
+    <div class="breadcrumb">
+        <ul>
+            <li><a href="{% url 'homepage' %}">Home</a></li>
+            <li><a href="{% url 'products:list' %}">Produtos</a></li>
+            <li class="is-active"><a href="#" aria-current="page">{{ product.name }}</a></li>
+        </ul>
+    </div>
+
+    <div class="columns is-variable is-6 mt-5">
+        <!-- Product Image -->
+        <div class="column is-6-desktop is-12-tablet">
+            <div class="product-image mb-5">
+                <figure class="image is-square">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Crect fill='%23e8f5e9' width='400' height='400'/%3E%3C/svg%3E" 
+                         alt="{{ product.name }}" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); object-fit: cover;">
+                </figure>
+            </div>
+            {% if product.is_organic %}
+            <div class="notification is-success is-light">
+                <p><strong>🌿 Produto Orgânico Certificado</strong></p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Product Details -->
+        <div class="column is-6-desktop is-12-tablet">
+            <!-- Header -->
+            <h1 class="title is-3 mb-2">{{ product.name }}</h1>
+            
+            <!-- Producer Info -->
+            <div class="box mb-4" style="background: #f5f5f5; border-left: 4px solid #2e7d32;">
+                <div class="level is-mobile">
+                    <div class="level-left">
+                        <div>
+                            <p class="has-text-weight-bold">{{ product.producer.name }}</p>
+                            <p class="is-size-7 has-text-grey">
+                                <i class="fas fa-map-marker-alt mr-1"></i>{{ product.producer.location }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="level-right">
+                        <div class="stars has-text-warning">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= product.producer.rating %}<i class="fas fa-star"></i>{% else %}<i class="far fa-star"></i>{% endif %}
+                            {% endfor %}
+                            <span class="ml-2 has-text-grey">({{ product.producer.rating }}/5)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price & Stock -->
+            <div class="mb-6">
+                <div class="level is-mobile">
+                    <div class="level-left">
+                        <div>
+                            <p class="is-size-7 has-text-grey">Preço</p>
+                            <p class="title is-2 has-text-success">€{{ product.price }}</p>
+                        </div>
+                    </div>
+                    <div class="level-right">
+                        <div class="has-text-centered">
+                            <p class="is-size-7 has-text-grey">Embalagem</p>
+                            <p class="is-size-5 has-text-weight-bold">{{ product.unit }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stock Status -->
+            <div class="mb-6">
+                {% if product.stock > 5 %}
+                <div class="notification is-success is-light">
+                    <p><strong>✓ Em stock</strong> — {{ product.stock }} unidades disponíveis</p>
+                </div>
+                {% elif product.stock > 0 %}
+                <div class="notification is-warning is-light">
+                    <p><strong>⚠ Estoque limitado</strong> — {{ product.stock }} unidades disponíveis</p>
+                </div>
+                {% else %}
+                <div class="notification is-danger is-light">
+                    <p><strong>✗ Esgotado</strong> — Produto indisponível no momento</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="field is-grouped mb-6">
+                {% if product.stock > 0 and product.available %}
+                <p class="control is-expanded">
+                    <button class="button is-success is-size-5 is-fullwidth">
+                        <span class="icon"><i class="fas fa-shopping-basket"></i></span>
+                        <span>Adicionar ao Carrinho</span>
+                    </button>
+                </p>
+                {% else %}
+                <p class="control is-expanded">
+                    <button class="button is-light is-size-5 is-fullwidth" disabled>
+                        <span>Indisponível</span>
+                    </button>
+                </p>
+                {% endif %}
+                <p class="control">
+                    <button class="button is-outlined">
+                        <span class="icon"><i class="far fa-heart"></i></span>
+                    </button>
+                </p>
+            </div>
+
+            <!-- Product Info Tabs -->
+            <div class="tabs is-boxed mb-5">
+                <ul>
+                    <li class="is-active"><a data-tab="description">Descrição</a></li>
+                    <li><a data-tab="details">Detalhes</a></li>
+                </ul>
+            </div>
+
+            <div id="description" class="tab-pane is-active mb-6">
+                <p class="is-size-6">{{ product.description|default:"Descrição não disponível." }}</p>
+            </div>
+
+            <div id="details" class="tab-pane mb-6" style="display: none;">
+                <table class="table is-fullwidth">
+                    <tr>
+                        <td class="has-text-grey"><strong>Categoria</strong></td>
+                        <td>{{ product.category|default:"Sem categoria" }}</td>
+                    </tr>
+                    <tr>
+                        <td class="has-text-grey"><strong>Tipo de Embalagem</strong></td>
+                        <td>{{ product.unit }}</td>
+                    </tr>
+                    <tr>
+                        <td class="has-text-grey"><strong>Tipo de Produção</strong></td>
+                        <td>
+                            {% if product.is_organic %}
+                            <span class="tag is-success">Orgânico</span>
+                            {% else %}
+                            <span class="tag is-info">Convencional</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="has-text-grey"><strong>Disponibilidade</strong></td>
+                        <td>{{ product.stock }} unidades em stock</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    {% if related_products %}
+    <section class="mt-7">
+        <h2 class="title is-4 mb-4">Produtos Relacionados</h2>
+        <div class="columns is-multiline is-variable is-6">
+            {% for related in related_products|slice:":3" %}
+            <div class="column is-4-desktop is-6-tablet is-12-mobile">
+                <div class="card product-card">
+                    <div class="card-image">
+                        <figure class="image is-4by3">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%23e8f5e9' width='400' height='300'/%3E%3C/svg%3E" 
+                                 alt="{{ related.name }}" loading="lazy" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);">
+                        </figure>
+                    </div>
+                    <div class="card-content">
+                        <p class="title is-6 mb-2">{{ related.name }}</p>
+                        <p class="is-size-7 has-text-grey mb-3">{{ related.description|default:""|truncatewords:10 }}</p>
+                        <div class="level is-mobile">
+                            <div class="level-left">
+                                <span class="has-text-success has-text-weight-bold">€{{ related.price }}</span>
+                            </div>
+                            <div class="level-right">
+                                {% if related.stock > 0 %}
+                                <a href="{% url 'products:detail' related.id %}" class="button is-success is-small">Ver</a>
+                                {% else %}
+                                <span class="has-text-danger is-small">Esgotado</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+</div>
+
+<style>
+.product-card { border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s ease; border: none; }
+.product-card:hover { box-shadow: 0 8px 16px rgba(0,0,0,0.12); transform: translateY(-4px); }
+.product-image { border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.image.is-square { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); }
+.tabs.is-boxed a { color: #666; }
+.tabs.is-boxed li.is-active a { border-bottom-color: #2e7d32; color: #2e7d32; background: transparent; }
+.tab-pane { animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.button.is-success { background-color: #2e7d32; }
+.button.is-success:hover { background-color: #1b5e20; }
+.breadcrumb a { color: #2e7d32; }
+.breadcrumb a:hover { color: #1b5e20; }
+.stars { font-size: 0.9rem; }
+
+@media screen and (max-width: 768px) {
+    .columns.is-variable { margin: 0 !important; }
+    .column { padding: 0.5rem; }
+    .title.is-3 { font-size: 1.5rem; }
+    .title.is-2 { font-size: 1.75rem; }
+}
+</style>
+
+<script>
+document.querySelectorAll('.tabs a').forEach(tab => {
+    tab.addEventListener('click', (e) => {
+        e.preventDefault();
+        const tabName = tab.dataset.tab;
+        document.querySelectorAll('.tab-pane').forEach(p => p.style.display = 'none');
+        document.querySelectorAll('.tabs li').forEach(li => li.classList.remove('is-active'));
+        document.getElementById(tabName).style.display = 'block';
+        tab.parentElement.classList.add('is-active');
+    });
+});
+</script>
 {% endblock %}

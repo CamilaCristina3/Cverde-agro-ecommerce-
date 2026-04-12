@@ -1,10 +1,227 @@
 {% extends "base.html" %}
-{% block title %}Novo produto | Cverde{% endblock %}
+{% block title %}
+  {% if is_edit %}
+    Editar Produto | Cverde
+  {% else %}
+    Novo Produto | Cverde
+  {% endif %}
+{% endblock %}
+
 {% block content %}
-<h2>Criar produto</h2>
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  <!-- Campos de criação de produto -->
-  <button class="btn btn-success mt-2" type="submit">Guardar</button>
-</form>
+<div class="container">
+  <div class="columns is-centered">
+    <div class="column is-8-desktop is-12-tablet">
+      <div class="card coverde-form-card">
+        <header class="card-header coverde-form-header">
+          <p class="card-header-title has-text-white">
+            <span class="icon mr-2"><i class="fas fa-leaf"></i></span>
+            {% if is_edit %}Editar produto{% else %}Adicionar novo produto{% endif %}
+          </p>
+        </header>
+
+        <div class="card-content">
+          <p class="has-text-grey mb-5">
+            Preencha os dados abaixo para publicar o seu produto na plataforma Coverde.
+          </p>
+
+          {% if producer %}
+            <article class="message is-success is-light coverde-producer-box mb-5">
+              <div class="message-body">
+                <div class="level is-mobile">
+                  <div class="level-left">
+                    <div>
+                      <p class="has-text-weight-semibold">
+                        <span class="icon has-text-success"><i class="fas fa-store"></i></span>
+                        Produtor: {{ producer.name }}
+                      </p>
+                      {% if producer.location %}
+                        <p class="is-size-7 has-text-grey">
+                          <span class="icon"><i class="fas fa-map-marker-alt"></i></span>
+                          {{ producer.location }}
+                        </p>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div class="level-right">
+                    {% if producer.is_active %}
+                      <span class="tag is-success is-light">Ativo</span>
+                    {% else %}
+                      <span class="tag is-warning is-light">Inativo</span>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </article>
+          {% endif %}
+
+          <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+              <div class="notification is-danger is-light">
+                <strong>Não foi possível guardar.</strong>
+                <p class="is-size-7 mt-2">{{ form.non_field_errors.0 }}</p>
+              </div>
+            {% endif %}
+
+            <h3 class="title is-5 has-text-success mb-4">
+              <span class="icon mr-2"><i class="fas fa-info-circle"></i></span>
+              Informações básicas
+            </h3>
+
+            <div class="field">
+              <label class="label">{{ form.name.label }}</label>
+              <div class="control has-icons-left">
+                {{ form.name }}
+                <span class="icon is-left has-text-success"><i class="fas fa-tag"></i></span>
+              </div>
+              {% if form.name.errors %}<p class="help is-danger">{{ form.name.errors.0 }}</p>{% endif %}
+            </div>
+
+            <div class="field">
+              <label class="label">{{ form.description.label }}</label>
+              <div class="control">{{ form.description }}</div>
+              <p class="help">Origem, qualidade, modo de produção, benefícios.</p>
+              {% if form.description.errors %}<p class="help is-danger">{{ form.description.errors.0 }}</p>{% endif %}
+            </div>
+
+            <div class="field">
+              <label class="label">{{ form.category.label }}</label>
+              <div class="control has-icons-left">
+                <div class="select is-fullwidth">
+                  {{ form.category }}
+                </div>
+                <span class="icon is-left has-text-success"><i class="fas fa-list"></i></span>
+              </div>
+              {% if form.category.errors %}<p class="help is-danger">{{ form.category.errors.0 }}</p>{% endif %}
+            </div>
+
+            <div class="field">
+              <label class="label">{{ form.certification.label }}</label>
+              <div class="control">
+                <div class="select is-fullwidth">
+                  {{ form.certification }}
+                </div>
+              </div>
+              {% if form.certification.errors %}<p class="help is-danger">{{ form.certification.errors.0 }}</p>{% endif %}
+              <p class="help">Se aplicável (Biológico, DOP, IGP, etc.).</p>
+            </div>
+
+            <hr>
+
+            <h3 class="title is-5 has-text-success mb-4">
+              <span class="icon mr-2"><i class="fas fa-calculator"></i></span>
+              Preço e stock
+            </h3>
+
+            <div class="columns is-variable is-4">
+              <div class="column is-4">
+                <div class="field">
+                  <label class="label">{{ form.price.label }}</label>
+                  <div class="control has-icons-left">
+                    {{ form.price }}
+                    <span class="icon is-left has-text-success"><i class="fas fa-euro-sign"></i></span>
+                  </div>
+                  {% if form.price.errors %}<p class="help is-danger">{{ form.price.errors.0 }}</p>{% endif %}
+                </div>
+              </div>
+
+              <div class="column is-4">
+                <div class="field">
+                  <label class="label">{{ form.unit.label }}</label>
+                  <div class="control has-icons-left">
+                    {{ form.unit }}
+                    <span class="icon is-left has-text-success"><i class="fas fa-ruler"></i></span>
+                  </div>
+                  {% if form.unit.errors %}<p class="help is-danger">{{ form.unit.errors.0 }}</p>{% endif %}
+                </div>
+              </div>
+
+              <div class="column is-4">
+                <div class="field">
+                  <label class="label">{{ form.stock.label }}</label>
+                  <div class="control has-icons-left">
+                    {{ form.stock }}
+                    <span class="icon is-left has-text-success"><i class="fas fa-boxes"></i></span>
+                  </div>
+                  {% if form.stock.errors %}<p class="help is-danger">{{ form.stock.errors.0 }}</p>{% endif %}
+                </div>
+              </div>
+            </div>
+
+            <hr>
+
+            <h3 class="title is-5 has-text-success mb-4">
+              <span class="icon mr-2"><i class="fas fa-leaf"></i></span>
+              Publicação
+            </h3>
+
+            <div class="field">
+              <label class="label">{{ form.main_image.label }}</label>
+              <div class="control">
+                {{ form.main_image }}
+              </div>
+              {% if form.main_image.errors %}<p class="help is-danger">{{ form.main_image.errors.0 }}</p>{% endif %}
+              <p class="help">Formatos: JPG/PNG. Otimize a imagem para carregar mais rápido.</p>
+            </div>
+
+            <div class="field">
+              <div class="control">
+                <label class="checkbox">
+                  {{ form.is_active }} {{ form.is_active.label }}
+                </label>
+              </div>
+              <p class="help ml-4">
+                <span id="activeHint">Produto aparece no catálogo.</span>
+              </p>
+            </div>
+
+            <div class="buttons is-right mt-5">
+              <a href="{% url 'products:list' %}" class="button is-light">
+                <span class="icon"><i class="fas fa-arrow-left"></i></span>
+                <span>Cancelar</span>
+              </a>
+              <button type="submit" class="button is-primary">
+                <span class="icon"><i class="fas fa-save"></i></span>
+                <span>{% if is_edit %}Atualizar{% else %}Publicar{% endif %}</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .coverde-form-card { border-radius: 20px; overflow: hidden; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+  .coverde-form-header { background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%); }
+  .coverde-form-header .card-header-title { font-weight: 700; }
+  .coverde-producer-box { border-left: 4px solid #2e7d32; }
+  .input, .textarea, select { border-radius: 12px; border: 1.5px solid #e0e0e0; transition: all 0.2s; }
+  .input:focus, .textarea:focus, select:focus { border-color: #2e7d32; box-shadow: 0 0 0 3px rgba(46,125,50,0.15); }
+  @media (max-width: 768px) {
+    .buttons.is-right { justify-content: stretch; }
+    .buttons.is-right .button { flex: 1; }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const nameInput = document.getElementById('id_name');
+    if (nameInput && !nameInput.value) nameInput.focus();
+
+    const activeToggle = document.getElementById('id_is_active');
+    const hint = document.getElementById('activeHint');
+    if (activeToggle && hint) {
+      const update = () => {
+        hint.textContent = activeToggle.checked
+          ? 'Produto aparece no catálogo.'
+          : 'Produto fica oculto no catálogo.';
+      };
+      update();
+      activeToggle.addEventListener('change', update);
+    }
+  });
+</script>
 {% endblock %}

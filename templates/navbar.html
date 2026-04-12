@@ -1,0 +1,64 @@
+{% load static %}
+<nav class="navbar is-fixed-top is-link has-shadow" role="navigation" aria-label="main navigation">
+  <div class="container">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="/">
+        <img src="{% static 'images/logo.svg' %}" alt="Cverde" height="40">
+      </a>
+
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasic">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div id="navbarBasic" class="navbar-menu">
+      <div class="navbar-start">
+        <a class="navbar-item" href="/">
+          <span class="icon"><i class="fas fa-home"></i></span>
+          <span>Início</span>
+        </a>
+        <a class="navbar-item" href="{% url 'products:list' %}">
+          <span class="icon"><i class="fas fa-shopping-bag"></i></span>
+          <span>Produtos</span>
+        </a>
+        <a class="navbar-item" href="{% url 'users:profile' %}">
+          <span class="icon"><i class="fas fa-user"></i></span>
+          <span>Minha Conta</span>
+        </a>
+      </div>
+
+      <div class="navbar-end">
+        <div class="navbar-item">
+          {% if user.is_authenticated %}
+            <div class="buttons">
+              <span class="has-text-white">Olá, {{ user.username }}!</span>
+              <a class="button is-light" href="{% url 'users:profile' %}" title="Minha Conta">
+                <span class="icon"><i class="fas fa-user-circle"></i></span>
+              </a>
+              <a class="button is-light" href="{% url 'orders:cart' %}" title="Carrinho">
+                <span class="icon"><i class="fas fa-shopping-cart"></i></span>
+              </a>
+              <a class="button is-primary is-small" href="{% url 'users:logout' %}">
+                <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
+                <span>Sair</span>
+              </a>
+            </div>
+          {% else %}
+            <div class="buttons">
+              <a class="button is-light" href="{% url 'users:login' %}">
+                <span class="icon"><i class="fas fa-sign-in-alt"></i></span>
+                <span>Entrar</span>
+              </a>
+              <a class="button is-primary" href="{% url 'users:register' %}">
+                <span class="icon"><i class="fas fa-user-plus"></i></span>
+                <span>Registar-se</span>
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

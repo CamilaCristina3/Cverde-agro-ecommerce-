@@ -1,0 +1,25 @@
+/* Estilos para o formulário de avaliação no Admin */
+
+.form-row.field-product,
+.form-row.field-producer,
+.field-product,
+.field-producer {
+  transition: all 0.2s ease;
+}
+
+.tag-product {
+  background-color: #2196f3;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+}
+
+.tag-producer {
+  background-color: #4caf50;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+}
+

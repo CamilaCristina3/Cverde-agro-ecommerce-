@@ -1,10 +1,127 @@
 /* Product images are loaded via CSS classes from static/images/ */
 body {
-  background: #f9fafb;
+  background: #f7fafc;
+  padding-top: 5.5rem;
 }
 
-.navbar-brand {
+.navbar.is-fixed-top {
+  background: #ffffff;
+  border-bottom: 1px solid rgba(170, 170, 170, 0.15);
+}
+
+.navbar .navbar-item,
+.navbar .navbar-link,
+.navbar .navbar-burger span {
   color: #1e824c;
+}
+
+.navbar .button.is-primary {
+  background-color: #1e824c;
+  border-color: transparent;
+}
+
+.home-hero {
+  background: linear-gradient(135deg, #e8f8ec 0%, #f5fff4 100%);
+}
+
+.hero-summary-box,
+.summary-card {
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 20px 50px rgba(28, 100, 48, 0.08);
+}
+
+.summary-card {
+  padding: 1.5rem;
+  min-height: 180px;
+}
+
+.summary-card .icon {
+  font-size: 1.75rem;
+}
+
+.categories-grid .category-card {
+  border-radius: 18px;
+  text-align: center;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.category-icon {
+  font-size: 2rem;
+}
+
+.featured-slider-wrapper {
+  position: relative;
+}
+
+.featured-slider {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 1rem;
+}
+
+.featured-card {
+  min-width: 320px;
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(30, 130, 76, 0.1);
+}
+
+.featured-card .card-image figure {
+  border-radius: 20px 20px 0 0;
+  overflow: hidden;
+}
+
+.featured-card .card-footer {
+  border-top: none;
+}
+
+.slider-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 10px 30px rgba(15, 77, 34, 0.12);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1e824c;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.slider-prev {
+  left: -0.75rem;
+}
+
+.slider-next {
+  right: -0.75rem;
+}
+
+.hero-producer-cta {
+  background: #1e824c;
+}
+
+.hero-producer-cta .button.is-light {
+  color: #1e824c;
+  background: #ffffff;
+}
+
+.producer-card {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(30, 130, 76, 0.08);
 }
 
 .product-card {

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Lista de Produtos | Cverde{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="level mb-6">
+    <div class="level-left">
+      <div>
+        <h1 class="title is-2 mb-2">Produtos</h1>
+        <p class="subtitle is-6 has-text-grey">Exemplo de página filha com grelha de produtos</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="columns is-multiline is-variable is-6">
+    {% for product in products %}
+      <div class="column is-3-desktop is-4-tablet is-12-mobile">
+        <div class="card h-100">
+          <div class="card-content">
+            <p class="title is-6 mb-1">{{ product.name }}</p>
+            <p class="is-size-7 has-text-grey mb-3">{{ product.description|default:"Produto agrícola de qualidade."|truncatewords:18 }}</p>
+            <div class="level is-mobile">
+              <div class="level-left">
+                <span class="has-text-success has-text-weight-bold">€{{ product.price }}</span>
+              </div>
+              <div class="level-right">
+                <a class="button is-success is-small" href="{% url 'products:list' %}">Ver no catálogo</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="column is-12">
+        <div class="notification is-warning">
+          Ainda não existem produtos disponíveis.
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+  .h-100 { height: 100%; }
+  .card { border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .card:hover { box-shadow: 0 8px 16px rgba(0,0,0,0.12); transform: translateY(-2px); transition: 0.2s; }
+</style>
+{% endblock %}
