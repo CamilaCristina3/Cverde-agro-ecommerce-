@@ -1,9 +1,7 @@
-from django.db import models
 from django.db.models import Count, Q
 from django.views.generic import TemplateView
 
-from apps.products.models import Product
-from apps.producers.models import Producer
+from apps.users.models import Category, Producer, Product
 
 
 class HomeView(TemplateView):
@@ -11,34 +9,47 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["featured_products"] = (
-            Product.objects.filter(available=True, producer__isnull=False)
-            .select_related("producer")
-            .order_by("-created_at")[:4]
-        )
-        categories = (
-            Product.objects.filter(available=True, producer__isnull=False)
-            .values("category")
-            .annotate(count=Count("id"))
-        )
-        category_icons = {
-            "Frutas": "🍓",
-            "Legumes": "🥕",
-            "Verduras": "🥬",
-            "Hortaliças": "🌶️",
-            "Grãos": "🌾",
-            "Orgânicos": "🍃",
+        base_products = Product.objects.filter(
+            is_active=True,
+            producer__is_active=True,
+        ).select_related("producer", "category")
+
+        featured_products = base_products.filter(is_featured=True, stock__gt=0).order_by("-created_at")[:8]
+        if not featured_products:
+            featured_products = base_products.filter(stock__gt=0).order_by("-created_at")[:8]
+        context["featured_products"] = featured_products
+
+        icon_map = {
+            "frutas": "fas fa-apple-alt",
+            "legumes": "fas fa-carrot",
+            "verduras": "fas fa-leaf",
+            "hortaliças": "fas fa-seedling",
+            "horticulas": "fas fa-seedling",
+            "grãos": "fas fa-wheat-awn",
+            "organicos": "fas fa-certificate",
+            "orgânicos": "fas fa-certificate",
         }
+
+        categories_qs = (
+            Category.objects.filter(is_active=True)
+            .annotate(products_count=Count("products", filter=Q(products__is_active=True)))
+            .filter(products_count__gt=0)
+            .order_by("-products_count", "name")[:12]
+        )
         context["categories"] = [
             {
-                "name": category["category"],
-                "icon": category_icons.get(category["category"], "🟢"),
-                "count": category["count"],
+                "id": c.id,
+                "name": c.name,
+                "count": c.products_count,
+                "icon_class": icon_map.get((c.name or "").strip().lower(), "fas fa-list"),
             }
-            for category in categories
-            if category["category"]
+            for c in categories_qs
         ]
-        context["local_producers"] = Producer.objects.filter(active=True).annotate(
-            products_count=Count("products", filter=models.Q(products__available=True))
-        )[:3]
+
+        context["local_producers"] = (
+            Producer.objects.filter(is_active=True)
+            .annotate(products_count=Count("products", filter=Q(products__is_active=True)))
+            .filter(products_count__gt=0)
+            .order_by("-rating", "name")[:5]
+        )
         return context

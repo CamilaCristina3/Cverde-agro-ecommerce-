@@ -43,60 +43,19 @@
                 </div>
                 <div class="card-content">
                     <div class="categories-list">
-                        <a href="{% url 'products:list' %}?category=fruits" class="category-item is-block mb-3">
-                            <span class="icon-text">
-                                <span class="icon">
-                                    <i class="fas fa-apple-alt has-text-success"></i>
-                                </span>
-                                <span>Frutas</span>
-                                <span class="tag is-light is-pulled-right">45 produtos</span>
-                            </span>
-                        </a>
-                        <a href="{% url 'products:list' %}?category=vegetables" class="category-item is-block mb-3">
-                            <span class="icon-text">
-                                <span class="icon">
-                                    <i class="fas fa-carrot has-text-success"></i>
-                                </span>
-                                <span>Legumes</span>
-                                <span class="tag is-light is-pulled-right">16 produtos</span>
-                            </span>
-                        </a>
-                        <a href="{% url 'products:list' %}?category=greens" class="category-item is-block mb-3">
-                            <span class="icon-text">
-                                <span class="icon">
-                                    <i class="fas fa-leaf has-text-success"></i>
-                                </span>
-                                <span>Verduras</span>
-                                <span class="tag is-light is-pulled-right">52 produtos</span>
-                            </span>
-                        </a>
-                        <a href="{% url 'products:list' %}?category=herbs" class="category-item is-block mb-3">
-                            <span class="icon-text">
-                                <span class="icon">
-                                    <i class="fas fa-seedling has-text-success"></i>
-                                </span>
-                                <span>Hortaliças</span>
-                                <span class="tag is-light is-pulled-right">31 produtos</span>
-                            </span>
-                        </a>
-                        <a href="{% url 'products:list' %}?category=grains" class="category-item is-block mb-3">
-                            <span class="icon-text">
-                                <span class="icon">
-                                    <i class="fas fa-wheat-alt has-text-success"></i>
-                                </span>
-                                <span>Grãos</span>
-                                <span class="tag is-light is-pulled-right">24 produtos</span>
-                            </span>
-                        </a>
-                        <a href="{% url 'products:list' %}?category=organic" class="category-item is-block mb-3">
-                            <span class="icon-text">
-                                <span class="icon">
-                                    <i class="fas fa-certificate has-text-success"></i>
-                                </span>
-                                <span>Orgânicos</span>
-                                <span class="tag is-light is-pulled-right">07 produtos</span>
-                            </span>
-                        </a>
+                        {% for category in categories %}
+                          <a href="{% url 'products:list' %}?category={{ category.id }}" class="category-item is-block mb-3">
+                              <span class="icon-text">
+                                  <span class="icon">
+                                      <i class="{{ category.icon_class }} has-text-success"></i>
+                                  </span>
+                                  <span>{{ category.name }}</span>
+                                  <span class="tag is-light is-pulled-right">{{ category.count }} produtos</span>
+                              </span>
+                          </a>
+                        {% empty %}
+                          <p class="has-text-grey is-size-7">Sem categorias disponíveis.</p>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -111,58 +70,30 @@
                 </div>
                 <div class="card-content">
                     <div class="producers-list">
-                        <div class="producer-item mb-4">
-                            <div class="media">
-                                <div class="media-left">
-                                    <i class="fas fa-store fa-2x has-text-success"></i>
-                                </div>
-                                <div class="media-content">
-                                    <p class="has-text-weight-bold">Quinta do Sol</p>
-                                    <p class="is-size-7 has-text-grey">Sintra</p>
-                                    <p class="is-size-7">Agricultura familiar sustentável há 30 anos.</p>
-                                    <div class="rating">
-                                        <span class="has-text-warning">★★★★☆</span>
-                                        <span class="is-size-7 has-text-grey"> 4.8</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="producer-item mb-4">
-                            <div class="media">
-                                <div class="media-left">
-                                    <i class="fas fa-store fa-2x has-text-success"></i>
-                                </div>
-                                <div class="media-content">
-                                    <p class="has-text-weight-bold">Horta da Vila</p>
-                                    <p class="is-size-7 has-text-grey">Cascais</p>
-                                    <p class="is-size-7">Produtos frescos colhidos diariamente.</p>
-                                    <div class="rating">
-                                        <span class="has-text-warning">★★★★☆</span>
-                                        <span class="is-size-7 has-text-grey"> 4.6</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="producer-item mb-4">
-                            <div class="media">
-                                <div class="media-left">
-                                    <i class="fas fa-store fa-2x has-text-success"></i>
-                                </div>
-                                <div class="media-content">
-                                    <p class="has-text-weight-bold">Fazenda Verde</p>
-                                    <p class="is-size-7 has-text-grey">Óbidos</p>
-                                    <p class="is-size-7">Certificação biológica desde 2010.</p>
-                                    <div class="rating">
-                                        <span class="has-text-warning">★★★★★</span>
-                                        <span class="is-size-7 has-text-grey"> 4.9</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        {% for p in local_producers %}
+                          <div class="producer-item mb-4">
+                              <div class="media">
+                                  <div class="media-left">
+                                      <i class="fas fa-store fa-2x has-text-success"></i>
+                                  </div>
+                                  <div class="media-content">
+                                      <p class="has-text-weight-bold">{{ p.name }}</p>
+                                      <p class="is-size-7 has-text-grey">{{ p.location|default:"Localização não indicada" }}</p>
+                                      <p class="is-size-7">{{ p.description|default:"Produtor local."|truncatewords:10 }}</p>
+                                      <div class="rating">
+                                          <span class="has-text-warning">★ {{ p.rating|floatformat:1 }}/5</span>
+                                          <span class="is-size-7 has-text-grey"> ({{ p.total_ratings|default:0 }})</span>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                        {% empty %}
+                          <p class="has-text-grey is-size-7">Sem produtores para mostrar.</p>
+                        {% endfor %}
                     </div>
                     <div class="has-text-centered mt-3">
                         <a href="{% url 'products:list' %}" class="button is-small is-light is-fullwidth">
-                            Ver todos (25 produtores)
+                            Ver catálogo de produtos
                         </a>
                     </div>
                 </div>
@@ -180,118 +111,71 @@
                 </div>
             </div>
 
-            <div class="columns is-multiline">
-                <!-- Produto 1 - Tomate Cereja Orgânico -->
-                <div class="column is-6-desktop is-12-tablet is-12-mobile">
-                    <div class="card product-card">
-                        <div class="card-image">
-                            <figure class="image is-4by3">
-                                <img src="{% static 'images/placeholder-product.jpg' %}" alt="Tomate Cereja Orgânico">
-                            </figure>
-                        </div>
-                        <div class="card-content">
-                            <p class="title is-6">Tomate Cereja Orgânico</p>
-                            <p class="subtitle is-7 has-text-grey">Quinta do Sol</p>
-                            <div class="rating-stars mb-2">
-                                <span class="has-text-warning">★★★★☆</span>
-                                <span class="is-size-7 has-text-grey">(23)</span>
-                            </div>
-                            <div class="level is-mobile">
-                                <div class="level-left">
-                                    <span class="product-price has-text-success has-text-weight-bold is-size-5">8,50€</span>
-                                    <span class="is-size-7 has-text-grey">/kg</span>
-                                </div>
-                                <div class="level-right">
-                                    <a href="{% url 'products:list' %}" class="button is-small is-success">Adicionar</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="featured-slider-wrapper">
+              <div class="featured-slider-controls">
+                <button class="button is-small is-light slider-prev" type="button" aria-label="Anterior">
+                  <span class="icon"><i class="fas fa-chevron-left"></i></span>
+                </button>
+                <button class="button is-small is-light slider-next" type="button" aria-label="Seguinte">
+                  <span class="icon"><i class="fas fa-chevron-right"></i></span>
+                </button>
+              </div>
 
-                <!-- Produto 2 - Cenouras Bio -->
-                <div class="column is-6-desktop is-12-tablet is-12-mobile">
+              <div class="featured-slider">
+                {% for product in featured_products %}
+                  <div class="featured-slide">
                     <div class="card product-card">
-                        <div class="card-image">
-                            <figure class="image is-4by3">
-                                <img src="{% static 'images/placeholder-product.jpg' %}" alt="Cenouras Bio">
-                            </figure>
-                        </div>
-                        <div class="card-content">
-                            <p class="title is-6">Cenouras Bio</p>
-                            <p class="subtitle is-7 has-text-grey">Fazenda Verde</p>
-                            <div class="rating-stars mb-2">
-                                <span class="has-text-warning">★★★★★</span>
-                                <span class="is-size-7 has-text-grey">(45)</span>
-                            </div>
-                            <div class="level is-mobile">
-                                <div class="level-left">
-                                    <span class="product-price has-text-success has-text-weight-bold is-size-5">3,20€</span>
-                                    <span class="is-size-7 has-text-grey">/kg</span>
-                                </div>
-                                <div class="level-right">
-                                    <a href="{% url 'products:list' %}" class="button is-small is-success">Adicionar</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                      <div class="card-image">
+                        <figure class="image is-4by3">
+                          {% if product.main_image %}
+                            <img src="{{ product.main_image.url }}" alt="{{ product.name }}" loading="lazy" style="object-fit: cover;">
+                          {% else %}
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%23e8f5e9' width='400' height='300'/%3E%3C/svg%3E"
+                                 alt="{{ product.name }}" loading="lazy" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); object-fit: cover;">
+                          {% endif %}
+                        </figure>
+                      </div>
+                      <div class="card-content">
+                        <p class="title is-6">{{ product.name }}</p>
+                        <p class="subtitle is-7 has-text-grey">{{ product.producer.name }}</p>
 
-                <!-- Produto 3 - Espinafres Frescos -->
-                <div class="column is-6-desktop is-12-tablet is-12-mobile">
-                    <div class="card product-card">
-                        <div class="card-image">
-                            <figure class="image is-4by3">
-                                <img src="{% static 'images/placeholder-product.jpg' %}" alt="Espinafres Frescos">
-                            </figure>
+                        <div class="rating-stars mb-2 is-size-7">
+                          {% if product.total_reviews > 0 %}
+                            <span class="has-text-warning">★ {{ product.average_rating|floatformat:1 }}/5</span>
+                            <span class="has-text-grey">({{ product.total_reviews }})</span>
+                          {% else %}
+                            <span class="has-text-grey">Sem avaliações</span>
+                          {% endif %}
                         </div>
-                        <div class="card-content">
-                            <p class="title is-6">Espinafres Frescos</p>
-                            <p class="subtitle is-7 has-text-grey">Horta da Vila</p>
-                            <div class="rating-stars mb-2">
-                                <span class="has-text-warning">★★★★☆</span>
-                                <span class="is-size-7 has-text-grey">(15)</span>
-                            </div>
-                            <div class="level is-mobile">
-                                <div class="level-left">
-                                    <span class="product-price has-text-success has-text-weight-bold is-size-5">5,80€</span>
-                                    <span class="is-size-7 has-text-grey">/maço</span>
-                                </div>
-                                <div class="level-right">
-                                    <a href="{% url 'products:list' %}" class="button is-small is-success">Adicionar</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Produto 4 - Morangos Bio -->
-                <div class="column is-6-desktop is-12-tablet is-12-mobile">
-                    <div class="card product-card">
-                        <div class="card-image">
-                            <figure class="image is-4by3">
-                                <img src="{% static 'images/placeholder-product.jpg' %}" alt="Morangos Bio">
-                            </figure>
+                        <div class="level is-mobile">
+                          <div class="level-left">
+                            <span class="product-price has-text-success has-text-weight-bold is-size-5">€{{ product.price }}</span>
+                            <span class="is-size-7 has-text-grey">/{{ product.get_unit_display }}</span>
+                          </div>
+                          <div class="level-right">
+                            <a href="{% url 'products:detail' product.id %}?back=/" class="button is-small is-light">Ver</a>
+                            {% if product.stock > 0 %}
+                              <form method="post" action="{% url 'orders:add_to_cart' product.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="button is-small is-success">Adicionar</button>
+                              </form>
+                            {% else %}
+                              <button class="button is-small is-light" disabled>Esgotado</button>
+                            {% endif %}
+                          </div>
                         </div>
-                        <div class="card-content">
-                            <p class="title is-6">Morangos Bio</p>
-                            <p class="subtitle is-7 has-text-grey">Pomar do Oeste</p>
-                            <div class="rating-stars mb-2">
-                                <span class="has-text-warning">★★★★★</span>
-                                <span class="is-size-7 has-text-grey">(67)</span>
-                            </div>
-                            <div class="level is-mobile">
-                                <div class="level-left">
-                                    <span class="product-price has-text-success has-text-weight-bold is-size-5">12,00€</span>
-                                    <span class="is-size-7 has-text-grey">/caixa</span>
-                                </div>
-                                <div class="level-right">
-                                    <a href="{% url 'products:list' %}" class="button is-small is-light" disabled>Esgotado</a>
-                                </div>
-                            </div>
-                        </div>
+                      </div>
                     </div>
-                </div>
+                  </div>
+                {% empty %}
+                  <div class="notification is-light">
+                    Ainda não existem produtos em destaque.
+                    <a href="{% url 'products:list' %}">Ver catálogo</a>.
+                  </div>
+                {% endfor %}
+              </div>
             </div>
 
             <!-- Banner para Produtor -->
@@ -365,6 +249,42 @@
     
     .producer-item:last-child {
         border-bottom: none;
+    }
+
+    .featured-slider-wrapper {
+        position: relative;
+    }
+
+    .featured-slider-controls {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .featured-slider {
+        display: flex;
+        gap: 1rem;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .featured-slide {
+        flex: 0 0 auto;
+        min-width: 300px;
+        max-width: 340px;
+        scroll-snap-align: start;
+    }
+
+    .featured-slider::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .featured-slider::-webkit-scrollbar-thumb {
+        background: rgba(46, 125, 50, 0.25);
+        border-radius: 999px;
     }
     
     .rating-stars .has-text-warning {
