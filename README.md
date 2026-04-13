@@ -1,60 +1,127 @@
-# Cverde Agro E-commerce
+# 🌱 Coverde Agro E-commerce
 
-Plataforma de e-commerce agrícola de impacto social que conecta produtores rurais a consumidores, empresas e logística local. Projeto académico desenvolvido em Django/Python.
+Plataforma de e-commerce agrícola de impacto social que conecta produtores rurais a consumidores, empresas e logística local.  
+**Projeto académico** desenvolvido em Django/Python.
 
-## Missão
-Promover desenvolvimento económico sustentável e inclusivo digitalizando o comércio local e aproximando produtor e consumidor final.
+## 🎯 Missão
 
-## Stack
-- Backend: Python + Django
-- Frontend: HTML, CSS, JavaScript, Bootstrap
-- Base de dados: SQLite (desenvolvimento), PostgreSQL (produção)
-- ORM: Django ORM
+Promover desenvolvimento económico sustentável e inclusivo, digitalizando o comércio local e aproximando produtor e consumidor final.
 
-## Como iniciar (dev)
-1) Crie um virtualenv e instale dependências:
-```
+## 🛠️ Stack Tecnológica
+
+| Camada | Tecnologia |
+|--------|------------|
+| Backend | Python + Django |
+| Frontend | HTML, CSS, JavaScript, Bootstrap |
+| Base de Dados | SQLite (desenvolvimento) / MySQL (produção) |
+| ORM | Django ORM |
+
+## 🚀 Como iniciar (desenvolvimento)
+
+```bash
+# 1. Criar e ativar ambiente virtual
+python -m venv venv
+venv\Scripts\activate  # Windows
+# source venv/bin/activate  # Linux/Mac
+
+# 2. Instalar dependências
 pip install -r requirements.txt
-```
-2) Execute migrações e servidor:
-```
+
+# 3. Configurar base de dados (SQLite para testes rápidos)
+echo "DB_USE_SQLITE=true" > .env
+
+# 4. Aplicar migrações
 python manage.py migrate
+
+# 5. Executar servidor
 python manage.py runserver
-```
 
-## Dados de demonstração
+Aceda em: http://127.0.0.1:8000
 
-- Criar/atualizar 6 produtores de exemplo:
-```
-python manage.py seed_producers
-```
+🗄️ Como restaurar a base de dados MySQL (para avaliação)
+Pré-requisitos
+MySQL instalado (versão 8.0+)
 
-## Requisitos SRS (utilizadores)
+Acesso ao terminal
 
-- Verificação de email: após registo é enviado link; login só após confirmar.
-- 2FA opcional por email: pode ativar em `Minha Conta -> Editar perfil`.
+Passos
+bash
+# 1. Criar a base de dados
+mysql -u root -p -e "CREATE DATABASE coverde_db CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;"
 
-## Estrutura
-- apps/: apps de domínio (utilizadores, produtores, produtos, encomendas, pagamentos, notificações)
-- cverde/: configuração do projeto Django (settings, urls, wsgi)
-- templates/ e static/: assets frontend
-- docs/: documentação
-- tests/: testes automatizados
+# 2. Restaurar o backup
+mysql -u root -p coverde_db < coverde_db_backup.sql
 
-## Funcionalidades
+# 3. Configurar o .env para usar MySQL
+echo "DB_USE_SQLITE=false" > .env
+echo "DB_NAME=coverde_db" >> .env
+echo "DB_USER=root" >> .env
+echo "DB_PASSWORD=" >> .env
+echo "DB_HOST=localhost" >> .env
+echo "DB_PORT=3306" >> .env
 
-### Página Inicial
-- Hero com call-to-action
-- Categorias de produtos
-- Produtos em destaque
-- Listagem de produtores locais
+# 4. Executar o servidor
+python manage.py runserver
+Credenciais de teste (após restauro)
+Perfil	Email	Password
+Consumidor	consumidor@teste.com	teste123
+Produtor	produtor@teste.com	teste123
+Administrador	admin@coverde.pt	admin123
+📦 Dados de demonstração (alternativa com fixtures)
+bash
+# Carregar dados de exemplo (sem MySQL)
+python manage.py loaddata fixtures/seed_data.json
+👥 Requisitos SRS (utilizadores)
+Verificação de email: após registo é enviado link de confirmação; login só após confirmar.
 
-### Painel de Produtor
-- Métricas de vendas, encomendas, produtos e avaliações
-- Gestão de produtos disponíveis
-- Acompanhamento de encomendas
+2FA opcional por email: pode ativar em Minha Conta → Editar perfil.
 
-### Listagem de Produtos
-- Produtos agrupados por produtor
-- Detalhes de categoria, unidade, stock e preço
-- Filtragem por disponibilidade
+📁 Estrutura do Projeto
+text
+Cverde-agro-ecommerce/
+├── apps/                    # Apps de domínio
+│   ├── users/              # Autenticação e perfis
+│   ├── products/           # Catálogo de produtos
+│   ├── orders/             # Encomendas e carrinho
+│   ├── payments/           # Pagamentos
+│   └── notifications/      # Notificações
+├── cverde/                 # Configuração do projeto
+├── templates/              # Templates HTML
+├── static/                 # Ficheiros estáticos
+├── fixtures/               # Dados de exemplo (JSON)
+├── docs/                   # Documentação
+├── tests/                  # Testes automatizados
+├── requirements.txt
+├── manage.py
+└── coverde_db_backup.sql   # Backup MySQL
+✨ Funcionalidades
+Página Inicial
+Hero com call-to-action
+
+Categorias de produtos
+
+Produtos em destaque
+
+Listagem de produtores locais
+
+Painel do Produtor
+Métricas de vendas, encomendas, produtos e avaliações
+
+Gestão de produtos disponíveis
+
+Acompanhamento de encomendas
+
+Listagem de Produtos
+Produtos agrupados por produtor
+
+Detalhes de categoria, unidade, stock e preço
+
+Filtragem por disponibilidade
+
+ Licença
+MIT License
+
+ Autora
+Camila Esteves
+Licenciatura em Informática de Gestão – ISCAC
+a2023110951@alumni.iscac.pt
