@@ -25,3 +25,4 @@ venv/
 *.log
 *.pot
 *.mo
+coverde_db_backup.sql
