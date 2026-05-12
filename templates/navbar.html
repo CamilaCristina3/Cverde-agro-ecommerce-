@@ -23,6 +23,16 @@
           <span class="icon"><i class="fas fa-shopping-bag"></i></span>
           <span>Produtos</span>
         </a>
+        {% if user.is_authenticated %}
+          <a class="navbar-item" href="{% url 'chat:assistant' %}">
+            <span class="icon"><i class="fas fa-robot"></i></span>
+            <span>Secretária</span>
+          </a>
+          <a class="navbar-item" href="{% url 'chat:index' %}">
+            <span class="icon"><i class="fas fa-comments"></i></span>
+            <span>Chat</span>
+          </a>
+        {% endif %}
         <a class="navbar-item" href="{% url 'users:dashboard' %}">
           <span class="icon"><i class="fas fa-user"></i></span>
           <span>Painel</span>

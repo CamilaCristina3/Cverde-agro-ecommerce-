@@ -15,6 +15,7 @@ urlpatterns = [
     path("orders/", include("apps.orders.urls")),
     path("payments/", include("apps.payments.urls")),
     path("notifications/", include("apps.notifications.urls")),
+    path("chat/", include("apps.chat.urls")),
     path("", include("apps.pages.urls")),  # Páginas estáticas (política, termos, cookies)
 ]
 

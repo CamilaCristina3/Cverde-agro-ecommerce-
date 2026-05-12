@@ -118,6 +118,18 @@ Detalhes de categoria, unidade, stock e preço
 
 Filtragem por disponibilidade
 
+💬 Chat em tempo real (WebSockets)
+Pré-requisitos
+pip install -r requirements.txt
+
+Configuração
+- Por defeito (sem Redis): usa InMemoryChannelLayer (bom para DEV).
+- Com Redis: define REDIS_URL (ex.: redis://localhost:6379/0).
+
+Rotas
+- UI: /chat/
+- WebSocket: /ws/chat/<room_name>/
+
  Licença
 MIT License
 

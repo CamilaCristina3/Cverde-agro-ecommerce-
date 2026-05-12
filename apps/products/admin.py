@@ -36,7 +36,6 @@ class ProductAdmin(admin.ModelAdmin):
     list_per_page = 20
     date_hierarchy = "created_at"
 
-    autocomplete_fields = ("producer",)
     readonly_fields = ("created_at",)
 
     actions = [

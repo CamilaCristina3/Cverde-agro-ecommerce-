@@ -1,0 +1,479 @@
+<div id="chatbot-widget">
+    <!-- Botão flutuante -->
+    <div class="chatbot-button" id="chatbotToggle">
+        <i class="fas fa-headset"></i>
+        <span class="chatbot-status"></span>
+    </div>
+
+    <!-- Janela do chat -->
+    <div class="chatbot-container" id="chatbotContainer">
+        <div class="chatbot-header">
+            <div class="chatbot-header-info">
+                <i class="fas fa-robot"></i>
+                <div>
+                    <h3>Secretária Virtual Coverde</h3>
+                    <p>💬 Online | Respondo em segundos</p>
+                </div>
+            </div>
+            <button class="chatbot-close" id="chatbotClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="message bot-message">
+                <div class="message-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-content">
+                    Olá! 👋 Sou a assistente virtual da Coverde.<br>
+                    Posso ajudar com:
+                    <ul class="help-suggestions">
+                        <li>📦 Produtos e encomendas</li>
+                        <li>🚚 Entregas e prazos</li>
+                        <li>💰 Pagamentos</li>
+                        <li>🌱 Como ser produtor</li>
+                    </ul>
+                    Como posso ajudá-lo hoje?
+                </div>
+            </div>
+        </div>
+
+        <div class="chatbot-input-area">
+            <div class="suggestions quick-replies" id="quickReplies">
+                <button class="suggestion-chip" data-message="Como faço uma encomenda?">📦 Como encomendar?</button>
+                <button class="suggestion-chip" data-message="Quanto tempo demora a entrega?">🚚 Prazo de entrega</button>
+                <button class="suggestion-chip" data-message="Como posso ser produtor?">🌱 Ser produtor</button>
+                <button class="suggestion-chip" data-message="Formas de pagamento">💰 Pagamentos</button>
+            </div>
+            <div class="input-group">
+                <input type="text" id="chatbotInput" placeholder="Escreva a sua mensagem..." autocomplete="off">
+                <button id="chatbotSend">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            <p class="chatbot-footer">Atendimento automático 24/7</p>
+        </div>
+    </div>
+</div>
+
+<style>
+#chatbot-widget {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.chatbot-button {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(46,125,50,0.4);
+    transition: all 0.3s;
+}
+
+.chatbot-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(46,125,50,0.5);
+}
+
+.chatbot-button i {
+    font-size: 28px;
+    color: white;
+}
+
+.chatbot-status {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 14px;
+    height: 14px;
+    background-color: #4caf50;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.chatbot-container {
+    position: absolute;
+    bottom: 80px;
+    right: 0;
+    width: 380px;
+    height: 550px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    animation: slideUp 0.3s ease;
+}
+
+.chatbot-container.active {
+    display: flex;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.chatbot-header {
+    background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chatbot-header-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.chatbot-header-info i {
+    font-size: 28px;
+}
+
+.chatbot-header-info h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.chatbot-header-info p {
+    margin: 0;
+    font-size: 0.7rem;
+    opacity: 0.9;
+}
+
+.chatbot-close {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chatbot-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    background-color: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.message {
+    display: flex;
+    gap: 10px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.message-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.bot-message .message-avatar {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.user-message {
+    justify-content: flex-end;
+}
+
+.user-message .message-content {
+    background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+    color: white;
+    border-radius: 18px 18px 4px 18px;
+}
+
+.message-content {
+    max-width: 70%;
+    padding: 10px 15px;
+    background-color: white;
+    border-radius: 18px 18px 18px 4px;
+    font-size: 0.9rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.help-suggestions {
+    margin-top: 8px;
+    padding-left: 20px;
+    font-size: 0.85rem;
+}
+
+.chatbot-input-area {
+    padding: 15px;
+    border-top: 1px solid #eee;
+    background: white;
+}
+
+.suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.suggestion-chip {
+    background: #e8f5e9;
+    border: none;
+    color: #2e7d32;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.suggestion-chip:hover {
+    background: #2e7d32;
+    color: white;
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+}
+
+.input-group input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    outline: none;
+    font-size: 0.9rem;
+}
+
+.input-group input:focus {
+    border-color: #2e7d32;
+}
+
+.input-group button {
+    background: #2e7d32;
+    border: none;
+    color: white;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.input-group button:hover {
+    background: #1b5e20;
+    transform: scale(1.02);
+}
+
+.chatbot-footer {
+    text-align: center;
+    font-size: 0.65rem;
+    color: #999;
+    margin-top: 10px;
+}
+
+.typing-indicator {
+    display: flex;
+    gap: 4px;
+    padding: 8px 12px;
+}
+
+.typing-indicator span {
+    width: 8px;
+    height: 8px;
+    background-color: #999;
+    border-radius: 50%;
+    animation: typing 1.4s infinite ease-in-out;
+}
+
+.typing-indicator span:nth-child(1) { animation-delay: 0s; }
+.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-10px); opacity: 1; }
+}
+
+@media (max-width: 500px) {
+    .chatbot-container {
+        width: calc(100vw - 40px);
+        right: 0;
+        height: 500px;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleBtn = document.getElementById('chatbotToggle');
+    const container = document.getElementById('chatbotContainer');
+    const closeBtn = document.getElementById('chatbotClose');
+    const sendBtn = document.getElementById('chatbotSend');
+    const input = document.getElementById('chatbotInput');
+    const messagesContainer = document.getElementById('chatbotMessages');
+    const quickReplyBtns = document.querySelectorAll('.suggestion-chip');
+    let isTyping = false;
+
+    const botResponses = {
+        'olá': 'Olá! 👋 Como posso ajudá-lo hoje?',
+        'oi': 'Oi! 😊 Em que posso ser útil?',
+        'bom dia': 'Bom dia! 🌞 Como posso ajudar?',
+        'boa tarde': 'Boa tarde! 😊 Em que posso ajudar?',
+        'boa noite': 'Boa noite! 🌙 Como posso ajudá-lo?',
+        'catálogo': 'Pode explorar todos os nossos produtos na página de catálogo! 🌱 Temos frutas, legumes, produtos biológicos e muito mais.',
+        'produtos em destaque': 'Os produtos em destaque estão na página inicial! 🌟 São selecionados pela qualidade e popularidade.',
+        'preço': 'Os preços variam por produto e produtor. Na página do produto encontra o preço detalhado.',
+        'como fazer uma encomenda': 'Para fazer uma encomenda: 1️⃣ Adicione produtos ao carrinho 2️⃣ Vá ao checkout 3️⃣ Preencha a morada 4️⃣ Escolha o pagamento 5️⃣ Confirme! 📦',
+        'encomenda': 'Fazer uma encomenda é fácil! Adicione produtos ao carrinho e siga o checkout.',
+        'carrinho': 'O carrinho está no canto superior direito. Clique no ícone do carrinho para ver os seus produtos! 🛒',
+        'entrega': 'As entregas são feitas pelos CTT. O prazo é de 1-3 dias úteis, dependendo da localização. 🚚',
+        'prazo de entrega': 'O prazo normal é de 1-3 dias úteis após confirmação do pagamento. 📦',
+        'portes': 'Os portes são calculados automaticamente no checkout com base no peso e destino.',
+        'rastreio': 'Após o envio, receberá um código de rastreio por email para acompanhar a sua encomenda.',
+        'pagamento': 'Aceitamos pagamentos por MB WAY, Referência Multibanco e PayPal. 💳',
+        'mb way': 'MB WAY é um pagamento rápido pelo seu telemóvel. Basta confirmar na app.',
+        'multibanco': 'Gera uma referência Multibanco que pode pagar no multibanco ou homebanking.',
+        'paypal': 'Pagamento seguro através do PayPal. Aceitamos cartões de crédito/débito.',
+        'como ser produtor': 'Para ser produtor, registe-se e escolha o perfil "Produtor". Depois aguarde verificação e comece a vender! 🌱',
+        'produtor': 'Os produtores são agricultores locais verificados. Tudo o que vende na plataforma é fresco e de confiança!',
+        'vender': 'Quer vender os seus produtos? Registe-se como produtor e publique os seus produtos! 🍅🥬',
+        'como registar': 'Clique em "Registar" no canto superior direito. Escolha entre consumidor ou produtor e preencha os dados.',
+        'login': 'Use o botão "Entrar" no topo. Se esqueceu a password, use a opção "Esqueceu a palavra-passe".',
+        'recuperar password': 'Na página de login, clique em "Esqueceu a palavra-passe?" e siga as instruções enviadas por email.',
+        'ajuda': 'Claro! Posso ajudar com dúvidas sobre pedidos, pagamento, produtos e taxas de entrega. Em que posso ajudar?',
+        'contacto': 'Pode contactar-nos por email: info@coverde.pt ou telefone: 210 000 000',
+        'horário': 'O nosso suporte está disponível de segunda a sexta, das 9h às 18h.',
+        'problemas': 'Descreva o problema que tem, e tentarei ajudar o melhor possível! 🤝',
+        'default': 'Obrigada pela mensagem! 📩 Um assistente irá responder brevemente. Enquanto isso, posso ajudar com: encomendas, produtos, entregas ou pagamentos?'
+    };
+
+    function getBotResponse(message) {
+        const lowerMsg = message.toLowerCase().trim();
+        for (const [key, response] of Object.entries(botResponses)) {
+            if (lowerMsg.includes(key)) {
+                return response;
+            }
+        }
+        return botResponses.default;
+    }
+
+    function addMessage(text, isUser = false) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+        if (!isUser) {
+            messageDiv.innerHTML = `
+                <div class="message-avatar"><i class="fas fa-robot"></i></div>
+                <div class="message-content">${text}</div>
+            `;
+        } else {
+            messageDiv.innerHTML = `
+                <div class="message-content">${escapeHtml(text)}</div>
+            `;
+        }
+        messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        return messageDiv;
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    async function simulateTyping(callback) {
+        if (isTyping) return;
+        isTyping = true;
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'message bot-message typing';
+        typingDiv.innerHTML = `
+            <div class="message-avatar"><i class="fas fa-robot"></i></div>
+            <div class="message-content">
+                <div class="typing-indicator">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+        `;
+        messagesContainer.appendChild(typingDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        await new Promise(resolve => setTimeout(resolve, 900));
+        typingDiv.remove();
+        isTyping = false;
+        callback();
+    }
+
+    async function processUserMessage(message) {
+        if (!message.trim()) return;
+        addMessage(message, true);
+        input.value = '';
+        const response = getBotResponse(message);
+        await simulateTyping(() => {
+            addMessage(response, false);
+        });
+    }
+
+    function sendMessage() {
+        const message = input.value.trim();
+        if (message) {
+            processUserMessage(message);
+        }
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+    toggleBtn.addEventListener('click', () => {
+        container.classList.toggle('active');
+        if (container.classList.contains('active')) {
+            input.focus();
+        }
+    });
+    closeBtn.addEventListener('click', () => {
+        container.classList.remove('active');
+    });
+    quickReplyBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const message = btn.getAttribute('data-message');
+            if (message) {
+                processUserMessage(message);
+            }
+        });
+    });
+});
+</script>

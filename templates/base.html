@@ -7,8 +7,9 @@
   <title>{% block title %}Cverde Agro E-commerce{% endblock %}</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+  <link rel="preload" href="{% static 'css/style.min.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="{% static 'css/custom.min.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="{% static 'css/style.min.css' %}"><link rel="stylesheet" href="{% static 'css/custom.min.css' %}"></noscript>
   {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -24,8 +25,9 @@
   </section>
 
   {% include "footer.html" %}
+  {% include "chatbot/chatbot_widget.html" %}
 
-  <script src="{% static 'js/main.js' %}"></script>
+  <script src="{% static 'js/main.min.js' %}" defer></script>
   <script>
     // Navbar burger functionality
     document.addEventListener('DOMContentLoaded', () => {
