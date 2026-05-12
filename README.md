@@ -130,7 +130,14 @@ Rotas
 - UI: /chat/
 - WebSocket: /ws/chat/<room_name>/
 
- Licença
+## 🏷️ Release v1.0.0
+- Integração da secretária virtual Coverde com widget flutuante em todas as páginas
+- Adição de chat em tempo real com Django Channels e WebSockets
+- Otimização de frontend: CSS/JS minificados e imagens otimizadas
+- Correção de configuração do app `apps.producers` no `INSTALLED_APPS`
+- Ajustes no admin Django para compatibilidade com o modelo `Producer`
+
+Licença
 MIT License
 
  Autora
