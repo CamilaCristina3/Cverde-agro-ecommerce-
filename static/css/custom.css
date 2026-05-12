@@ -90,3 +90,222 @@ body {
     width: 100%;
   }
 }
+
+/* Professional appearance enhancements */
+body {
+  color: #1b3a2a;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.7;
+}
+
+a {
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+a:hover {
+  color: #164821;
+}
+
+.hero-section {
+  background: linear-gradient(180deg, rgba(235, 250, 238, 0.95) 0%, rgba(242, 255, 250, 0.98) 100%);
+  border: 1px solid rgba(46, 125, 50, 0.12);
+  box-shadow: 0 24px 64px rgba(46, 125, 50, 0.08);
+  border-radius: 30px;
+  padding: 3rem 2.5rem;
+}
+
+.hero-section .title {
+  color: #1f4f2d;
+}
+
+.hero-section .subtitle,
+.hero-section p {
+  color: #3c5d47;
+}
+
+.hero-section .buttons .button {
+  min-width: 190px;
+}
+
+.hero-section .button.is-success {
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+  border-color: transparent;
+  color: #ffffff;
+}
+
+.hero-section .button.is-success.is-outlined {
+  color: #1b5e20;
+  border-color: #1b5e20;
+}
+
+.hero-section .button.is-success:hover,
+.hero-section .button.is-success.is-outlined:hover {
+  transform: translateY(-1px);
+}
+
+#sidebar .card {
+  border: 1px solid rgba(46, 125, 50, 0.12);
+}
+
+.categories-list .category-item {
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  border: 1px solid rgba(46, 125, 50, 0.08);
+}
+
+.categories-list .category-item:hover {
+  background-color: rgba(46, 125, 50, 0.08);
+  transform: translateX(4px);
+}
+
+.producer-item {
+  padding: 1rem;
+  border-radius: 16px;
+  border: 1px solid rgba(46, 125, 50, 0.08);
+  background: #ffffff;
+}
+
+.producer-item:hover {
+  box-shadow: 0 20px 35px rgba(46, 125, 50, 0.08);
+}
+
+.producer-item .media {
+  align-items: flex-start;
+}
+
+.producer-item .message-avatar,
+.producer-item .icon {
+  color: #2e7d32;
+}
+
+.featured-slider-wrapper {
+  position: relative;
+}
+
+.featured-slider {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(46, 125, 50, 0.25) transparent;
+}
+
+.featured-slider::-webkit-scrollbar {
+  height: 10px;
+}
+
+.featured-slider::-webkit-scrollbar-thumb {
+  background: rgba(46, 125, 50, 0.25);
+  border-radius: 999px;
+}
+
+.featured-slide {
+  min-width: 320px;
+  flex: 0 0 auto;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(30, 130, 76, 0.12);
+  background: #ffffff;
+  scroll-snap-align: start;
+}
+
+.featured-slider-controls {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: flex;
+  gap: 0.75rem;
+  z-index: 10;
+}
+
+.featured-slide .card-image figure {
+  overflow: hidden;
+}
+
+.featured-slide .card-content {
+  padding: 1.5rem;
+}
+
+.featured-slide .title {
+  margin-bottom: 0.35rem;
+}
+
+.featured-slide .rating-stars {
+  margin-bottom: 1rem;
+}
+
+.featured-slide .button {
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.featured-slide .button:hover {
+  transform: translateY(-1px);
+}
+
+.slider-prev,
+.slider-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+.slider-prev {
+  left: -0.75rem;
+}
+
+.slider-next {
+  right: -0.75rem;
+}
+
+.card.has-background-success-light {
+  border: 1px solid rgba(46, 125, 50, 0.12);
+}
+
+.card.has-background-success-light .card-content {
+  background: linear-gradient(180deg, rgba(244, 253, 247, 0.98) 0%, rgba(236, 250, 240, 1) 100%);
+}
+
+.card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.footer {
+  background: #ffffff;
+  border-top: 1px solid rgba(46, 125, 50, 0.12);
+}
+
+.footer .content {
+  padding: 2rem 0;
+}
+
+@media (max-width: 1080px) {
+  .hero-section {
+    padding: 2.5rem 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 2rem 1rem;
+  }
+
+  .featured-slider {
+    gap: 0.8rem;
+  }
+
+  .featured-slide {
+    min-width: 90%;
+  }
+}
