@@ -1,16 +1,59 @@
-<footer class="footer mt-6">
-  <div class="content has-text-centered">
-    <p class="mb-2">
-      <strong>Cverde</strong> — Produtos locais e frescos.
-    </p>
-    <p class="is-size-7 has-text-grey">
-      <a href="{% url 'pages:privacy_policy' %}">Política de Privacidade (RGPD)</a> ·
-      <a href="{% url 'pages:terms_of_use' %}">Termos de Utilização</a> ·
-      <a href="{% url 'pages:cookies_policy' %}">Política de Cookies</a>
-    </p>
-    <p class="is-size-7 has-text-grey mt-2">
-      Contacto: <a href="mailto:suporte@cverde.co.mz">suporte@cverde.co.mz</a>
-    </p>
+{% load static %}
+<footer class="footer coverde-footer mt-6">
+  <div class="container">
+    <div class="columns">
+      <div class="column is-4">
+        <div class="coverde-footer__brand">
+          <img src="{% static 'images/logo.svg' %}" alt="Cverde" class="coverde-footer__logo">
+          <div>
+            <p class="title is-6 mb-1">Cverde</p>
+            <p class="is-size-7 has-text-grey">
+              Mercado local de produtos agrícolas — fresco, sustentável e transparente.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="column is-3">
+        <p class="title is-6">Links</p>
+        <ul class="coverde-footer__links">
+          <li><a href="{% url 'products:list' %}">Produtos</a></li>
+          <li><a href="{% url 'pages:terms_of_use' %}">Termos de Utilização</a></li>
+          <li><a href="{% url 'pages:privacy_policy' %}">Política de Privacidade</a></li>
+          <li><a href="{% url 'pages:cookies_policy' %}">Política de Cookies</a></li>
+        </ul>
+      </div>
+
+      <div class="column is-3">
+        <p class="title is-6">Contacto</p>
+        <p class="is-size-7 has-text-grey mb-2">Suporte por email:</p>
+        <p><a href="mailto:suporte@cverde.co.mz">suporte@cverde.co.mz</a></p>
+      </div>
+
+      <div class="column is-2">
+        <p class="title is-6">Social</p>
+        <div class="buttons">
+          <a class="button is-light is-small" href="#" aria-label="Instagram" title="Instagram">
+            <span class="icon"><i class="fab fa-instagram"></i></span>
+          </a>
+          <a class="button is-light is-small" href="#" aria-label="Facebook" title="Facebook">
+            <span class="icon"><i class="fab fa-facebook"></i></span>
+          </a>
+          <a class="button is-light is-small" href="#" aria-label="LinkedIn" title="LinkedIn">
+            <span class="icon"><i class="fab fa-linkedin"></i></span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <hr class="coverde-footer__divider">
+    <div class="level is-mobile is-size-7 has-text-grey">
+      <div class="level-left">
+        <div class="level-item">© {% now "Y" %} Cverde. Todos os direitos reservados.</div>
+      </div>
+      <div class="level-right">
+        <div class="level-item">Feito com Django + Bulma.</div>
+      </div>
+    </div>
   </div>
 </footer>
-

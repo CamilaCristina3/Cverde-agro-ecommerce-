@@ -1,41 +1,285 @@
 {% extends "base.html" %}
-{% block title %}Registar | Cverde{% endblock %}
-{% block content %}
-<section class="section">
-  <div class="container">
-    <div class="columns is-centered">
-      <div class="column is-8">
-        <div class="box">
-          <h2 class="title is-4 has-text-centered mb-5">Criar conta</h2>
-          <p class="has-text-centered mb-5">Escolha o tipo de conta que pretende criar.</p>
+{% load static %}
 
-          <div class="columns is-variable is-8">
-            <div class="column">
-              <div class="card">
-                <div class="card-content has-text-centered">
-                  <p class="title is-5">Consumidor</p>
-                  <p class="subtitle is-6">Aceda ao mercado, explore produtos frescos e faça encomendas.</p>
-                  <a href="{% url 'users:register_consumer' %}" class="button is-success mt-4">Registar como Consumidor</a>
-                </div>
+{% block title %}Criar conta | Coverde{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* Hero Section */
+  .hero-auth {
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    border-radius: 30px;
+    padding: 2rem 2rem 3rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .hero-auth h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1b5e20;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-auth p {
+    font-size: 1rem;
+    color: #2e7d32;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  /* Cartões de perfil */
+  .profile-card {
+    border-radius: 28px;
+    transition: all 0.3s ease;
+    height: 100%;
+    border: 1px solid #e0e0e0;
+    background: white;
+    overflow: hidden;
+  }
+
+  .profile-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.15);
+    border-color: #c8e6c9;
+  }
+
+  .profile-card-header {
+    padding: 1.8rem 1.5rem 1rem;
+    text-align: center;
+    background: #fafdfa;
+  }
+
+  .profile-icon {
+    width: 80px;
+    height: 80px;
+    background: #e8f5e9;
+    border-radius: 60px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+
+  .profile-icon i {
+    font-size: 2.8rem;
+    color: #2e7d32;
+  }
+
+  .profile-card-header h3 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1b5e20;
+    margin-bottom: 0.3rem;
+  }
+
+  .profile-card-header p {
+    color: #5a6e5c;
+    font-size: 0.85rem;
+    margin-bottom: 0;
+  }
+
+  .profile-divider {
+    height: 4px;
+    width: 50px;
+    background: #c8e6c9;
+    margin: 0.75rem auto 0;
+    border-radius: 4px;
+  }
+
+  .profile-features {
+    padding: 1.5rem;
+    background: white;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.9rem;
+    color: #2c3e2f;
+    font-size: 0.9rem;
+  }
+
+  .feature-item i {
+    width: 24px;
+    color: #2e7d32;
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .btn-outline-success-custom {
+    background: transparent;
+    border: 2px solid #2e7d32;
+    color: #2e7d32;
+    border-radius: 40px;
+    padding: 0.7rem 1rem;
+    font-weight: 600;
+    width: 100%;
+    transition: all 0.2s;
+  }
+
+  .btn-outline-success-custom:hover {
+    background: #2e7d32;
+    color: white;
+    transform: scale(1.01);
+  }
+
+  .btn-success-custom {
+    background: #2e7d32;
+    border: none;
+    border-radius: 40px;
+    padding: 0.7rem 1rem;
+    font-weight: 600;
+    width: 100%;
+    color: white;
+    transition: all 0.2s;
+  }
+
+  .btn-success-custom:hover {
+    background: #1b5e20;
+    transform: scale(1.01);
+    box-shadow: 0 6px 12px rgba(46,125,50,0.2);
+  }
+
+  .info-note {
+    background: #f9fbf9;
+    border-radius: 20px;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    border: 1px solid #e0f0e0;
+  }
+
+  .info-note i {
+    font-size: 1.3rem;
+    color: #2e7d32;
+  }
+
+  @media (max-width: 768px) {
+    .hero-auth {
+      padding: 1.5rem;
+    }
+    .hero-auth h1 {
+      font-size: 1.6rem;
+    }
+    .profile-card-header h3 {
+      font-size: 1.3rem;
+    }
+    .feature-item {
+      font-size: 0.8rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="columns is-centered">
+    <div class="column is-10-desktop is-12-tablet">
+
+      <!-- Hero -->
+      <div class="hero-auth">
+        <h1>🌱 Criar conta</h1>
+        <p>Escolha o tipo de conta. Pode alterar ou completar os seus dados depois.</p>
+        <div class="info-note mt-4">
+          <i class="fas fa-envelope"></i>
+          <span>Após o registo, enviamos um link de confirmação por email.</span>
+        </div>
+      </div>
+
+      <!-- Cards de escolha -->
+      <div class="columns is-multiline is-vcentered" style="gap: 1.5rem 0;">
+        
+        <!-- Consumidor -->
+        <div class="column is-6-desktop is-12-tablet">
+          <div class="profile-card">
+            <div class="profile-card-header">
+              <div class="profile-icon">
+                <i class="fas fa-user"></i>
+              </div>
+              <h3>Consumidor</h3>
+              <p>Compre direto do produtor</p>
+              <div class="profile-divider"></div>
+            </div>
+            <div class="profile-features">
+              <div class="feature-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span>➕ Adicionar ao carrinho e acompanhar encomendas</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-bolt"></i>
+                <span>⚡ Checkout rápido</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-clock"></i>
+                <span>📋 Histórico de encomendas</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-heart"></i>
+                <span>❤️ Favoritos e avaliações</span>
               </div>
             </div>
-            <div class="column">
-              <div class="card">
-                <div class="card-content has-text-centered">
-                  <p class="title is-5">Produtor</p>
-                  <p class="subtitle is-6">Publique produtos, gere stock e venda diretamente aos clientes.</p>
-                  <a href="{% url 'users:register_producer' %}" class="button is-primary mt-4">Registar como Produtor</a>
-                </div>
-              </div>
+            <div class="px-4 pb-4">
+              <a href="{% url 'users:register_consumer' %}" class="button btn-success-custom">
+                Registrar como Consumidor
+              </a>
             </div>
           </div>
+        </div>
 
-          <div class="has-text-centered mt-4">
-            <p>Já tem conta? <a href="{% url 'users:login' %}">Iniciar sessão</a></p>
+        <!-- Produtor -->
+        <div class="column is-6-desktop is-12-tablet">
+          <div class="profile-card">
+            <div class="profile-card-header">
+              <div class="profile-icon">
+                <i class="fas fa-tractor"></i>
+              </div>
+              <h3>Produtor</h3>
+              <p>Venda os seus produtos</p>
+              <div class="profile-divider"></div>
+            </div>
+            <div class="profile-features">
+              <div class="feature-item">
+                <i class="fas fa-boxes"></i>
+                <span>📦 Gestão de catálogo e stock</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-chart-line"></i>
+                <span>📊 Indicadores de desempenho</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-check-circle"></i>
+                <span>✅ Verificação opcional (confiança)</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-store"></i>
+                <span>🌍 Venda para toda a região</span>
+              </div>
+            </div>
+            <div class="px-4 pb-4">
+              <a href="{% url 'users:register_producer' %}" class="button btn-outline-success-custom">
+                Registrar como Produtor
+              </a>
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- Link para login -->
+      <div class="has-text-centered mt-5 pt-3">
+        <p class="is-size-6 has-text-grey">
+          Já tem conta?
+          <a href="{% url 'users:login' %}" class="has-text-weight-semibold" style="color: #2e7d32;">
+            <i class="fas fa-sign-in-alt mr-1"></i> Entrar
+          </a>
+        </p>
+      </div>
+
     </div>
   </div>
-</section>
+</div>
 {% endblock %}

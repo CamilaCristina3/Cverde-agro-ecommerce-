@@ -3,7 +3,6 @@ from datetime import datetime, timezone
 
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
-from django.utils.html import escape
 
 from .models import ChatMessage, ChatRoom
 
@@ -87,7 +86,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                 {
                     "type": "chat.message",
                     "username": "Secretária Coverde",
-                    "content": escape(response),
+                    "content": response,
                     "timestamp": datetime.now(timezone.utc).isoformat(),
                 },
             )
@@ -136,13 +135,14 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             return "Posso ajudar com dúvidas sobre pedidos, pagamento, produtos e taxas de entrega. Em que posso ajudar?"
 
         return "Desculpe, não entendi. Pode reformular a pergunta?"
+
     @database_sync_to_async
     def _create_message(self, room_id: int, user_id: int, content: str):
         msg = ChatMessage.objects.create(room_id=room_id, user_id=user_id, content=content)
         timestamp = msg.created_at.astimezone(timezone.utc).isoformat()
         return {
-            "username": escape(getattr(msg.user, "username", str(msg.user_id))),
-            "content": escape(msg.content),
+            "username": getattr(msg.user, "username", str(msg.user_id)),
+            "content": msg.content,
             "timestamp": timestamp,
         }
 
@@ -157,8 +157,8 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         for msg in reversed(list(qs)):
             items.append(
                 {
-                    "username": escape(getattr(msg.user, "username", str(msg.user_id))),
-                    "content": escape(msg.content),
+                    "username": getattr(msg.user, "username", str(msg.user_id)),
+                    "content": msg.content,
                     "timestamp": msg.created_at.astimezone(timezone.utc).isoformat(),
                 }
             )

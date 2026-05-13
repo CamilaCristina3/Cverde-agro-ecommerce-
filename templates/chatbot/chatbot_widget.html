@@ -393,16 +393,23 @@ document.addEventListener('DOMContentLoaded', function() {
     function addMessage(text, isUser = false) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+
         if (!isUser) {
-            messageDiv.innerHTML = `
-                <div class="message-avatar"><i class="fas fa-robot"></i></div>
-                <div class="message-content">${text}</div>
-            `;
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.innerHTML = '<i class="fas fa-robot"></i>';
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            content.textContent = String(text || '');
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(content);
         } else {
-            messageDiv.innerHTML = `
-                <div class="message-content">${escapeHtml(text)}</div>
-            `;
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            content.textContent = String(text || '');
+            messageDiv.appendChild(content);
         }
+
         messagesContainer.appendChild(messageDiv);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
         return messageDiv;

@@ -111,20 +111,11 @@
                 </div>
             </div>
 
-            <div class="featured-slider-wrapper">
-              <div class="featured-slider-controls">
-                <button class="button is-small is-light slider-prev" type="button" aria-label="Anterior">
-                  <span class="icon"><i class="fas fa-chevron-left"></i></span>
-                </button>
-                <button class="button is-small is-light slider-next" type="button" aria-label="Seguinte">
-                  <span class="icon"><i class="fas fa-chevron-right"></i></span>
-                </button>
-              </div>
-
-              <div class="featured-slider">
+            {% if featured_products %}
+              <div class="columns is-multiline is-variable is-5 coverde-featured-grid">
                 {% for product in featured_products %}
-                  <div class="featured-slide">
-                    <div class="card product-card">
+                  <div class="column is-4-widescreen is-6-desktop is-6-tablet is-12-mobile">
+                    <div class="card product-card coverde-product-card h-100">
                       <div class="card-image">
                         <figure class="image is-4by3">
                           {% if product.main_image %}
@@ -136,47 +127,61 @@
                         </figure>
                       </div>
                       <div class="card-content">
-                        <p class="title is-6">{{ product.name }}</p>
-                        <p class="subtitle is-7 has-text-grey">{{ product.producer.name }}</p>
+                        <p class="title is-6 mb-1" title="{{ product.name }}">{{ product.name }}</p>
+                        <p class="subtitle is-7 has-text-grey mb-3">{{ product.producer.name }}</p>
 
-                        <div class="rating-stars mb-2 is-size-7">
-                          {% if product.total_reviews > 0 %}
-                            <span class="has-text-warning">★ {{ product.average_rating|floatformat:1 }}/5</span>
-                            <span class="has-text-grey">({{ product.total_reviews }})</span>
-                          {% else %}
-                            <span class="has-text-grey">Sem avaliações</span>
-                          {% endif %}
+                        <div class="level is-mobile is-size-7 mb-2">
+                          <div class="level-left has-text-grey">
+                            <div class="level-item">{{ product.get_unit_display }}</div>
+                          </div>
+                          <div class="level-right has-text-grey">
+                            {% if product.total_reviews > 0 %}
+                              <span class="has-text-warning">★ {{ product.average_rating|floatformat:1 }}/5</span>
+                              <span class="ml-1">({{ product.total_reviews }})</span>
+                            {% else %}
+                              <span>Sem avaliações</span>
+                            {% endif %}
+                          </div>
                         </div>
 
-                        <div class="level is-mobile">
+                        <div class="level is-mobile mb-3">
                           <div class="level-left">
                             <span class="product-price has-text-success has-text-weight-bold is-size-5">€{{ product.price }}</span>
                             <span class="is-size-7 has-text-grey">/{{ product.get_unit_display }}</span>
                           </div>
                           <div class="level-right">
-                            <a href="{% url 'products:detail' product.id %}?back=/" class="button is-small is-light">Ver</a>
                             {% if product.stock > 0 %}
-                              <form method="post" action="{% url 'orders:add_to_cart' product.id %}" style="display:inline;">
-                                {% csrf_token %}
-                                <input type="hidden" name="quantity" value="1">
-                                <button type="submit" class="button is-small is-success">Adicionar</button>
-                              </form>
+                              <span class="tag is-success is-light">Em stock</span>
                             {% else %}
-                              <button class="button is-small is-light" disabled>Esgotado</button>
+                              <span class="tag is-danger is-light">Esgotado</span>
                             {% endif %}
                           </div>
+                        </div>
+
+                        <div class="buttons is-right">
+                          <a href="{% url 'products:detail' product.id %}?back=/" class="button is-light is-small">Ver detalhes</a>
+                          {% if product.stock > 0 %}
+                            <form method="post" action="{% url 'orders:add_to_cart' product.id %}">
+                              {% csrf_token %}
+                              <input type="hidden" name="quantity" value="1">
+                              <button type="submit" class="button is-success is-small">
+                                <span class="icon"><i class="fas fa-shopping-basket"></i></span>
+                                <span>Adicionar</span>
+                              </button>
+                            </form>
+                          {% endif %}
                         </div>
                       </div>
                     </div>
                   </div>
-                {% empty %}
-                  <div class="notification is-light">
-                    Ainda não existem produtos em destaque.
-                    <a href="{% url 'products:list' %}">Ver catálogo</a>.
-                  </div>
                 {% endfor %}
               </div>
-            </div>
+            {% else %}
+              <div class="notification is-light">
+                Ainda não existem produtos em destaque.
+                <a href="{% url 'products:list' %}">Ver catálogo</a>.
+              </div>
+            {% endif %}
 
             <!-- Banner para Produtor -->
             <div class="card mt-5 has-background-success-light">

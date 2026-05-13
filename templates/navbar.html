@@ -3,7 +3,12 @@
   <div class="container">
     <div class="navbar-brand">
       <a class="navbar-item" href="/">
-        <img src="{% static 'images/logo.svg' %}" alt="Cverde" height="40">
+        <span class="coverde-brand">
+          <span class="coverde-brand__logo">
+            <img src="{% static 'images/logo.svg' %}" alt="Cverde" height="44">
+          </span>
+          <span class="coverde-brand__text">Cverde</span>
+        </span>
       </a>
 
       <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasic">
@@ -23,64 +28,52 @@
           <span class="icon"><i class="fas fa-shopping-bag"></i></span>
           <span>Produtos</span>
         </a>
-        {% if user.is_authenticated %}
-          <a class="navbar-item" href="{% url 'chat:assistant' %}">
-            <span class="icon"><i class="fas fa-robot"></i></span>
-            <span>Secretária</span>
-          </a>
-          <a class="navbar-item" href="{% url 'chat:index' %}">
-            <span class="icon"><i class="fas fa-comments"></i></span>
-            <span>Chat</span>
-          </a>
-        {% endif %}
-        <a class="navbar-item" href="{% url 'users:dashboard' %}">
-          <span class="icon"><i class="fas fa-user"></i></span>
-          <span>Painel</span>
-        </a>
       </div>
 
       <div class="navbar-end">
         <div class="navbar-item">
-          {% if user.is_authenticated %}
-            <div class="buttons">
-              <span class="has-text-white">Olá, {{ user.username }}!</span>
-              <a class="button is-light" href="{% url 'users:dashboard' %}" title="Painel">
-                <span class="icon"><i class="fas fa-user-circle"></i></span>
-              </a>
-              <a class="button is-light" href="{% url 'orders:cart' %}" title="Carrinho">
-                <span class="icon cart-icon">
-                  <i class="fas fa-shopping-cart"></i>
-                  {% if nav_cart_count %}
-                    <span class="cart-badge">{{ nav_cart_count }}</span>
-                  {% endif %}
-                </span>
-              </a>
-              <a class="button is-primary is-small" href="{% url 'users:logout' %}">
+          <a class="button is-light" href="{% url 'orders:cart' %}" title="Carrinho">
+            <span class="icon cart-icon">
+              <i class="fas fa-shopping-cart"></i>
+              {% if nav_cart_count %}
+                <span class="cart-badge">{{ nav_cart_count }}</span>
+              {% endif %}
+            </span>
+            <span class="is-hidden-touch">Carrinho</span>
+          </a>
+        </div>
+
+        {% if user.is_authenticated %}
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
+              <span class="icon"><i class="fas fa-user-circle"></i></span>
+              <span>{{ user.username }}</span>
+            </a>
+            <div class="navbar-dropdown is-right">
+              <a class="navbar-item" href="{% url 'users:dashboard' %}">Painel</a>
+              <a class="navbar-item" href="{% url 'chat:index' %}">Chat</a>
+              <a class="navbar-item" href="{% url 'chat:assistant' %}">Secretária Virtual</a>
+              <hr class="navbar-divider">
+              <a class="navbar-item has-text-danger" href="{% url 'users:logout' %}">
                 <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
                 <span>Sair</span>
               </a>
             </div>
-          {% else %}
-            <div class="buttons">
+          </div>
+        {% else %}
+          <div class="navbar-item">
+            <div class="buttons coverde-nav-actions">
               <a class="button is-light" href="{% url 'users:login' %}">
                 <span class="icon"><i class="fas fa-sign-in-alt"></i></span>
                 <span>Entrar</span>
               </a>
-              <a class="button is-light" href="{% url 'orders:cart' %}" title="Carrinho">
-                <span class="icon cart-icon">
-                  <i class="fas fa-shopping-cart"></i>
-                  {% if nav_cart_count %}
-                    <span class="cart-badge">{{ nav_cart_count }}</span>
-                  {% endif %}
-                </span>
-              </a>
               <a class="button is-primary" href="{% url 'users:register' %}">
                 <span class="icon"><i class="fas fa-user-plus"></i></span>
-                <span>Registar-se</span>
+                <span>Registar</span>
               </a>
             </div>
-          {% endif %}
-        </div>
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>

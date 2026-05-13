@@ -166,7 +166,15 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
 
 
 def register_choice(request):
-    return render(request, 'users/register.html')
+    next_url = _safe_next_url(request)
+    return render(
+        request,
+        "users/register.html",
+        {
+            "next_url": next_url,
+            "require_email_verification": getattr(settings, "REQUIRE_EMAIL_VERIFICATION", True),
+        },
+    )
 
 
 def register_consumer(request):
