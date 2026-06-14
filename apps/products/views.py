@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
 
 from apps.users.models import Producer, Product, Category
+from django.conf import settings
 from forms import ProductForm
 
 
@@ -62,6 +63,15 @@ def product_list(request):
     page_obj = paginator.get_page(request.GET.get("page"))
 
     categories = Category.objects.filter(is_active=True).order_by("order", "name")
+    # annotate categories with image_url: prefer uploaded image, otherwise use static placeholder
+    for c in categories:
+        try:
+            if c.image and hasattr(c.image, 'url'):
+                c.image_url = c.image.url
+            else:
+                c.image_url = settings.STATIC_URL + f"images/placeholders/categories/{c.slug}.svg"
+        except Exception:
+            c.image_url = settings.STATIC_URL + f"images/placeholders/categories/{c.slug}.svg"
     producers = Producer.objects.filter(is_active=True).order_by("name")
     return render(
         request,

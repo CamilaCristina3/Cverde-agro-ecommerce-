@@ -47,7 +47,11 @@
                           <a href="{% url 'products:list' %}?category={{ category.id }}" class="category-item is-block mb-3">
                               <span class="icon-text">
                                   <span class="icon">
-                                      <i class="{{ category.icon_class }} has-text-success"></i>
+                                      {% if category.image_url %}
+                                        <img src="{{ category.image_url }}" alt="{{ category.name }}" style="width:28px;height:28px;object-fit:cover;border-radius:6px;">
+                                      {% else %}
+                                        <i class="{{ category.icon_class }} has-text-success"></i>
+                                      {% endif %}
                                   </span>
                                   <span>{{ category.name }}</span>
                                   <span class="tag is-light is-pulled-right">{{ category.count }} produtos</span>

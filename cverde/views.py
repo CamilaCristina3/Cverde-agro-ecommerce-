@@ -1,4 +1,5 @@
 from django.db.models import Count, Q
+from django.conf import settings
 from django.views.generic import TemplateView
 
 from apps.users.models import Category, Producer, Product
@@ -36,15 +37,23 @@ class HomeView(TemplateView):
             .filter(products_count__gt=0)
             .order_by("-products_count", "name")[:12]
         )
-        context["categories"] = [
-            {
-                "id": c.id,
-                "name": c.name,
-                "count": c.products_count,
-                "icon_class": icon_map.get((c.name or "").strip().lower(), "fas fa-list"),
-            }
-            for c in categories_qs
-        ]
+        context["categories"] = []
+        for c in categories_qs:
+            # prefer uploaded image, otherwise use static placeholder based on slug
+            if getattr(c, "image", None):
+                image_url = c.image.url if c.image else None
+            else:
+                image_url = settings.STATIC_URL + f"images/placeholders/categories/{c.slug}.svg"
+
+            context["categories"].append(
+                {
+                    "id": c.id,
+                    "name": c.name,
+                    "count": c.products_count,
+                    "icon_class": icon_map.get((c.name or "").strip().lower(), "fas fa-list"),
+                    "image_url": image_url,
+                }
+            )
 
         context["local_producers"] = (
             Producer.objects.filter(is_active=True)
