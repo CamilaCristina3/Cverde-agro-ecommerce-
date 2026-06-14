@@ -17,11 +17,24 @@ python -m venv venv
 pip install -r requirements.txt
 ```
 
-2. Prepare the database and load sample fixtures:
+2. Prepare the database and load demo data:
 
 ```powershell
 python manage.py migrate
-python manage.py loaddata fixtures/seed_data.json
+# Create a superuser and demo accounts + products
+python manage.py create_demo_data
+```
+
+This command creates the following demo accounts (use these to log in during evaluation):
+
+- Superuser: `demoadmin` / `demoadminpass` (Django admin)
+- Consumer: `alice` / `alicepass`
+- Producer: `bobfarm` / `bobpass`
+
+If you prefer to load a JSON fixture instead, run:
+
+```powershell
+python manage.py loaddata fixtures/demo_seed.json
 ```
 
 3. Run the development server:
