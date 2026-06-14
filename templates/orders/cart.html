@@ -38,7 +38,11 @@
                   <div class="is-flex is-align-items-center">
                     {% if it.product.main_image %}
                       <figure class="image is-48x48 mr-3">
-                        <img src="{{ it.product.main_image.url }}" alt="{{ it.product.name }}" loading="lazy" style="object-fit: cover;">
+                        <img src="{{ it.product.main_image.url }}" alt="{{ it.product.name }}" loading="lazy">
+                      </figure>
+                    {% else %}
+                      <figure class="image is-48x48 mr-3">
+                        <img src="{% static 'images/product_placeholder.svg' %}" alt="{{ it.product.name }}" loading="lazy" class="placeholder-svg">
                       </figure>
                     {% endif %}
                     <div>
