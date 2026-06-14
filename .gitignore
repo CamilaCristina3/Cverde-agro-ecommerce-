@@ -26,3 +26,5 @@ venv/
 *.pot
 *.mo
 coverde_db_backup.sql
+coverde_db.sql
+coverde_db_sanitized.sql
