@@ -1,0 +1,139 @@
+[
+  {
+    "model": "users.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$260000$1kFOlVoN$irb6Wt/nHHTDi5uFoWI3Zu36fc7GSVSDwh3qtyBj6Zc=",
+      "last_login": null,
+      "is_superuser": true,
+      "username": "demoadmin",
+      "first_name": "Demo",
+      "last_name": "Admin",
+      "email": "demoadmin@example.com",
+      "is_staff": true,
+      "date_joined": "2026-06-14T00:00:00Z",
+      "user_type": "admin",
+      "is_active": true
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$260000$ID6nsNY9$9q8i6OSmwGAERnL78++pMZnP4Ki8IghInvarPtvq2yk=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "alice",
+      "first_name": "Alice",
+      "last_name": "Demo",
+      "email": "alice@example.com",
+      "is_staff": false,
+      "date_joined": "2026-06-14T00:00:00Z",
+      "user_type": "consumer",
+      "is_active": true
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 3,
+    "fields": {
+      "password": "pbkdf2_sha256$260000$6fBZo4a3$UUfkY2e3sGGJctO3dZviFFJpKHekIugAsYFP36+PyY0=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "bobfarm",
+      "first_name": "Bob",
+      "last_name": "Demo",
+      "email": "bob@example.com",
+      "is_staff": false,
+      "date_joined": "2026-06-14T00:00:00Z",
+      "user_type": "producer",
+      "is_active": true
+    }
+  },
+  {
+    "model": "producers.producer",
+    "pk": 1,
+    "fields": {
+      "user": 3,
+      "name": "Bob's Farm",
+      "description": "Produção de vegetais locais (demo).",
+      "location": "Demoville",
+      "nif": "000000000",
+      "verification_document": "",
+      "is_verified": false,
+      "verified_at": null,
+      "verified_by": null,
+      "rating": "4.50",
+      "total_ratings": 12,
+      "total_products": 4,
+      "total_sales": 10,
+      "is_active": true,
+      "created_at": "2026-06-14T00:00:00Z",
+      "updated_at": "2026-06-14T00:00:00Z"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 1,
+    "fields": {
+      "producer": 1,
+      "name": "Maçã Gala",
+      "description": "Maçã fresca, colhida no dia.",
+      "price": "1.50",
+      "category": "Frutas",
+      "unit": "kg",
+      "stock": 120,
+      "available": true,
+      "is_organic": false,
+      "created_at": "2026-06-14T00:00:00Z"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 2,
+    "fields": {
+      "producer": 1,
+      "name": "Cenoura",
+      "description": "Cenouras crocantes, embaladas em 1kg.",
+      "price": "0.80",
+      "category": "Legumes",
+      "unit": "kg",
+      "stock": 200,
+      "available": true,
+      "is_organic": false,
+      "created_at": "2026-06-14T00:00:00Z"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 3,
+    "fields": {
+      "producer": 1,
+      "name": "Alface",
+      "description": "Alface romana, embalagem 1un.",
+      "price": "0.65",
+      "category": "Verduras",
+      "unit": "un",
+      "stock": 150,
+      "available": true,
+      "is_organic": false,
+      "created_at": "2026-06-14T00:00:00Z"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 4,
+    "fields": {
+      "producer": 1,
+      "name": "Feijão",
+      "description": "Feijão seco, qualidade demo.",
+      "price": "2.20",
+      "category": "Grãos",
+      "unit": "kg",
+      "stock": 80,
+      "available": true,
+      "is_organic": false,
+      "created_at": "2026-06-14T00:00:00Z"
+    }
+  }
+]
