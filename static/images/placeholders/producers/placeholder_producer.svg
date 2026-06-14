@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200" role="img" aria-label="Produtor">
+  <rect width="100%" height="100%" fill="#f3fff6"/>
+  <circle cx="60" cy="60" r="36" fill="#2e7d32"/>
+  <rect x="120" y="40" width="220" height="40" rx="8" fill="#e6f4ea"/>
+  <text x="50%" y="85%" text-anchor="middle" fill="#166534" font-size="16">Produtor</text>
+</svg>

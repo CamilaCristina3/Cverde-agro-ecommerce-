@@ -1,0 +1,27 @@
+{
+  "categories": [
+    {
+      "id": "frutas",
+      "nome": "Frutas",
+      "descricao": "Frutas frescas e sazonais, produzidas localmente.",
+      "icone": "images/placeholders/categories/frutas/laranja.svg",
+      "imagens": [
+        "images/placeholders/categories/frutas/laranja.svg",
+        "images/placeholders/categories/frutas/tangerina.svg",
+        "images/placeholders/categories/frutas/limao.svg"
+      ]
+    },
+    {
+      "id": "legumes",
+      "nome": "Legumes",
+      "descricao": "Legumes variados, cultivados com práticas sustentáveis.",
+      "icone": "images/placeholders/categories/legumes/alface.svg",
+      "imagens": [
+        "images/placeholders/categories/legumes/alface.svg",
+        "images/placeholders/categories/legumes/cenoura.svg",
+        "images/placeholders/categories/legumes/abobora.svg"
+      ]
+    }
+  ],
+  "default_category_image": "images/placeholders/categories/default-category.svg"
+}
