@@ -42,6 +42,22 @@ Demo accounts (available in both options):
 
 Both options are provided so the evaluator can choose the preferred setup method.
 
+Note about demo accounts and evaluator steps:
+
+- The demo users can be (re)created at any time by running:
+
+```powershell
+python manage.py create_demo_data
+```
+
+- If a `demoadmin` account already exists in the local database, its password may differ from the one documented above (it might have been changed after creation). To reset the `demoadmin` password, run:
+
+```powershell
+python manage.py changepassword demoadmin
+```
+
+- Note for evaluators: If `demoadmin` exists in your local database, either reset its password with `changepassword` or recreate the demo data with `create_demo_data` before starting your evaluation.
+
 3. Run the development server:
 
 ```powershell
