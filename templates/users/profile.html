@@ -1,48 +1,48 @@
 {% extends "base.html" %}
 {% block title %}Perfil | Cverde{% endblock %}
+
 {% block content %}
-<section class="section">
+<section class="py-5">
   <div class="container">
-    <div class="level mb-5">
-      <div class="level-left">
-        <div>
-          <h1 class="title is-3 mb-1">Minha Conta</h1>
-          <p class="subtitle is-6 has-text-grey">Bem-vindo, {{ user_name }}.</p>
+    <div class="row gy-4">
+      <div class="col-lg-5">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h1 class="h4 mb-2">Minha Conta</h1>
+            <p class="text-muted mb-4">Bem-vindo, {{ user_name }}.</p>
+
+            <dl class="row mb-4">
+              <dt class="col-4 text-muted">Nome</dt>
+              <dd class="col-8">{{ user_name }}</dd>
+              <dt class="col-4 text-muted">Email</dt>
+              <dd class="col-8">{{ request.user.email }}</dd>
+              <dt class="col-4 text-muted">Localização</dt>
+              <dd class="col-8">{{ request.user.district }}{% if request.user.county %}, {{ request.user.county }}{% endif %}{% if request.user.parish %}, {{ request.user.parish }}{% endif %}</dd>
+              <dt class="col-4 text-muted">Encomendas</dt>
+              <dd class="col-8">{{ orders_count }}</dd>
+              <dt class="col-4 text-muted">Total gasto</dt>
+              <dd class="col-8">{{ spent }}</dd>
+            </dl>
+
+            <div class="d-flex flex-wrap gap-2">
+              <a class="btn btn-outline-primary" href="{% url 'users:profile_edit' %}">
+                <i class="fas fa-user-edit me-1"></i>Editar perfil
+              </a>
+              <a class="btn btn-outline-danger" href="{% url 'users:delete_account' %}">
+                <i class="fas fa-user-slash me-1"></i>Eliminar conta
+              </a>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="columns">
-      <div class="column is-6">
-        <div class="box">
-          <h5 class="title is-5">Dados do perfil</h5>
-          <div class="content">
-            <p><strong>Nome:</strong> {{ user_name }}</p>
-            <p><strong>Email:</strong> {{ request.user.email }}</p>
-            <p><strong>Localização:</strong> {{ request.user.district }}{% if request.user.county %}, {{ request.user.county }}{% endif %}{% if request.user.parish %}, {{ request.user.parish }}{% endif %}</p>
-            <p><strong>Encomendas:</strong> {{ orders_count }}</p>
-            <p><strong>Total gasto:</strong> {{ spent }}</p>
-          </div>
-          <div class="buttons mt-4">
-            <a class="button is-primary is-light" href="{% url 'users:profile_edit' %}">
-              <span class="icon"><i class="fas fa-user-edit"></i></span>
-              <span>Editar perfil</span>
-            </a>
-            <a class="button is-danger is-light" href="{% url 'users:delete_account' %}">
-              <span class="icon"><i class="fas fa-user-slash"></i></span>
-              <span>Eliminar conta</span>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="column is-6">
-        <div class="box">
-          <h5 class="title is-5">Ações rápidas</h5>
-          <div class="content">
-            <ul>
-              <li><a href="{% url 'products:list' %}">Ver produtos</a></li>
-              <li><a href="{% url 'orders:cart' %}">Ver carrinho</a></li>
+      <div class="col-lg-7">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h2 class="h5 mb-3">Ações rápidas</h2>
+            <ul class="list-unstyled mb-0">
+              <li class="mb-2"><a href="{% url 'users:product_list' %}">Ver produtos</a></li>
+              <li class="mb-2"><a href="{% url 'orders:cart' %}">Ver carrinho</a></li>
               {% if is_producer %}
                 <li><a href="{% url 'users:producer_panel' %}">Aceder ao painel de produtor</a></li>
               {% endif %}

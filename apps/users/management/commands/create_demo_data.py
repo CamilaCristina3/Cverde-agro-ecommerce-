@@ -2,8 +2,9 @@ from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 
-from producers.models import Producer
-from products.models import Product
+from apps.producers.models import Producer
+from apps.users.models import Product  # Product está em users
+from django.utils.text import slugify
 
 
 class Command(BaseCommand):

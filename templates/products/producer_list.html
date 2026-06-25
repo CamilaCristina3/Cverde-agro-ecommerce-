@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Meus Produtos | COVERDE{% endblock %}
+
+{% block extra_css %}
+<style>
+  .products-header {
+    background: linear-gradient(135deg, #198754, #157347);
+    border-radius: 1.25rem;
+  }
+
+  .product-item {
+    border: 1px solid #e9ecef;
+    border-radius: 1rem;
+    transition: all 0.2s ease;
+  }
+
+  .product-item:hover {
+    box-shadow: 0 10px 28px rgba(15, 23, 42, .07);
+    transform: translateY(-2px);
+  }
+
+  .product-image {
+    height: 150px;
+    background: #f8f9fa;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 0.5rem;
+  }
+
+  .status-badge {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.65rem;
+  }
+
+  .stock-warning {
+    background: #fff3cd;
+    border-left: 3px solid #ffc107;
+  }
+
+  .stock-danger {
+    background: #f8d7da;
+    border-left: 3px solid #dc3545;
+  }
+
+  .stats-card {
+    background: linear-gradient(135deg, #f0f8f4, #ffffff);
+    border-radius: 1rem;
+    padding: 1.5rem;
+  }
+
+  .stats-number {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #198754;
+  }
+
+  .filter-chip {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: #e7f5f1;
+    border-radius: 2rem;
+    font-size: 0.875rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .filter-chip.active {
+    background: #198754;
+    color: white;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Header -->
+<div class="products-header text-white p-4 p-md-5 mb-4">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+    <div>
+      <h1 class="h3 fw-bold mb-2">
+        <i class="fa-solid fa-box me-2"></i>Meus Produtos
+      </h1>
+      <p class="mb-0 text-white-50">Gerencie todos os seus produtos e stock</p>
+    </div>
+    <a href="{% url 'users:product_create' %}" class="btn btn-light text-success fw-bold">
+      <i class="fa-solid fa-plus me-2"></i>Novo Produto
+    </a>
+  </div>
+</div>
+
+<div class="container-lg mb-5">
+  
+  <!-- Estatísticas -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3">
+      <div class="stats-card">
+        <div class="text-muted mb-2">
+          <i class="fa-solid fa-cubes me-2"></i>Total de Produtos
+        </div>
+        <div class="stats-number">{{ total_products }}</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stats-card">
+        <div class="text-muted mb-2">
+          <i class="fa-solid fa-eye me-2"></i>Produtos Ativos
+        </div>
+        <div class="stats-number">{{ active_products }}</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stats-card">
+        <div class="text-muted mb-2">
+          <i class="fa-solid fa-triangle-exclamation me-2"></i>Stock Baixo (&le; 5)
+        </div>
+        <div class="stats-number">{{ low_stock_count }}</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stats-card">
+        <div class="text-muted mb-2">
+          <i class="fa-solid fa-star me-2"></i>Avaliação Média
+        </div>
+        <div class="stats-number">
+          {% if producer.rating %}
+            {{ producer.rating|floatformat:1 }} / 5
+          {% else %}
+            —
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="card border-0 shadow-sm p-3 p-md-4 mb-4">
+    <h5 class="fw-bold mb-3">
+      <i class="fa-solid fa-filter me-2 text-success"></i>Filtros
+    </h5>
+    
+    <div class="mb-3">
+      <a href="{% url 'users:producer_products' %}" class="filter-chip {% if not status_filter and not low_stock_filter %}active{% endif %}">
+        Todos os produtos
+      </a>
+      <a href="{% url 'users:producer_products' %}?status=active" class="filter-chip {% if status_filter == 'active' %}active{% endif %}">
+        <i class="fa-solid fa-check me-1"></i>Apenas Ativos
+      </a>
+      <a href="{% url 'users:producer_products' %}?status=inactive" class="filter-chip {% if status_filter == 'inactive' %}active{% endif %}">
+        <i class="fa-solid fa-ban me-1"></i>Apenas Inativos
+      </a>
+      <a href="{% url 'users:producer_products' %}?low_stock=1" class="filter-chip {% if low_stock_filter == '1' %}active{% endif %}">
+        <i class="fa-solid fa-exclamation-triangle me-1"></i>Stock Baixo
+      </a>
+    </div>
+  </div>
+
+  <!-- Lista de produtos -->
+  {% if page_obj %}
+    <div class="row g-3">
+      {% for product in page_obj %}
+        <div class="col-md-6 col-lg-4">
+          <div class="product-item p-3">
+            
+            <!-- Imagem -->
+            <div class="product-image mb-3">
+              {% if product.main_image %}
+                <img src="{{ product.main_image.url }}" alt="{{ product.name }}">
+              {% else %}
+                <i class="fa-solid fa-image fa-2x text-muted"></i>
+              {% endif %}
+            </div>
+
+            <!-- Info do produto -->
+            <div class="mb-3">
+              <h5 class="fw-bold mb-1">{{ product.name }}</h5>
+              <p class="text-muted mb-2 small">{{ product.category.name }}</p>
+              
+              <!-- Status badges -->
+              <div class="mb-2">
+                {% if product.is_active %}
+                  <span class="badge bg-success status-badge">Ativo</span>
+                {% else %}
+                  <span class="badge bg-secondary status-badge">Inativo</span>
+                {% endif %}
+                
+                {% if product.is_featured %}
+                  <span class="badge bg-primary status-badge">Destaque</span>
+                {% endif %}
+
+                {% if product.stock <= 5 %}
+                  <span class="badge bg-warning status-badge">Stock Baixo</span>
+                {% endif %}
+              </div>
+
+              <!-- Stock e Preço -->
+              <div class="row text-sm mb-2">
+                <div class="col-6">
+                  <small class="text-muted">Preço</small>
+                  <div class="fw-bold text-success">€{{ product.price }}</div>
+                </div>
+                <div class="col-6">
+                  <small class="text-muted">Stock</small>
+                  <div class="fw-bold">{{ product.stock }} {{ product.get_unit_display }}</div>
+                </div>
+              </div>
+
+              <!-- Stock warning -->
+              {% if product.stock <= 5 and product.stock > 0 %}
+                <div class="alert alert-warning stock-warning mb-2 py-1 px-2">
+                  <i class="fa-solid fa-exclamation-triangle me-1"></i>
+                  <small>Stock baixo</small>
+                </div>
+              {% elif product.stock == 0 %}
+                <div class="alert alert-danger stock-danger mb-2 py-1 px-2">
+                  <i class="fa-solid fa-ban me-1"></i>
+                  <small>Sem stock</small>
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Ações -->
+            <div class="d-flex gap-2">
+              <a href="{% url 'users:product_edit' product.id %}" class="btn btn-sm btn-outline-success flex-grow-1">
+                <i class="fa-solid fa-pen me-1"></i>Editar
+              </a>
+              <a href="{% url 'users:product_delete' product.id %}" class="btn btn-sm btn-outline-danger flex-grow-1">
+                <i class="fa-solid fa-trash me-1"></i>Deletar
+              </a>
+            </div>
+
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Paginação -->
+    {% if page_obj.has_other_pages %}
+      <nav class="mt-5">
+        <ul class="pagination justify-content-center">
+          {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page=1">Primeira</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+            </li>
+          {% endif %}
+
+          {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+              <li class="page-item active">
+                <span class="page-link">{{ num }}</span>
+              </li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+
+          {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}">Próxima</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Última</a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+
+  {% else %}
+    <!-- Sem produtos -->
+    <div class="text-center py-5">
+      <i class="fa-solid fa-box-open fa-4x text-muted mb-3"></i>
+      <h4>Nenhum produto encontrado</h4>
+      <p class="text-muted">Ainda não tem produtos publicados. Comece a criar um agora!</p>
+      <a href="{% url 'users:product_create' %}" class="btn btn-success">
+        <i class="fa-solid fa-plus me-2"></i>Criar Primeiro Produto
+      </a>
+    </div>
+  {% endif %}
+
+</div>
+
+{% endblock %}

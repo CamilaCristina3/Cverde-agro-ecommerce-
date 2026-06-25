@@ -2,95 +2,85 @@
 {% block title %}Editar Perfil | Cverde{% endblock %}
 
 {% block content %}
-<section class="section">
+<section class="py-5">
   <div class="container">
-    <div class="columns is-centered">
-      <div class="column is-7">
-        <div class="box">
-          <h1 class="title is-4">Editar perfil</h1>
-          <p class="subtitle is-6 has-text-grey">Atualize os seus dados (o email não pode ser alterado).</p>
+    <div class="row justify-content-center">
+      <div class="col-xl-8 col-lg-9">
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <h1 class="h4 mb-2">Editar perfil</h1>
+            <p class="text-muted mb-4">Atualize os seus dados (o email não pode ser alterado).</p>
 
-          <form method="post" enctype="multipart/form-data" novalidate>
-            {% csrf_token %}
+            <form method="post" enctype="multipart/form-data" novalidate>
+              {% csrf_token %}
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label" for="{{ form.first_name.auto_id }}">{{ form.first_name.label }}</label>
+                  {{ form.first_name }}
+                  {% if form.first_name.errors %}<div class="invalid-feedback d-block">{{ form.first_name.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="{{ form.last_name.auto_id }}">{{ form.last_name.label }}</label>
+                  {{ form.last_name }}
+                  {% if form.last_name.errors %}<div class="invalid-feedback d-block">{{ form.last_name.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="{{ form.phone.auto_id }}">{{ form.phone.label }}</label>
+                  {{ form.phone }}
+                  {% if form.phone.errors %}<div class="invalid-feedback d-block">{{ form.phone.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="{{ form.profile_image.auto_id }}">{{ form.profile_image.label }}</label>
+                  {{ form.profile_image }}
+                  {% if form.profile_image.errors %}<div class="invalid-feedback d-block">{{ form.profile_image.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label" for="{{ form.district.auto_id }}">{{ form.district.label }}</label>
+                  {{ form.district }}
+                  {% if form.district.errors %}<div class="invalid-feedback d-block">{{ form.district.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label" for="{{ form.county.auto_id }}">{{ form.county.label }}</label>
+                  {{ form.county }}
+                  {% if form.county.errors %}<div class="invalid-feedback d-block">{{ form.county.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label" for="{{ form.parish.auto_id }}">{{ form.parish.label }}</label>
+                  {{ form.parish }}
+                  {% if form.parish.errors %}<div class="invalid-feedback d-block">{{ form.parish.errors.0 }}</div>{% endif %}
+                </div>
+              </div>
 
-            <div class="columns is-multiline">
-              <div class="column is-6">
-                <div class="field">
-                  <label class="label">{{ form.first_name.label }}</label>
-                  <div class="control">{{ form.first_name }}</div>
-                  {% if form.first_name.errors %}<p class="help is-danger">{{ form.first_name.errors.0 }}</p>{% endif %}
-                </div>
-              </div>
-              <div class="column is-6">
-                <div class="field">
-                  <label class="label">{{ form.last_name.label }}</label>
-                  <div class="control">{{ form.last_name }}</div>
-                  {% if form.last_name.errors %}<p class="help is-danger">{{ form.last_name.errors.0 }}</p>{% endif %}
-                </div>
-              </div>
-              <div class="column is-6">
-                <div class="field">
-                  <label class="label">{{ form.phone.label }}</label>
-                  <div class="control">{{ form.phone }}</div>
-                  {% if form.phone.errors %}<p class="help is-danger">{{ form.phone.errors.0 }}</p>{% endif %}
-                </div>
-              </div>
-              <div class="column is-6">
-                <div class="field">
-                  <label class="label">{{ form.profile_image.label }}</label>
-                  <div class="control">{{ form.profile_image }}</div>
-                  {% if form.profile_image.errors %}<p class="help is-danger">{{ form.profile_image.errors.0 }}</p>{% endif %}
-                </div>
-              </div>
-              <div class="column is-4">
-                <div class="field">
-                  <label class="label">{{ form.district.label }}</label>
-                  <div class="control">{{ form.district }}</div>
-                  {% if form.district.errors %}<p class="help is-danger">{{ form.district.errors.0 }}</p>{% endif %}
-                </div>
-              </div>
-              <div class="column is-4">
-                <div class="field">
-                  <label class="label">{{ form.county.label }}</label>
-                  <div class="control">{{ form.county }}</div>
-                  {% if form.county.errors %}<p class="help is-danger">{{ form.county.errors.0 }}</p>{% endif %}
-                </div>
-              </div>
-              <div class="column is-4">
-                <div class="field">
-                  <label class="label">{{ form.parish.label }}</label>
-                  <div class="control">{{ form.parish }}</div>
-                  {% if form.parish.errors %}<p class="help is-danger">{{ form.parish.errors.0 }}</p>{% endif %}
-                </div>
-              </div>
-            </div>
+              <hr class="my-4">
 
-            <hr>
-
-            <div class="field">
-              <div class="control">
-                <label class="checkbox">
-                  {{ form.two_factor_enabled }} {{ form.two_factor_enabled.label }}
-                </label>
+              <div class="row g-3">
+                <div class="col-12">
+                  <div class="form-check">
+                    {{ form.two_factor_enabled }}
+                    <label class="form-check-label" for="{{ form.two_factor_enabled.auto_id }}">
+                      {{ form.two_factor_enabled.label }}
+                    </label>
+                  </div>
+                  {% if form.two_factor_enabled.errors %}<div class="invalid-feedback d-block">{{ form.two_factor_enabled.errors.0 }}</div>{% endif %}
+                  <div class="form-text">Se ativar, terá de confirmar um código por email em cada login.</div>
+                </div>
+                <div class="col-12">
+                  <div class="form-check">
+                    {{ form.marketing_opt_in }}
+                    <label class="form-check-label" for="{{ form.marketing_opt_in.auto_id }}">
+                      {{ form.marketing_opt_in.label }}
+                    </label>
+                  </div>
+                  {% if form.marketing_opt_in.errors %}<div class="invalid-feedback d-block">{{ form.marketing_opt_in.errors.0 }}</div>{% endif %}
+                </div>
               </div>
-              {% if form.two_factor_enabled.errors %}<p class="help is-danger">{{ form.two_factor_enabled.errors.0 }}</p>{% endif %}
-              <p class="help">Se ativar, terá de confirmar um código por email em cada login.</p>
-            </div>
 
-            <div class="field">
-              <div class="control">
-                <label class="checkbox">
-                  {{ form.marketing_opt_in }} {{ form.marketing_opt_in.label }}
-                </label>
+              <div class="d-flex justify-content-end gap-2 mt-4">
+                <a class="btn btn-outline-secondary" href="{% url 'users:profile' %}">Cancelar</a>
+                <button type="submit" class="btn btn-primary">Guardar</button>
               </div>
-              {% if form.marketing_opt_in.errors %}<p class="help is-danger">{{ form.marketing_opt_in.errors.0 }}</p>{% endif %}
-            </div>
-
-            <div class="buttons is-right mt-5">
-              <a class="button is-light" href="{% url 'users:profile' %}">Cancelar</a>
-              <button class="button is-primary" type="submit">Guardar</button>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
     </div>

@@ -1,41 +1,40 @@
-{% extends "base.html" %}
+{% extends "auth_base.html" %}
 {% block title %}Verificação 2FA | Cverde{% endblock %}
 
-{% block content %}
-<section class="section">
-  <div class="container">
-    <div class="columns is-centered">
-      <div class="column is-5">
-        <div class="box">
-          <h1 class="title is-4">Confirme o código</h1>
-          <p class="subtitle is-6 has-text-grey">
-            Enviámos um código para <strong>{{ email }}</strong>.
-          </p>
+{% block extra_css %}
+<style>
+.auth-card { border-radius: 1.5rem; box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08); }
+</style>
+{% endblock %}
 
-          <form method="post" novalidate>
-            {% csrf_token %}
+{% block auth_content %}
+<div class="row justify-content-center">
+  <div class="col-xl-4 col-lg-5">
+    <div class="card auth-card">
+      <div class="card-body p-5">
+        <div class="text-center mb-4">
+          <h1 class="h5 mb-2">Confirmar código</h1>
+          <p class="text-muted mb-0">Enviámos um código para <strong>{{ email }}</strong>.</p>
+        </div>
 
-            <div class="field">
-              <label class="label">{{ form.code.label }}</label>
-              <div class="control">
-                {{ form.code }}
-              </div>
-              {% if form.code.errors %}<p class="help is-danger">{{ form.code.errors.0 }}</p>{% endif %}
-              <p class="help">O código expira em 10 minutos.</p>
-            </div>
-
-            <div class="field mt-4">
-              <button type="submit" class="button is-primary is-fullwidth">Verificar</button>
-            </div>
-          </form>
-
-          <div class="has-text-centered mt-4">
-            <a href="{% url 'users:login' %}" class="is-size-7">Voltar ao login</a>
+        <form method="post" novalidate>
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label" for="{{ form.code.auto_id }}">{{ form.code.label }}</label>
+            {{ form.code }}
+            {% if form.code.errors %}<div class="invalid-feedback d-block">{{ form.code.errors.0 }}</div>{% endif %}
+            <div class="form-text">O código expira em 10 minutos.</div>
           </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-success btn-lg">Verificar</button>
+          </div>
+        </form>
+
+        <div class="text-center mt-4">
+          <a href="{% url 'users:login' %}" class="link-success">Voltar ao login</a>
         </div>
       </div>
     </div>
   </div>
-</section>
+</div>
 {% endblock %}
-

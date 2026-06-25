@@ -1,11 +1,14 @@
-from django.urls import path
+"""
+COVERDE - apps/products/urls.py
+URLs de produtos (Portugal).
+"""
 
+from django.urls import path
 from . import views
 
-app_name = "products"
+app_name = 'products'
 
 urlpatterns = [
-    path("", views.product_list, name="list"),
-    path("<int:product_id>/", views.product_detail, name="detail"),
-    path("create/", views.create_product, name="create"),
+    path('', views.product_list, name='list'),
+    path('<slug:slug>/', views.product_detail, name='detail'),
 ]

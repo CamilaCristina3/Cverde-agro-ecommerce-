@@ -1,0 +1,269 @@
+"""
+COVERDE - apps/users/emails.py
+Funções de envio de emails (Portugal).
+"""
+
+from django.conf import settings
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.urls import reverse
+
+
+def send_activation_email(request, user, token):
+    """
+    Envia email de confirmação de conta.
+    Em desenvolvimento: aparece no terminal (console backend).
+    """
+    activation_url = request.build_absolute_uri(
+        reverse('users:activate', kwargs={'token': str(token.token)})
+    )
+
+    subject = f'Confirme a sua conta COVERDE'
+
+    # Email para cliente (Portugal)
+    if user.role == 'client':
+        message = f"""
+Olá {user.get_full_name()},
+
+Bem-vindo(a) ao COVERDE - Marketplace Agrícola de Portugal!
+
+Obrigado por criar a sua conta de CLIENTE.
+
+Para ativar a sua conta, clique no link abaixo:
+{activation_url}
+
+Este link é válido por {getattr(settings, 'ACCOUNT_ACTIVATION_TOKEN_HOURS', 48)} horas.
+
+Após a confirmação, poderá começar a comprar produtos agrícolas frescos
+diretamente dos nossos produtores portugueses.
+
+Se não criou esta conta, ignore este email.
+
+Com os melhores cumprimentos,
+Equipa COVERDE
+suporte@coverde.pt
+https://coverde.pt
+"""
+
+    # Email para produtor (Portugal)
+    elif user.role == 'producer':
+        message = f"""
+Olá {user.get_full_name()},
+
+Obrigado por se registar como PRODUTOR no COVERDE - Marketplace Agrícola de Portugal!
+
+O seu registo foi recebido com sucesso.
+
+IMPORTANTE: A sua conta está em estado PENDENTE de aprovação.
+A nossa equipa irá analisar o seu pedido e contactá-lo(a) brevemente.
+
+Para confirmar o seu email, clique no link abaixo:
+{activation_url}
+
+Este link é válido por {getattr(settings, 'ACCOUNT_ACTIVATION_TOKEN_HOURS', 48)} horas.
+
+Após a confirmação do email e aprovação da equipa COVERDE,
+poderá começar a listar os seus produtos agrícolas.
+
+Para questões, contacte-nos:
+suporte@coverde.pt
+
+Com os melhores cumprimentos,
+Equipa COVERDE
+"""
+
+    # Fallback para outros tipos (Portugal)
+    else:
+        message = f"""
+Olá {user.get_full_name()},
+
+Bem-vindo(a) ao COVERDE - Marketplace Agrícola de Portugal!
+
+Por favor confirme o seu email clicando no link abaixo:
+{activation_url}
+
+Este link é válido por {getattr(settings, 'ACCOUNT_ACTIVATION_TOKEN_HOURS', 48)} horas.
+
+Com os melhores cumprimentos,
+Equipa COVERDE
+suporte@coverde.pt
+https://coverde.pt
+"""
+
+    try:
+        send_mail(
+            subject=subject,
+            message=message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[user.email],
+            fail_silently=False,
+        )
+        return True
+    except Exception as e:
+        print(f'[COVERDE] Erro ao enviar email: {e}')
+        return False
+
+
+def send_order_confirmation_email(user, order, payment):
+    """
+    Envia email de confirmação de encomenda ao cliente (Portugal).
+    """
+    mode = '[TESTE] ' if payment.is_test_payment else ''
+    subject = f'Encomenda #{order.reference} confirmada - COVERDE'
+
+    message = f"""
+Olá {user.get_full_name()},
+
+A sua encomenda foi confirmada com sucesso!
+
+Detalhes da encomenda:
+- Referência: #{order.reference}
+- Total: {order.total} €  # ← Euro
+- Estado: Confirmada
+
+Detalhes do pagamento:
+- Referência: {payment.reference}
+- Método: {payment.get_method_display()}
+- Valor: {payment.amount} €  # ← Euro
+- Estado: {mode}Aprovado
+
+{'' if payment.is_test_payment else 'Pagamento real efetuado com sucesso.'}
+Pagamento de teste aprovado com sucesso. A sua encomenda foi confirmada.
+
+Obrigado por comprar no COVERDE!
+
+Pode acompanhar a sua encomenda no seu painel de cliente.
+
+Com os melhores cumprimentos,
+Equipa COVERDE
+suporte@coverde.pt
+https://coverde.pt
+"""
+
+    try:
+        send_mail(
+            subject=subject,
+            message=message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[user.email],
+            fail_silently=True,
+        )
+    except Exception:
+        pass
+
+
+def send_new_order_notification_to_producer(producer_user, order, store):
+    """
+    Notifica o produtor de uma nova encomenda (Portugal).
+    """
+    subject = f'Nova encomenda na sua loja {store.name} - COVERDE'
+
+    message = f"""
+Olá {producer_user.get_full_name()},
+
+Tem uma nova encomenda na sua loja {store.name}!
+
+Referência da encomenda: #{order.reference}
+Valor total: {order.total} €  # ← Euro
+
+Detalhes da encomenda:
+- Cliente: {order.customer.get_full_name()}
+- Data: {order.created_at.strftime('%d/%m/%Y %H:%M')}
+- Estado: Pendente de preparação
+
+Aceda ao seu painel de produtor para ver os detalhes e aceitar ou recusar a encomenda.
+
+Link para o painel: https://coverde.pt/produtor/
+
+Com os melhores cumprimentos,
+Equipa COVERDE
+suporte@coverde.pt
+https://coverde.pt
+"""
+
+    try:
+        send_mail(
+            subject=subject,
+            message=message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[producer_user.email],
+            fail_silently=True,
+        )
+    except Exception:
+        pass
+
+
+def send_payment_approved_email(user, order, payment):
+    """
+    Envia email de confirmação de pagamento aprovado (Portugal).
+    """
+    subject = f'Pagamento aprovado - Encomenda #{order.reference} - COVERDE'
+
+    message = f"""
+Olá {user.get_full_name()},
+
+O pagamento da sua encomenda foi aprovado com sucesso!
+
+Encomenda: #{order.reference}
+Valor: {order.total} €
+Método de pagamento: {payment.get_method_display()}
+
+O seu pedido está agora a ser preparado para envio.
+
+Obrigado por comprar no COVERDE!
+
+Com os melhores cumprimentos,
+Equipa COVERDE
+suporte@coverde.pt
+https://coverde.pt
+"""
+
+    try:
+        send_mail(
+            subject=subject,
+            message=message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[user.email],
+            fail_silently=True,
+        )
+    except Exception:
+        pass
+
+
+def send_producer_approved_email(producer_user):
+    """
+    Envia email a informar que o produtor foi aprovado (Portugal).
+    """
+    subject = f'Conta de Produtor Aprovada - COVERDE'
+
+    message = f"""
+Olá {producer_user.get_full_name()},
+
+Temos o prazer de informar que a sua conta de PRODUTOR no COVERDE foi aprovada!
+
+Já pode começar a:
+- Listar os seus produtos agrícolas
+- Gerir o stock da sua loja
+- Receber encomendas dos clientes
+
+Aceda ao seu painel de produtor para começar:
+https://coverde.pt/produtor/
+
+Bem-vindo(a) à comunidade COVERDE!
+
+Com os melhores cumprimentos,
+Equipa COVERDE
+suporte@coverde.pt
+https://coverde.pt
+"""
+
+    try:
+        send_mail(
+            subject=subject,
+            message=message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[producer_user.email],
+            fail_silently=True,
+        )
+    except Exception:
+        pass

@@ -1,27 +1,42 @@
-from django.urls import path
+"""
+COVERDE - apps/users/urls.py
+URLs de utilizadores (Portugal).
+"""
 
+from django.urls import path
+from django.contrib.auth import views as auth_views
 from . import views
 
-app_name = "users"
+app_name = 'users'
 
 urlpatterns = [
-    path("login/", views.CustomLoginView.as_view(), name="login"),
-    path("logout/", views.CustomLogoutView.as_view(), name="logout"),
-    path("dashboard/", views.dashboard, name="dashboard"),
-    path("verify-email/<uuid:token>/", views.verify_email, name="verify_email"),
-    path("two-factor/", views.two_factor_verify, name="two_factor_verify"),
-    path("register/", views.register_choice, name="register"),
-    path("register/consumer/", views.register_consumer, name="register_consumer"),
-    path("register/producer/", views.register_producer, name="register_producer"),
-    path("profile/", views.profile, name="profile"),
-    path("profile/edit/", views.edit_profile, name="profile_edit"),
-    path("delete-account/", views.delete_account, name="delete_account"),
-    path("producer/", views.producer_panel, name="producer_panel"),
-    path("producer/verification/", views.producer_verification_request, name="producer_verification"),
-    
-    # Password reset views
-    path("password-reset/", views.CustomPasswordResetView.as_view(), name="password_reset"),
-    path("password-reset/done/", views.CustomPasswordResetDoneView.as_view(), name="password_reset_done"),
-    path("password-reset/<uidb64>/<token>/", views.CustomPasswordResetConfirmView.as_view(), name="password_reset_confirm"),
-    path("password-reset/complete/", views.CustomPasswordResetCompleteView.as_view(), name="password_reset_complete"),
+    # Registo
+    path('registar/', views.register_client, name='register'),          # ← Cliente
+    path('registar/produtor/', views.register_producer, name='register_producer'),  # ← Produtor
+
+    # Ativação
+    path('ativar/<uuid:token>/', views.activate_account, name='activate'),  # ← Portugal
+
+    # Autenticação
+    path('entrar/', views.user_login, name='login'),
+    path('sair/', views.user_logout, name='logout'),
+
+    # Perfil
+    path('perfil/', views.profile, name='profile'),
+    path('perfil/moradas/adicionar/', views.add_address, name='add_address'),  # ← Portugal: moradas
+
+    # Recuperação de password
+    path('password-reset/', auth_views.PasswordResetView.as_view(
+        template_name='users/password_reset.html',
+        email_template_name='users/password_reset_email.html'
+    ), name='password_reset'),
+    path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(
+        template_name='users/password_reset_done.html'
+    ), name='password_reset_done'),
+    path('password-reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(
+        template_name='users/password_reset_confirm.html'
+    ), name='password_reset_confirm'),
+    path('password-reset/complete/', auth_views.PasswordResetCompleteView.as_view(
+        template_name='users/password_reset_complete.html'
+    ), name='password_reset_complete'),
 ]

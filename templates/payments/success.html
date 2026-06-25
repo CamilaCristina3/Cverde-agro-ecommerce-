@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Pagamento Confirmado - COVERDE{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      
+      <!-- Sucesso -->
+      <div class="alert alert-success alert-lg border-0 mb-4" role="alert">
+        <div class="text-center mb-3">
+          <i class="fa-solid fa-circle-check" style="font-size: 4rem; color: #198754;"></i>
+        </div>
+        <h2 class="h4 text-center mb-2">✅ Pagamento de Teste Aprovado!</h2>
+        <p class="text-center text-muted mb-0">Sua encomenda foi confirmada com sucesso.</p>
+      </div>
+      
+      <!-- Detalhes da Encomenda -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white">
+          <h3 class="h6 mb-0">Detalhes da Encomenda #{{ order.id }}</h3>
+        </div>
+        
+        <div class="card-body">
+          <table class="table table-sm">
+            <tbody>
+              <tr>
+                <td class="fw-bold">Referência:</td>
+                <td><code>{{ payment.reference }}</code></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Status:</td>
+                <td>
+                  <span class="badge bg-success">
+                    {{ order.get_status_display }}
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Método de Pagamento:</td>
+                <td>{{ payment.get_payment_method_display }}</td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Tipo:</td>
+                <td>
+                  <span class="badge bg-info">🧪 TESTE</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- Resumo Financeiro -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+          <h3 class="h6 mb-0">Resumo Financeiro</h3>
+        </div>
+        
+        <div class="card-body">
+          <table class="table table-sm mb-0">
+            <tbody>
+              <tr>
+                <td>Subtotal:</td>
+                <td class="text-end">€{{ order.subtotal }}</td>
+              </tr>
+              <tr>
+                <td>Portes:</td>
+                <td class="text-end">€{{ order.shipping_cost }}</td>
+              </tr>
+              <tr>
+                <td>IVA:</td>
+                <td class="text-end">€{{ order.vat }}</td>
+              </tr>
+              <tr class="fw-bold border-top">
+                <td>Total Pago:</td>
+                <td class="text-end text-success">€{{ order.total }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- Próximos Passos -->
+      <div class="alert alert-info mb-4">
+        <h6 class="fw-bold mb-2">📧 Próximos Passos</h6>
+        <ul class="small mb-0">
+          <li>Um email de confirmação foi enviado para <strong>{{ request.user.email }}</strong></li>
+          <li>Sua encomenda será preparada em breve</li>
+          <li>Receberá um email com o código de rastreio</li>
+          <li>Pode acompanhar o estado da encomenda a qualquer momento</li>
+        </ul>
+      </div>
+      
+      <!-- Informações Importantes -->
+      <div class="alert alert-secondary mb-4">
+        <strong>ℹ️ Informações Importantes:</strong>
+        <ul class="small mb-0">
+          <li>Este é um pagamento simulado em ambiente de teste</li>
+          <li>Nenhum dinheiro real foi cobrado</li>
+          <li>A encomenda será processada normalmente</li>
+          <li>Mantenha a referência para futuras consultas</li>
+        </ul>
+      </div>
+      
+      <!-- Botões de Ação -->
+      <div class="d-grid gap-2">
+        <a href="{% url 'orders:detail' order.id %}" class="btn btn-success btn-lg">
+          <i class="fa-solid fa-box me-2"></i>
+          Ver Detalhes da Encomenda
+        </a>
+        <a href="{% url 'users:product_list' %}" class="btn btn-outline-success">
+          <i class="fa-solid fa-shopping-bag me-2"></i>
+          Continuar Compras
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

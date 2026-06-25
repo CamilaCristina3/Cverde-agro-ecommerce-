@@ -1,179 +1,211 @@
-{% extends "base.html" %}
-{% block title %}Registar Consumidor | Cverde{% endblock %}
-{% block messages %}{% endblock %}
-{% block content %}
-<section class="section">
-  <div class="container">
-    <div class="columns is-centered">
-      <div class="column is-6">
-        <div class="box">
-          <h2 class="title is-4 has-text-centered mb-5">Registar como Consumidor</h2>
+{% extends "auth_base.html" %}
+{% block title %}Registar-se como Consumidor | COVERDE{% endblock %}
 
-          {% if messages %}
-            {% for message in messages %}
-              <div class="notification is-{{ message.tags }}">
-                {{ message }}
-              </div>
-            {% endfor %}
+{% block extra_css %}
+<style>
+  .auth-card {
+    border: 0;
+    border-radius: 1.5rem;
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+  }
+
+  .auth-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+  }
+</style>
+{% endblock %}
+
+{% block auth_content %}
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-8 col-xl-7">
+    <div class="card auth-card">
+      <div class="card-body p-4 p-md-5">
+
+        <div class="text-center mb-4">
+          <h1 class="auth-title">Registar-se como Consumidor</h1>
+          <p class="text-muted mb-0">
+            Crie uma conta gratuita para comprar produtos locais directamente aos produtores.
+          </p>
+        </div>
+
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger" role="alert">
+            {{ form.non_field_errors.0 }}
+          </div>
+        {% endif %}
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          {% if next_url %}
+            <input type="hidden" name="next" value="{{ next_url }}">
           {% endif %}
 
-          <form method="post" novalidate>
-            {% csrf_token %}
-            {% if next_url %}
-              <input type="hidden" name="next" value="{{ next_url }}">
-            {% endif %}
+          <div class="mb-4">
+            <h2 class="h6 fw-bold text-success mb-3">Dados pessoais</h2>
 
-            <div class="columns is-multiline">
-              <div class="column is-6">
-                <div class="field">
-                  <label for="{{ form.username.id_for_label }}" class="label">{{ form.username.label }}</label>
-                  <div class="control">
-                    {{ form.username }}
-                  </div>
-                  {% if form.username.errors %}<p class="help is-danger">{{ form.username.errors.0 }}</p>{% endif %}
-                </div>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label" for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+                {{ form.first_name }}
+                {% if form.first_name.errors %}
+                  <div class="invalid-feedback d-block">{{ form.first_name.errors.0 }}</div>
+                {% endif %}
               </div>
 
-              <div class="column is-6">
-                <div class="field">
-                  <label for="{{ form.email.id_for_label }}" class="label">{{ form.email.label }}</label>
-                  <div class="control">
-                    {{ form.email }}
-                  </div>
-                  {% if form.email.errors %}<p class="help is-danger">{{ form.email.errors.0 }}</p>{% endif %}
-                </div>
-              </div>
-
-              <div class="column is-6">
-                <div class="field">
-                  <label for="{{ form.first_name.id_for_label }}" class="label">{{ form.first_name.label }}</label>
-                  <div class="control">
-                    {{ form.first_name }}
-                  </div>
-                  {% if form.first_name.errors %}<p class="help is-danger">{{ form.first_name.errors.0 }}</p>{% endif %}
-                </div>
-              </div>
-
-              <div class="column is-6">
-                <div class="field">
-                  <label for="{{ form.last_name.id_for_label }}" class="label">{{ form.last_name.label }}</label>
-                  <div class="control">
-                    {{ form.last_name }}
-                  </div>
-                  {% if form.last_name.errors %}<p class="help is-danger">{{ form.last_name.errors.0 }}</p>{% endif %}
-                </div>
-              </div>
-
-              <div class="column is-6">
-                <div class="field">
-                  <label for="{{ form.phone.id_for_label }}" class="label">{{ form.phone.label }}</label>
-                  <div class="control">
-                    {{ form.phone }}
-                  </div>
-                  {% if form.phone.help_text %}<p class="help">{{ form.phone.help_text }}</p>{% endif %}
-                  {% if form.phone.errors %}<p class="help is-danger">{{ form.phone.errors.0 }}</p>{% endif %}
-                </div>
-              </div>
-
-              <div class="column is-6">
-                <div class="field">
-                  <label for="{{ form.password.id_for_label }}" class="label">{{ form.password.label }}</label>
-                  <div class="control">
-                    {{ form.password }}
-                  </div>
-                  {% if form.password.errors %}<p class="help is-danger">{{ form.password.errors.0 }}</p>{% endif %}
-                </div>
-              </div>
-
-              <div class="column is-4">
-                <div class="field">
-                  <label for="{{ form.district.id_for_label }}" class="label">{{ form.district.label }}</label>
-                  <div class="control">
-                    {{ form.district }}
-                  </div>
-                  {% if form.district.errors %}<p class="help is-danger">{{ form.district.errors.0 }}</p>{% endif %}
-                </div>
-              </div>
-
-              <div class="column is-4">
-                <div class="field">
-                  <label for="{{ form.county.id_for_label }}" class="label">{{ form.county.label }}</label>
-                  <div class="control">
-                    {{ form.county }}
-                  </div>
-                  {% if form.county.errors %}<p class="help is-danger">{{ form.county.errors.0 }}</p>{% endif %}
-                </div>
-              </div>
-
-              <div class="column is-4">
-                <div class="field">
-                  <label for="{{ form.parish.id_for_label }}" class="label">{{ form.parish.label }}</label>
-                  <div class="control">
-                    {{ form.parish }}
-                  </div>
-                  {% if form.parish.errors %}<p class="help is-danger">{{ form.parish.errors.0 }}</p>{% endif %}
-                </div>
+              <div class="col-md-6">
+                <label class="form-label" for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+                {{ form.last_name }}
+                {% if form.last_name.errors %}
+                  <div class="invalid-feedback d-block">{{ form.last_name.errors.0 }}</div>
+                {% endif %}
               </div>
             </div>
-
-            <hr>
-
-            <div class="content is-size-7 has-text-grey">
-              Os seus dados serão utilizados apenas para criar e gerir a sua conta e, quando aplicável, processar encomendas.
-              Pode consultar a <a href="{% url 'pages:privacy_policy' %}">Política de Privacidade</a> e os
-              <a href="{% url 'pages:terms_of_use' %}">Termos de Utilização</a>.
-            </div>
-
-            <div class="field">
-              <div class="control">
-                <label class="checkbox">
-                  {{ form.accept_privacy_policy }} {{ form.accept_privacy_policy.label }}
-                </label>
-              </div>
-              {% if form.accept_privacy_policy.errors %}
-                <p class="help is-danger">{{ form.accept_privacy_policy.errors.0 }}</p>
-              {% endif %}
-            </div>
-
-            <div class="field">
-              <div class="control">
-                <label class="checkbox">
-                  {{ form.accept_terms }} {{ form.accept_terms.label }}
-                </label>
-              </div>
-              {% if form.accept_terms.errors %}
-                <p class="help is-danger">{{ form.accept_terms.errors.0 }}</p>
-              {% endif %}
-            </div>
-
-            <div class="field">
-              <div class="control">
-                <label class="checkbox">
-                  {{ form.marketing_opt_in }} {{ form.marketing_opt_in.label }}
-                </label>
-              </div>
-              {% if form.marketing_opt_in.errors %}
-                <p class="help is-danger">{{ form.marketing_opt_in.errors.0 }}</p>
-              {% endif %}
-            </div>
-
-            <div class="field mt-4">
-              <div class="control">
-                <button type="submit" class="button is-success is-fullwidth">Registar como Consumidor</button>
-              </div>
-            </div>
-          </form>
-
-          <div class="has-text-centered mt-4">
-            <p class="mb-2">
-              Já tem conta?
-              <a href="{% url 'users:login' %}{% if next_url %}?next={{ next_url|urlencode }}{% endif %}">Entrar</a>
-            </p>
-            <p>Quer criar outro tipo de conta? <a href="{% url 'users:register' %}">Voltar</a></p>
           </div>
-        </div>
+
+          <div class="mb-4">
+            <h2 class="h6 fw-bold text-success mb-3">Dados de acesso</h2>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label" for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                  <div class="invalid-feedback d-block">{{ form.username.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                  <div class="invalid-feedback d-block">{{ form.email.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label" for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+                {{ form.phone }}
+                {% if form.phone.errors %}
+                  <div class="invalid-feedback d-block">{{ form.phone.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label" for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                  <div class="invalid-feedback d-block">{{ form.password.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label" for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
+                {{ form.password2 }}
+                {% if form.password2.errors %}
+                  <div class="invalid-feedback d-block">{{ form.password2.errors.0 }}</div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <h2 class="h6 fw-bold text-success mb-3">Localização</h2>
+
+            <div class="row g-3">
+              <div class="col-md-4">
+                <label class="form-label" for="{{ form.district.id_for_label }}">{{ form.district.label }}</label>
+                {{ form.district }}
+                {% if form.district.errors %}
+                  <div class="invalid-feedback d-block">{{ form.district.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label" for="{{ form.county.id_for_label }}">{{ form.county.label }}</label>
+                {{ form.county }}
+                {% if form.county.errors %}
+                  <div class="invalid-feedback d-block">{{ form.county.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label" for="{{ form.parish.id_for_label }}">{{ form.parish.label }}</label>
+                {{ form.parish }}
+                {% if form.parish.errors %}
+                  <div class="invalid-feedback d-block">{{ form.parish.errors.0 }}</div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <div class="alert alert-light border small mb-4">
+            Os seus dados serão utilizados apenas para criar e gerir a sua conta e processar encomendas.
+            Pode consultar a
+            <a href="{% url 'pages:privacy_policy' %}" class="link-success">Política de Privacidade</a>
+            e os
+            <a href="{% url 'pages:terms_of_use' %}" class="link-success">Termos de Utilização</a>.
+          </div>
+
+          <div class="mb-3">
+            <div class="form-check">
+              {{ form.accept_privacy_policy }}
+              <label class="form-check-label" for="{{ form.accept_privacy_policy.id_for_label }}">
+                {{ form.accept_privacy_policy.label }}
+              </label>
+            </div>
+            {% if form.accept_privacy_policy.errors %}
+              <div class="invalid-feedback d-block">{{ form.accept_privacy_policy.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <div class="mb-3">
+            <div class="form-check">
+              {{ form.accept_terms }}
+              <label class="form-check-label" for="{{ form.accept_terms.id_for_label }}">
+                {{ form.accept_terms.label }}
+              </label>
+            </div>
+            {% if form.accept_terms.errors %}
+              <div class="invalid-feedback d-block">{{ form.accept_terms.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <div class="mb-4">
+            <div class="form-check">
+              {{ form.marketing_opt_in }}
+              <label class="form-check-label" for="{{ form.marketing_opt_in.id_for_label }}">
+                {{ form.marketing_opt_in.label }}
+              </label>
+            </div>
+          </div>
+
+          <div class="d-grid mb-3">
+            <button type="submit" class="btn btn-success btn-lg">Registar</button>
+          </div>
+
+          <div class="text-center">
+            <p class="mb-0">
+              Já tem conta?
+              <a href="{% url 'users:login' %}{% if next_url %}?next={{ next_url|urlencode }}{% endif %}" class="link-success">
+                Iniciar Sessão
+              </a>
+            </p>
+          </div>
+        </form>
+
       </div>
     </div>
   </div>
-</section>
+</div>
 {% endblock %}

@@ -1,79 +1,29 @@
-{% load static %}
-<nav class="navbar is-fixed-top is-link has-shadow" role="navigation" aria-label="main navigation">
+<nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
   <div class="container">
-    <div class="navbar-brand">
-      <a class="navbar-item" href="/">
-        <span class="coverde-brand">
-          <span class="coverde-brand__logo">
-            <img src="{% static 'images/logo.svg' %}" alt="Coverde" height="36">
-          </span>
-          <span class="coverde-brand__text">Coverde</span>
-        </span>
-      </a>
+    <a class="navbar-brand fw-bold text-success" href="/">
+      <i class="fa-solid fa-leaf me-2"></i>COVERDE
+    </a>
 
-      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasic">
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </a>
-    </div>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+            aria-controls="mainNavbar" aria-expanded="false" aria-label="Abrir menu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-    <div id="navbarBasic" class="navbar-menu">
-      <div class="navbar-start">
-        <a class="navbar-item" href="/">
-          <span class="icon"><i class="fas fa-home"></i></span>
-          <span>Início</span>
-        </a>
-        <a class="navbar-item" href="{% url 'products:list' %}">
-          <span class="icon"><i class="fas fa-shopping-bag"></i></span>
-          <span>Produtos</span>
-        </a>
-      </div>
+    <div class="collapse navbar-collapse" id="mainNavbar">
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Início</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/">Produtos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/">Admin</a>
+        </li>
+      </ul>
 
-      <div class="navbar-end">
-        <div class="navbar-item">
-          <a class="button is-light" href="{% url 'orders:cart' %}" title="Carrinho">
-            <span class="icon cart-icon">
-              <i class="fas fa-shopping-cart"></i>
-              {% if nav_cart_count %}
-                <span class="cart-badge">{{ nav_cart_count }}</span>
-              {% endif %}
-            </span>
-            <span class="is-hidden-touch">Carrinho</span>
-          </a>
-        </div>
-
-        {% if user.is_authenticated %}
-          <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link">
-              <span class="icon"><i class="fas fa-user-circle"></i></span>
-              <span>{{ user.username }}</span>
-            </a>
-            <div class="navbar-dropdown is-right">
-              <a class="navbar-item" href="{% url 'users:dashboard' %}">Painel</a>
-              <a class="navbar-item" href="{% url 'chat:index' %}">Chat</a>
-              <a class="navbar-item" href="{% url 'chat:assistant' %}">Secretária Virtual</a>
-              <hr class="navbar-divider">
-              <a class="navbar-item has-text-danger" href="{% url 'users:logout' %}">
-                <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
-                <span>Sair</span>
-              </a>
-            </div>
-          </div>
-        {% else %}
-          <div class="navbar-item">
-            <div class="buttons coverde-nav-actions">
-              <a class="button is-light" href="{% url 'users:login' %}">
-                <span class="icon"><i class="fas fa-sign-in-alt"></i></span>
-                <span>Entrar</span>
-              </a>
-              <a class="button is-primary" href="{% url 'users:register' %}">
-                <span class="icon"><i class="fas fa-user-plus"></i></span>
-                <span>Registar</span>
-              </a>
-            </div>
-          </div>
-        {% endif %}
+      <div class="d-flex gap-2">
+        <a href="/admin/" class="btn btn-success btn-sm">Admin Panel</a>
       </div>
     </div>
   </div>

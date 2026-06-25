@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+{% block title %}Editar Produto | COVERDE{% endblock %}
+
+{% block extra_css %}
+<style>
+  .product-form-header {
+    background: linear-gradient(135deg, #198754, #157347);
+    border-radius: 1.25rem;
+  }
+
+  .product-form-card {
+    border: 0;
+    border-radius: 1.25rem;
+    box-shadow: 0 20px 45px rgba(15, 23, 42, 0.10);
+  }
+
+  .section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #198754;
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: .75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .form-control:focus,
+  .form-select:focus,
+  .form-check-input:focus {
+    border-color: #198754;
+    box-shadow: 0 0 0 .25rem rgba(25, 135, 84, .18);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="product-form-header text-white p-4 p-md-5 mb-4">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+    <div>
+      <h1 class="h3 fw-bold mb-2">
+        <i class="fa-solid fa-pen-to-square me-2"></i>Editar Produto
+      </h1>
+      <p class="mb-0 text-white-50">Atualize as informações do seu produto</p>
+    </div>
+    <a href="{% url 'users:producer_products' %}" class="btn btn-light text-success fw-bold">
+      <i class="fa-solid fa-arrow-left me-2"></i>Voltar
+    </a>
+  </div>
+</div>
+
+<div class="container mb-5">
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="product-form-card p-4 p-md-5">
+        
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          <!-- Informação Básica -->
+          <h4 class="section-title">Informação Básica</h4>
+          <div class="row">
+            <div class="col-md-8 mb-3">
+              <label for="{{ form.name.id_for_label }}" class="form-label fw-bold">
+                <i class="fa-solid fa-heading me-2 text-success"></i>Nome do Produto
+              </label>
+              {{ form.name }}
+              {% if form.name.errors %}
+                <div class="invalid-feedback d-block">{{ form.name.errors.0 }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="{{ form.category.id_for_label }}" class="form-label fw-bold">
+                <i class="fa-solid fa-folder me-2 text-success"></i>Categoria
+              </label>
+              {{ form.category }}
+              {% if form.category.errors %}
+                <div class="invalid-feedback d-block">{{ form.category.errors.0 }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Descrição -->
+          <div class="mb-3">
+            <label for="{{ form.description.id_for_label }}" class="form-label fw-bold">
+              <i class="fa-solid fa-align-left me-2 text-success"></i>Descrição
+            </label>
+            {{ form.description }}
+            {% if form.description.errors %}
+              <div class="invalid-feedback d-block">{{ form.description.errors.0 }}</div>
+            {% endif %}
+            <small class="text-muted">Descreva em detalhe o seu produto, origem, sabor, etc.</small>
+          </div>
+
+          <!-- Preço e Stock -->
+          <h4 class="section-title mt-4">Preço e Stock</h4>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label for="{{ form.price.id_for_label }}" class="form-label fw-bold">
+                <i class="fa-solid fa-euro-sign me-2 text-success"></i>Preço (€)
+              </label>
+              {{ form.price }}
+              {% if form.price.errors %}
+                <div class="invalid-feedback d-block">{{ form.price.errors.0 }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="{{ form.stock.id_for_label }}" class="form-label fw-bold">
+                <i class="fa-solid fa-cubes me-2 text-success"></i>Stock
+              </label>
+              {{ form.stock }}
+              {% if form.stock.errors %}
+                <div class="invalid-feedback d-block">{{ form.stock.errors.0 }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="{{ form.unit.id_for_label }}" class="form-label fw-bold">
+                <i class="fa-solid fa-weight me-2 text-success"></i>Unidade
+              </label>
+              {{ form.unit }}
+              {% if form.unit.errors %}
+                <div class="invalid-feedback d-block">{{ form.unit.errors.0 }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Certificação -->
+          <h4 class="section-title mt-4">Certificação</h4>
+          <div class="mb-3">
+            <label for="{{ form.certification.id_for_label }}" class="form-label fw-bold">
+              <i class="fa-solid fa-certificate me-2 text-success"></i>Tipo de Certificação
+            </label>
+            {{ form.certification }}
+            {% if form.certification.errors %}
+              <div class="invalid-feedback d-block">{{ form.certification.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Imagem -->
+          <h4 class="section-title mt-4">Imagem Principal</h4>
+          <div class="mb-3">
+            <label for="{{ form.main_image.id_for_label }}" class="form-label fw-bold">
+              <i class="fa-solid fa-image me-2 text-success"></i>Foto do Produto
+            </label>
+            {% if product.main_image %}
+              <div class="mb-2">
+                <img src="{{ product.main_image.url }}" class="img-thumbnail" style="max-width: 200px; max-height: 200px;">
+                <br><small class="text-muted">Imagem atual</small>
+              </div>
+            {% endif %}
+            {{ form.main_image }}
+            {% if form.main_image.errors %}
+              <div class="invalid-feedback d-block">{{ form.main_image.errors.0 }}</div>
+            {% endif %}
+            <small class="text-muted">Carregue uma imagem clara e atrativa do seu produto</small>
+          </div>
+
+          <!-- Status -->
+          <h4 class="section-title mt-4">Status</h4>
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="is_active" name="is_active" 
+              {% if form.is_active.value %}checked{% endif %}>
+            <label class="form-check-label" for="is_active">
+              <i class="fa-solid fa-eye me-2 text-success"></i>Produto ativo (visível na loja)
+            </label>
+          </div>
+
+          <!-- Botões -->
+          <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-success btn-lg fw-bold">
+              <i class="fa-solid fa-check me-2"></i>Guardar Alterações
+            </button>
+            <a href="{% url 'users:producer_products' %}" class="btn btn-outline-secondary btn-lg fw-bold">
+              <i class="fa-solid fa-times me-2"></i>Cancelar
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Sidebar com info -->
+    <div class="col-lg-4">
+      <div class="product-form-card p-4 mb-3">
+        <h5 class="fw-bold mb-3">
+          <i class="fa-solid fa-circle-info me-2 text-success"></i>Informações
+        </h5>
+        <p class="text-muted">
+          <strong>Produto ID:</strong> #{{ product.id }}
+        </p>
+        <p class="text-muted">
+          <strong>Criado em:</strong> {{ product.created_at|date:"d/m/Y H:i" }}
+        </p>
+        <hr>
+        <h6 class="fw-bold text-success mb-2">
+          <i class="fa-solid fa-lightbulb me-2"></i>Dicas
+        </h6>
+        <ul class="small text-muted">
+          <li>Use uma descrição clara e detalhada</li>
+          <li>Adicione informações sobre origem e processos</li>
+          <li>Mantenha o stock sempre atualizado</li>
+          <li>Use imagens de alta qualidade</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .form-control, .form-select, textarea {
+    border-color: #e9ecef;
+  }
+  .form-control:focus, .form-select:focus, textarea:focus {
+    border-color: #198754;
+  }
+</style>
+
+{% endblock %}

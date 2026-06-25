@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Pagamento - COVERDE{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white">
+          <h2 class="h5 mb-0">Confirmar Pagamento</h2>
+        </div>
+        
+        <div class="card-body">
+          
+          <!-- Resumo da Encomenda -->
+          <div class="alert alert-light border mb-4">
+            <h6 class="fw-bold mb-3">Resumo da Encomenda #{{ order.id }}</h6>
+            <table class="table table-sm mb-0">
+              <tbody>
+                <tr>
+                  <td>Subtotal:</td>
+                  <td class="text-end">€{{ order.subtotal }}</td>
+                </tr>
+                <tr>
+                  <td>Portes:</td>
+                  <td class="text-end">€{{ order.shipping_cost }}</td>
+                </tr>
+                <tr>
+                  <td>IVA:</td>
+                  <td class="text-end">€{{ order.vat }}</td>
+                </tr>
+                <tr class="fw-bold">
+                  <td>Total:</td>
+                  <td class="text-end text-success fs-5">€{{ order.total }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Aviso de Modo Teste -->
+          <div class="alert alert-info mb-4" role="alert">
+            <i class="fa-solid fa-flask-vial me-2"></i>
+            <strong>Modo de Teste Ativado</strong><br>
+            <small>Este é um ambiente de teste. O pagamento não será cobrado.</small>
+          </div>
+          
+          <!-- Formulário de Pagamento -->
+          <form method="post" class="needs-validation">
+            {% csrf_token %}
+            
+            <!-- Método de Pagamento -->
+            <div class="mb-3">
+              <label for="payment_method" class="form-label fw-bold">
+                Método de Pagamento
+              </label>
+              <select name="payment_method" id="payment_method" class="form-select" required>
+                <option value="">-- Selecione um método --</option>
+                <option value="card_test" selected>💳 Cartão de Teste</option>
+                <option value="bank_transfer_test">🏦 Transferência Bancária Teste</option>
+                <option value="cash_on_delivery">📦 Pagamento na Entrega</option>
+                <option value="mbay_test">📱 MBay Teste</option>
+              </select>
+            </div>
+            
+            <!-- Separador -->
+            <hr class="my-4">
+            
+            <!-- Autenticação de Teste -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">
+                Autenticação de Teste
+              </label>
+              <p class="text-muted small mb-2">
+                Use <strong>1234</strong> como senha OU <strong>COVERDE-TEST</strong> como assinatura
+              </p>
+            </div>
+            
+            <!-- Senha Teste -->
+            <div class="mb-3">
+              <label for="test_password" class="form-label">
+                Senha de Teste (opcional)
+              </label>
+              <input type="password" name="test_password" id="test_password" 
+                     class="form-control" placeholder="1234">
+              <small class="text-muted">Use: <code>1234</code></small>
+            </div>
+            
+            <!-- Assinatura Teste -->
+            <div class="mb-3">
+              <label for="test_signature" class="form-label">
+                Assinatura de Teste (opcional)
+              </label>
+              <input type="text" name="test_signature" id="test_signature" 
+                     class="form-control" placeholder="COVERDE-TEST">
+              <small class="text-muted">Use: <code>COVERDE-TEST</code></small>
+            </div>
+            
+            <!-- Dicas -->
+            <div class="alert alert-secondary" role="alert">
+              <strong>💡 Dicas:</strong>
+              <ul class="mb-0 small">
+                <li>Deixe um dos campos em branco se não quiser usar</li>
+                <li>Use exatamente: <code>1234</code> ou <code>COVERDE-TEST</code></li>
+                <li>Maiúsculas/minúsculas importam!</li>
+              </ul>
+            </div>
+            
+            <!-- Botões -->
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-success btn-lg">
+                <i class="fa-solid fa-lock me-2"></i>
+                Confirmar Pagamento de Teste
+              </button>
+              <a href="{% url 'orders:detail' order.id %}" class="btn btn-outline-secondary">
+                Voltar
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      <!-- Informações Adicionais -->
+      <div class="card bg-light border-0">
+        <div class="card-body">
+          <h6 class="fw-bold mb-2">ℹ️ Informações Importantes</h6>
+          <ul class="small mb-0">
+            <li>Este pagamento é simulado para fins de desenvolvimento</li>
+            <li>Nenhum dinheiro real será cobrado</li>
+            <li>Após a confirmação, sua encomenda será processada normalmente</li>
+            <li>Receberá um email de confirmação</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

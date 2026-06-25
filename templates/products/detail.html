@@ -1,260 +1,511 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block title %}{{ product.name }} | Cverde{% endblock %}
 
 {% block content %}
-<div class="container mt-5 mb-6">
-    <div class="breadcrumb">
+<div class="container product-detail-page mt-5 mb-6">
+
+    <nav class="breadcrumb is-small mb-4" aria-label="breadcrumbs">
         <ul>
-            <li><a href="{% url 'home' %}">Home</a></li>
-            <li><a href="{% url 'products:list' %}">Produtos</a></li>
-            <li class="is-active"><a href="#" aria-current="page">{{ product.name }}</a></li>
+            <li><a href="{% url 'home' %}">Início</a></li>
+            <li><a href="{% url 'users:product_list' %}">Produtos</a></li>
+            <li class="is-active">
+                <a href="#" aria-current="page">{{ product.name }}</a>
+            </li>
         </ul>
-    </div>
+    </nav>
 
     <div class="mb-4">
-        <a class="button is-light" href="{{ back_url }}">
+        <a class="button is-light is-rounded" href="{{ back_url }}">
             <span class="icon"><i class="fas fa-arrow-left"></i></span>
             <span>Continuar a comprar</span>
         </a>
     </div>
 
-    <div class="columns is-variable is-6 mt-5">
-        <!-- Product Image -->
-        <div class="column is-6-desktop is-12-tablet">
-            <div class="product-image mb-5">
-                <figure class="image is-square">
-                    {% if product.main_image %}
-                        <img src="{{ product.main_image.url }}" alt="{{ product.name }}">
+    <section class="box product-main-card">
+        <div class="columns is-variable is-8">
+
+            <div class="column is-6-desktop is-12-tablet">
+                <div class="product-gallery">
+                    <figure class="image product-main-image">
+                        {% if product.main_image %}
+                            <img src="{{ product.main_image.url }}" alt="{{ product.name }}">
+                        {% else %}
+                            <img src="{% static 'images/placeholders/products/product_placeholder.svg' %}"
+                                 alt="{{ product.name }}"
+                                 class="placeholder-svg">
+                        {% endif %}
+                    </figure>
+                </div>
+
+                <div class="tags mt-4">
+                    {% if product.certification %}
+                        <span class="tag is-success is-light">
+                            {{ product.get_certification_display }}
+                        </span>
                     {% else %}
-                        <img src="{% static 'images/product_placeholder.svg' %}" alt="{{ product.name }}" class="placeholder-svg">
+                        <span class="tag is-success is-light">✓ Fresco</span>
                     {% endif %}
-                </figure>
-            </div>
-            <div class="tags">
-                {% if product.certification %}
-                    <span class="tag is-success">{{ product.get_certification_display }}</span>
-                {% else %}
-                    <span class="tag is-light">✓ Fresco</span>
-                {% endif %}
-                {% if product.producer.is_verified %}
-                    <span class="tag is-info">Produtor verificado</span>
-                {% endif %}
-            </div>
-        </div>
 
-        <!-- Product Details -->
-        <div class="column is-6-desktop is-12-tablet">
-            <!-- Header -->
-            <h1 class="title is-3 mb-2">{{ product.name }}</h1>
+                    {% if product.producer.is_verified %}
+                        <span class="tag is-info is-light">Produtor verificado</span>
+                    {% endif %}
+                </div>
+            </div>
 
-            <p class="is-size-7 has-text-grey mb-4">
-                {% if product.total_reviews > 0 %}
-                    <span class="has-text-warning">★ {{ product.average_rating|floatformat:1 }}/5</span>
-                    <span class="ml-1">({{ product.total_reviews }} avaliação{{ product.total_reviews|pluralize:"ão,ões" }})</span>
-                {% else %}
-                    Sem avaliações ainda
-                {% endif %}
-            </p>
-            
-            <!-- Producer Info -->
-            <div class="box mb-4" style="background: #f5f5f5; border-left: 4px solid #2e7d32;">
-                <div class="level is-mobile">
-                    <div class="level-left">
+            <div class="column is-6-desktop is-12-tablet">
+                <div class="product-info-panel">
+
+                    <p class="is-size-7 has-text-grey mb-2">
+                        {% if product.category %}
+                            {{ product.category.name }}
+                        {% else %}
+                            Produto local
+                        {% endif %}
+                    </p>
+
+                    <h1 class="title is-3 mb-2">{{ product.name }}</h1>
+
+                    <div class="mb-4">
+                        {% if product.total_reviews > 0 %}
+                            <span class="has-text-warning has-text-weight-semibold">
+                                ★ {{ product.average_rating|floatformat:1 }}/5
+                            </span>
+                            <span class="has-text-grey is-size-7">
+                                ({{ product.total_reviews }} avaliação{{ product.total_reviews|pluralize:"ão,ões" }})
+                            </span>
+                        {% else %}
+                            <span class="has-text-grey is-size-7">Sem avaliações ainda</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="producer-card-detail mb-5">
                         <div>
-                            <p class="has-text-weight-bold">{{ product.producer.name }}</p>
+                            <p class="has-text-weight-bold mb-1">{{ product.producer.name }}</p>
                             <p class="is-size-7 has-text-grey">
-                                {% if product.producer.location %}<i class="fas fa-map-marker-alt mr-1"></i>{{ product.producer.location }}{% else %}Localização não indicada{% endif %}
+                                {% if product.producer.location %}
+                                    <i class="fas fa-map-marker-alt mr-1"></i>{{ product.producer.location }}
+                                {% else %}
+                                    Localização não indicada
+                                {% endif %}
                             </p>
                         </div>
-                    </div>
-                    <div class="level-right">
-                        <div class="is-size-7 has-text-grey has-text-right">
+
+                        <div class="has-text-right is-size-7">
                             {% if product.producer.total_ratings > 0 %}
-                                <span class="has-text-warning">★ {{ product.producer.rating|floatformat:1 }}/5</span>
-                                <span class="ml-1">({{ product.producer.total_ratings }})</span>
+                                <span class="has-text-warning">
+                                    ★ {{ product.producer.rating|floatformat:1 }}/5
+                                </span>
+                                <br>
+                                <span class="has-text-grey">{{ product.producer.total_ratings }} avaliações</span>
                             {% else %}
-                                Sem avaliações
+                                <span class="has-text-grey">Sem avaliações</span>
                             {% endif %}
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Price & Stock -->
-            <div class="mb-6">
-                <div class="level is-mobile">
-                    <div class="level-left">
+                    <div class="price-box mb-5">
                         <div>
                             <p class="is-size-7 has-text-grey">Preço</p>
-                            <p class="title is-2 has-text-success">€{{ product.price }}</p>
+                            <p class="product-price">€{{ product.price }}</p>
                         </div>
-                    </div>
-                    <div class="level-right">
-                        <div class="has-text-centered">
+
+                        <div class="has-text-right">
                             <p class="is-size-7 has-text-grey">Embalagem</p>
-                            <p class="is-size-5 has-text-weight-bold">{{ product.get_unit_display }}</p>
+                            <p class="has-text-weight-bold">{{ product.get_unit_display }}</p>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Stock Status -->
-            <div class="mb-6">
-                {% if product.stock > 5 %}
-                <div class="notification is-success is-light">
-                    <p><strong>✓ Em stock</strong> — {{ product.stock }} unidades disponíveis</p>
-                </div>
-                {% elif product.stock > 0 %}
-                <div class="notification is-warning is-light">
-                    <p><strong>⚠ Estoque limitado</strong> — {{ product.stock }} unidades disponíveis</p>
-                </div>
-                {% else %}
-                <div class="notification is-danger is-light">
-                    <p><strong>✗ Esgotado</strong> — Produto indisponível no momento</p>
-                </div>
-                {% endif %}
-            </div>
+                    <div class="mb-5">
+                        {% if product.stock > 5 %}
+                            <div class="stock-alert stock-ok">
+                                <strong>✓ Em stock</strong>
+                                <span>{{ product.stock }} unidades disponíveis</span>
+                            </div>
+                        {% elif product.stock > 0 %}
+                            <div class="stock-alert stock-low">
+                                <strong>⚠ Stock limitado</strong>
+                                <span>{{ product.stock }} unidades disponíveis</span>
+                            </div>
+                        {% else %}
+                            <div class="stock-alert stock-out">
+                                <strong>✗ Esgotado</strong>
+                                <span>Produto indisponível no momento</span>
+                            </div>
+                        {% endif %}
+                    </div>
 
-            <!-- Action Buttons -->
-            <div class="field is-grouped mb-6">
-                {% if product.stock > 0 %}
-                <p class="control is-expanded">
-                    <form method="post" action="{% url 'orders:add_to_cart' product.id %}">
-                        {% csrf_token %}
-                        <input type="hidden" name="next" value="{{ back_url }}">
-                        <div class="field has-addons">
-                            <div class="control">
-                                <input class="input" type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" style="max-width: 110px;">
+                    {% if product.stock > 0 %}
+                        <form method="post" action="{% url 'orders:add_to_cart' product.id %}" class="mb-5">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ back_url }}">
+
+                            <div class="field">
+                                <label class="label is-size-7">Quantidade</label>
+                                <div class="field has-addons">
+                                    <div class="control">
+                                        <input class="input quantity-input"
+                                               type="number"
+                                               name="quantity"
+                                               value="1"
+                                               min="1"
+                                               max="{{ product.stock }}">
+                                    </div>
+                                    <div class="control is-expanded">
+                                        <button type="submit" class="button is-success is-fullwidth add-cart-button">
+                                            <span class="icon"><i class="fas fa-shopping-basket"></i></span>
+                                            <span>Adicionar ao carrinho</span>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="control is-expanded">
-                                <button type="submit" class="button is-success is-size-5 is-fullwidth">
-                                    <span class="icon"><i class="fas fa-shopping-basket"></i></span>
-                                    <span>Adicionar ao Carrinho</span>
-                                </button>
-                            </div>
+                        </form>
+                    {% else %}
+                        <button class="button is-light is-fullwidth is-medium mb-5" disabled>
+                            Produto indisponível
+                        </button>
+                    {% endif %}
+
+                    <div class="trust-box">
+                        <div>
+                            <i class="fas fa-lock"></i>
+                            <span>Checkout seguro</span>
                         </div>
-                    </form>
-                </p>
-                {% else %}
-                <p class="control is-expanded">
-                    <button class="button is-light is-size-5 is-fullwidth" disabled>
-                        <span>Indisponível</span>
-                    </button>
-                </p>
-                {% endif %}
-            </div>
+                        <div>
+                            <i class="fas fa-user-shield"></i>
+                            <span>RGPD</span>
+                        </div>
+                        <div>
+                            <i class="fas fa-truck"></i>
+                            <span>Encomenda rastreável</span>
+                        </div>
+                    </div>
 
-            <div class="notification is-light mb-6" style="border-left: 4px solid #2e7d32;">
-                <p class="is-size-7 has-text-grey mb-2"><strong>Compra com confiança</strong></p>
-                <p class="is-size-7 has-text-grey">
-                    <span class="icon-text mr-3"><span class="icon is-small"><i class="fas fa-lock"></i></span><span>Checkout seguro</span></span>
-                    <span class="icon-text mr-3"><span class="icon is-small"><i class="fas fa-user-shield"></i></span><span>RGPD</span></span>
-                    <span class="icon-text"><span class="icon is-small"><i class="fas fa-truck"></i></span><span>Encomenda rastreável</span></span>
-                </p>
+                </div>
             </div>
+        </div>
+    </section>
 
-            <!-- Product Info Tabs -->
-            <div class="tabs is-boxed mb-5">
-                <ul>
-                    <li class="is-active"><a data-tab="description">Descrição</a></li>
-                    <li><a data-tab="details">Detalhes</a></li>
-                </ul>
-            </div>
+    <section class="box mt-5">
+        <div class="tabs is-boxed mb-5">
+            <ul>
+                <li class="is-active">
+                    <a data-tab="description">Descrição</a>
+                </li>
+                <li>
+                    <a data-tab="details">Detalhes</a>
+                </li>
+            </ul>
+        </div>
 
-            <div id="description" class="tab-pane is-active mb-6">
-                <p class="is-size-6">{{ product.description|default:"Descrição não disponível." }}</p>
-            </div>
+        <div id="description" class="tab-pane is-active">
+            <p class="is-size-6">
+                {{ product.description|default:"Descrição não disponível." }}
+            </p>
+        </div>
 
-            <div id="details" class="tab-pane mb-6" style="display: none;">
-                <table class="table is-fullwidth">
+        <div id="details" class="tab-pane" style="display: none;">
+            <table class="table is-fullwidth is-striped">
+                <tbody>
                     <tr>
-                        <td class="has-text-grey"><strong>Categoria</strong></td>
-                        <td>{% if product.category %}{{ product.category.name }}{% else %}Sem categoria{% endif %}</td>
+                        <td><strong>Categoria</strong></td>
+                        <td>
+                            {% if product.category %}
+                                {{ product.category.name }}
+                            {% else %}
+                                Sem categoria
+                            {% endif %}
+                        </td>
                     </tr>
                     <tr>
-                        <td class="has-text-grey"><strong>Tipo de Embalagem</strong></td>
+                        <td><strong>Tipo de embalagem</strong></td>
                         <td>{{ product.get_unit_display }}</td>
                     </tr>
                     <tr>
-                        <td class="has-text-grey"><strong>Certificação</strong></td>
+                        <td><strong>Certificação</strong></td>
                         <td>
                             {% if product.certification %}
-                                <span class="tag is-success">{{ product.get_certification_display }}</span>
+                                <span class="tag is-success">
+                                    {{ product.get_certification_display }}
+                                </span>
                             {% else %}
                                 <span class="tag is-light">Sem certificação</span>
                             {% endif %}
                         </td>
                     </tr>
                     <tr>
-                        <td class="has-text-grey"><strong>Disponibilidade</strong></td>
+                        <td><strong>Disponibilidade</strong></td>
                         <td>{{ product.stock }} unidades em stock</td>
                     </tr>
-                </table>
-            </div>
+                </tbody>
+            </table>
         </div>
-    </div>
+    </section>
 
-    <!-- Related Products -->
     {% if related_products %}
-    <section class="mt-7">
-        <h2 class="title is-4 mb-4">Produtos Relacionados</h2>
-        <div class="columns is-multiline is-variable is-6">
-            {% for related in related_products|slice:":3" %}
-            <div class="column is-4-desktop is-6-tablet is-12-mobile">
-                <div class="card product-card">
-                    <div class="card-image">
-                        <figure class="image is-4by3">
-                            {% if related.main_image %}
-                                <img src="{{ related.main_image.url }}" alt="{{ related.name }}" loading="lazy">
-                            {% else %}
-                                <img src="{% static 'images/product_placeholder.svg' %}" alt="{{ related.name }}" loading="lazy" class="placeholder-svg">
-                            {% endif %}
-                        </figure>
-                    </div>
-                    <div class="card-content">
-                        <p class="title is-6 mb-2">{{ related.name }}</p>
-                        <p class="is-size-7 has-text-grey mb-3">{{ related.description|default:""|truncatewords:10 }}</p>
-                        <div class="level is-mobile">
-                            <div class="level-left">
-                                <span class="has-text-success has-text-weight-bold">€{{ related.price }}</span>
+        <section class="mt-6">
+            <h2 class="title is-4 mb-4">Produtos relacionados</h2>
+
+            <div class="columns is-multiline is-variable is-5">
+                {% for related in related_products|slice:":3" %}
+                    <div class="column is-4-desktop is-6-tablet is-12-mobile">
+                        <div class="card product-card related-product-card">
+                            <div class="card-image">
+                                <figure class="image is-4by3">
+                                    {% if related.main_image %}
+                                        <img src="{{ related.main_image.url }}"
+                                             alt="{{ related.name }}"
+                                             loading="lazy">
+                                    {% else %}
+                                        <img src="{% static 'images/placeholders/products/product_placeholder.svg' %}"
+                                             alt="{{ related.name }}"
+                                             loading="lazy"
+                                             class="placeholder-svg">
+                                    {% endif %}
+                                </figure>
                             </div>
-                            <div class="level-right">
-                                {% if related.stock > 0 %}
-                                <a href="{% url 'products:detail' related.id %}?back={{ back_url|urlencode }}" class="button is-success is-small">Ver</a>
-                                {% else %}
-                                <span class="has-text-danger is-small">Esgotado</span>
-                                {% endif %}
+
+                            <div class="card-content">
+                                <p class="title is-6 mb-2">{{ related.name }}</p>
+                                <p class="is-size-7 has-text-grey mb-3">
+                                    {{ related.description|default:"Produto local e sustentável."|truncatewords:10 }}
+                                </p>
+
+                                <div class="related-footer">
+                                    <span class="has-text-success has-text-weight-bold">
+                                        €{{ related.price }}
+                                    </span>
+
+                                    {% if related.stock > 0 %}
+                                                     <a href="{% url 'users:product_detail' related.id %}?back={{ back_url|urlencode }}"
+                                           class="button is-success is-small is-rounded">
+                                            Ver detalhes
+                                        </a>
+                                    {% else %}
+                                        <span class="tag is-danger is-light">Esgotado</span>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
-    </section>
+        </section>
     {% endif %}
 </div>
 
 <style>
-.product-card { border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s ease; border: none; }
-.product-card:hover { box-shadow: 0 8px 16px rgba(0,0,0,0.12); transform: translateY(-4px); }
-.product-image { border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-.image.is-square { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); }
-.tabs.is-boxed a { color: #666; }
-.tabs.is-boxed li.is-active a { border-bottom-color: #2e7d32; color: #2e7d32; background: transparent; }
-.tab-pane { animation: fadeIn 0.3s ease; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-.button.is-success { background-color: #2e7d32; }
-.button.is-success:hover { background-color: #1b5e20; }
-.breadcrumb a { color: #2e7d32; }
-.breadcrumb a:hover { color: #1b5e20; }
-.stars { font-size: 0.9rem; }
+.product-detail-page {
+    max-width: 1180px;
+}
+
+.product-main-card {
+    border-radius: 22px;
+    border: 1px solid rgba(46, 125, 50, 0.08);
+    box-shadow: 0 18px 45px rgba(20, 83, 45, 0.08);
+    padding: 2rem;
+}
+
+.product-gallery {
+    background: linear-gradient(135deg, #f0fdf4, #ffffff);
+    border-radius: 22px;
+    padding: 1rem;
+    border: 1px solid rgba(46, 125, 50, 0.10);
+}
+
+.product-main-image {
+    border-radius: 18px;
+    overflow: hidden;
+    background: #f0fdf4;
+}
+
+.product-main-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.placeholder-svg {
+    object-fit: contain !important;
+    padding: 2rem;
+    background: #f0fdf4;
+}
+
+.product-info-panel {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.producer-card-detail {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background: #f8fafc;
+    border-left: 5px solid #2e7d32;
+    border-radius: 16px;
+    padding: 1rem 1.2rem;
+}
+
+.price-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f7fbf8;
+    border-radius: 18px;
+    padding: 1.2rem;
+    border: 1px solid rgba(46, 125, 50, 0.10);
+}
+
+.product-price {
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: #2e7d32;
+    line-height: 1;
+}
+
+.stock-alert {
+    border-radius: 14px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.stock-ok {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.stock-low {
+    background: #fffbeb;
+    color: #92400e;
+}
+
+.stock-out {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.quantity-input {
+    max-width: 110px;
+    height: 48px;
+}
+
+.add-cart-button {
+    height: 48px;
+    font-weight: 700;
+    background: #2e7d32;
+}
+
+.add-cart-button:hover {
+    background: #1b5e20;
+}
+
+.trust-box {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 1rem;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.trust-box div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    text-align: center;
+    font-size: 0.78rem;
+    color: #64748b;
+}
+
+.trust-box i {
+    color: #2e7d32;
+}
+
+.tabs.is-boxed a {
+    color: #666;
+}
+
+.tabs.is-boxed li.is-active a {
+    border-bottom-color: #2e7d32;
+    color: #2e7d32;
+    background: transparent;
+    font-weight: 700;
+}
+
+.tab-pane {
+    animation: fadeIn 0.25s ease;
+}
+
+.related-product-card {
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(46, 125, 50, 0.08);
+    box-shadow: 0 12px 28px rgba(20, 83, 45, 0.08);
+    height: 100%;
+}
+
+.related-product-card .card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.related-product-card .card-content {
+    display: flex;
+    flex-direction: column;
+    min-height: 180px;
+}
+
+.related-footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.breadcrumb a {
+    color: #2e7d32;
+}
+
+.breadcrumb a:hover {
+    color: #1b5e20;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
 @media screen and (max-width: 768px) {
-    .columns.is-variable { margin: 0 !important; }
-    .column { padding: 0.5rem; }
-    .title.is-3 { font-size: 1.5rem; }
-    .title.is-2 { font-size: 1.75rem; }
+    .product-main-card {
+        padding: 1.2rem;
+    }
+
+    .product-price {
+        font-size: 2rem;
+    }
+
+    .producer-card-detail,
+    .price-box {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .trust-box {
+        grid-template-columns: 1fr;
+    }
+
+    .title.is-3 {
+        font-size: 1.6rem;
+    }
 }
 </style>
 
@@ -262,10 +513,22 @@
 document.querySelectorAll('.tabs a').forEach(tab => {
     tab.addEventListener('click', (e) => {
         e.preventDefault();
+
         const tabName = tab.dataset.tab;
-        document.querySelectorAll('.tab-pane').forEach(p => p.style.display = 'none');
-        document.querySelectorAll('.tabs li').forEach(li => li.classList.remove('is-active'));
-        document.getElementById(tabName).style.display = 'block';
+
+        document.querySelectorAll('.tab-pane').forEach(pane => {
+            pane.style.display = 'none';
+        });
+
+        document.querySelectorAll('.tabs li').forEach(item => {
+            item.classList.remove('is-active');
+        });
+
+        const activePane = document.getElementById(tabName);
+        if (activePane) {
+            activePane.style.display = 'block';
+        }
+
         tab.parentElement.classList.add('is-active');
     });
 });

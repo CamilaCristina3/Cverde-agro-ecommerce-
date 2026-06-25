@@ -1,265 +1,329 @@
 {% extends "base.html" %}
-{% block title %}Produtos | Cverde{% endblock %}
+{% load static %}
+
+{% block title %}Produtos | COVERDE{% endblock %}
+
+{% block extra_css %}
+<style>
+  .market-header {
+    background: linear-gradient(135deg, #198754, #157347);
+    border-radius: 1.25rem;
+  }
+
+  .filter-card {
+    border-left: 4px solid #198754;
+  }
+
+  .product-card {
+    border: 0;
+    border-radius: 1rem;
+    transition: all .2s ease;
+  }
+
+  .product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 35px rgba(15, 23, 42, .12);
+  }
+
+  .product-image {
+    height: 210px;
+    object-fit: contain;
+    background: #f8f9fa;
+    padding: 1rem;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+  }
+
+  .product-title {
+    min-height: 42px;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .product-description {
+    min-height: 44px;
+  }
+
+  .price {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #198754;
+  }
+
+  .badge-soft-success {
+    background: #e8f5ee;
+    color: #198754;
+  }
+
+  .badge-soft-info {
+    background: #e7f1ff;
+    color: #0d6efd;
+  }
+
+  .empty-state {
+    border: 2px dashed #dee2e6;
+    border-radius: 1rem;
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="level mb-5">
-        <div class="level-left">
-            <div>
-                <h1 class="title is-2 mb-2">Produtos Agrícolas</h1>
-                <p class="subtitle is-6 has-text-grey">Pesquise por produto, categoria, produtor ou localização.</p>
-            </div>
-        </div>
-        <div class="level-right">
-            <span class="tag is-success is-size-6">{{ total_products }} resultado{{ total_products|pluralize }}</span>
-        </div>
+
+<div class="market-header text-white p-4 p-md-5 mb-4 shadow-sm">
+  <div class="row align-items-center g-4">
+    <div class="col-lg-8">
+      <h1 class="display-6 fw-bold mb-2">Produtos Agrícolas</h1>
+      <p class="lead mb-0">
+        Compre produtos locais, frescos e sustentáveis directamente aos produtores.
+      </p>
     </div>
 
-    <!-- Filtros -->
-    <div class="box mb-6" style="border-left: 4px solid #2e7d32;">
-        <form method="get">
-            <div class="columns is-multiline is-variable is-4">
-                <div class="column is-5-desktop is-12-tablet">
-                    <div class="field">
-                        <label class="label">Pesquisa</label>
-                        <div class="control has-icons-left">
-                            <input class="input" type="text" name="q" placeholder="Ex.: alface, Coimbra, Quinta..." value="{{ filters.q }}">
-                            <span class="icon is-small is-left"><i class="fas fa-search"></i></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="column is-3-desktop is-6-tablet">
-                    <div class="field">
-                        <label class="label">Categoria</label>
-                        <div class="control">
-                            <div class="select is-fullwidth">
-                                <select name="category">
-                                    <option value="">Todas</option>
-                                    {% for c in categories %}
-                                        <option value="{{ c.id }}" {% if filters.category == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="column is-2-desktop is-6-tablet">
-                    <div class="field">
-                        <label class="label">Certificação</label>
-                        <div class="control">
-                            <div class="select is-fullwidth">
-                                <select name="certification">
-                                    <option value="">Todas</option>
-                                    <option value="biologico" {% if filters.certification == "biologico" %}selected{% endif %}>Biológico</option>
-                                    <option value="dop" {% if filters.certification == "dop" %}selected{% endif %}>DOP</option>
-                                    <option value="igp" {% if filters.certification == "igp" %}selected{% endif %}>IGP</option>
-                                    <option value="integrada" {% if filters.certification == "integrada" %}selected{% endif %}>Integrada</option>
-                                    <option value="tradicional" {% if filters.certification == "tradicional" %}selected{% endif %}>Tradicional</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="column is-2-desktop is-6-tablet">
-                    <div class="field">
-                        <label class="label">Ordenar</label>
-                        <div class="control">
-                            <div class="select is-fullwidth">
-                                <select name="sort">
-                                    <option value="newest" {% if filters.sort == "newest" %}selected{% endif %}>Mais recentes</option>
-                                    <option value="rating_desc" {% if filters.sort == "rating_desc" %}selected{% endif %}>Melhor avaliados</option>
-                                    <option value="price_asc" {% if filters.sort == "price_asc" %}selected{% endif %}>Preço: menor</option>
-                                    <option value="price_desc" {% if filters.sort == "price_desc" %}selected{% endif %}>Preço: maior</option>
-                                    <option value="name_asc" {% if filters.sort == "name_asc" %}selected{% endif %}>Nome (A–Z)</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="column is-4-desktop is-6-tablet">
-                    <div class="field">
-                        <label class="label">Produtor</label>
-                        <div class="control">
-                            <div class="select is-fullwidth">
-                                <select name="producer">
-                                    <option value="">Todos</option>
-                                    {% for p in producers %}
-                                        <option value="{{ p.id }}" {% if filters.producer == p.id|stringformat:"s" %}selected{% endif %}>{{ p.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="column is-4-desktop is-6-tablet">
-                    <div class="field">
-                        <label class="label">&nbsp;</label>
-                        <div class="control">
-                            <label class="checkbox">
-                                <input type="checkbox" name="in_stock" value="1" {% if filters.in_stock == "1" %}checked{% endif %}>
-                                Apenas em stock
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="column is-4-desktop is-12-tablet">
-                    <div class="field">
-                        <label class="label">&nbsp;</label>
-                        <div class="buttons">
-                            <button type="submit" class="button is-success">
-                                <span class="icon"><i class="fas fa-filter"></i></span>
-                                <span>Aplicar</span>
-                            </button>
-                            <a class="button is-light" href="{% url 'products:list' %}">Limpar</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-        <div class="content is-size-7 has-text-grey mt-3">
-            Pagamento e checkout seguros. Mostramos sempre o produtor e a origem para ajudar na decisão de compra.
-        </div>
+    <div class="col-lg-4 text-lg-end">
+      <span class="badge bg-light text-success fs-6 px-3 py-2">
+        {{ total_products }} resultado{{ total_products|pluralize }}
+      </span>
     </div>
-
-    {% if total_products %}
-        <div class="columns is-multiline is-variable is-6">
-            {% for product in page_obj %}
-                <div class="column is-4-desktop is-6-tablet is-12-mobile">
-                    <div class="card product-card h-100">
-                        <div class="card-image">
-                            <figure class="image is-4by3">
-                                {% if product.main_image %}
-                                    <img src="{{ product.main_image.url }}" alt="{{ product.name }}" loading="lazy">
-                                {% else %}
-                                    <img src="{% static 'images/product_placeholder.svg' %}" alt="{{ product.name }}" loading="lazy" class="placeholder-svg">
-                                {% endif %}
-                            </figure>
-                            <div class="tags are-small is-pulled-right m-3">
-                                {% if product.certification %}
-                                    <span class="tag is-success">{{ product.get_certification_display }}</span>
-                                {% else %}
-                                    <span class="tag is-light">✓ Fresco</span>
-                                {% endif %}
-                                {% if product.producer.is_verified %}
-                                    <span class="tag is-info">Produtor verificado</span>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="card-content">
-                            <p class="title is-6 mb-1" title="{{ product.name }}">{{ product.name }}</p>
-                            <p class="is-size-7 has-text-grey mb-2" title="{{ product.description }}">
-                                {{ product.description|default:"Produto agrícola de qualidade."|truncatewords:18 }}
-                            </p>
-
-                            <div class="is-size-7 has-text-grey mb-2">
-                                <span class="icon-text">
-                                    <span class="icon is-small"><i class="fas fa-seedling"></i></span>
-                                    <span>{{ product.producer.name }}</span>
-                                </span>
-                                {% if product.producer.location %}
-                                    <span class="ml-3 icon-text">
-                                        <span class="icon is-small"><i class="fas fa-map-marker-alt"></i></span>
-                                        <span>{{ product.producer.location }}</span>
-                                    </span>
-                                {% endif %}
-                            </div>
-
-                            <div class="level is-mobile is-size-7 mb-2">
-                                <div class="level-left has-text-grey">
-                                    <div class="level-item">{% if product.category %}{{ product.category.name }}{% else %}Sem categoria{% endif %}</div>
-                                    <div class="level-item">•</div>
-                                    <div class="level-item">{{ product.get_unit_display }}</div>
-                                </div>
-                                <div class="level-right has-text-grey">
-                                    {% if product.total_reviews > 0 %}
-                                        <span class="has-text-warning">★ {{ product.average_rating|floatformat:1 }}/5</span>
-                                        <span class="ml-1">({{ product.total_reviews }})</span>
-                                    {% else %}
-                                        <span>Sem avaliações</span>
-                                    {% endif %}
-                                </div>
-                            </div>
-
-                            <div class="level is-mobile is-size-7 mb-2">
-                                <div class="level-left has-text-grey">
-                                    {% if product.stock > 0 %}
-                                        <span class="has-text-success">{{ product.stock }} em stock</span>
-                                    {% else %}
-                                        <span class="has-text-danger">Esgotado</span>
-                                    {% endif %}
-                                </div>
-                                <div class="level-right">
-                                    <span class="has-text-success has-text-weight-bold is-size-5">€{{ product.price }}</span>
-                                </div>
-                            </div>
-
-                            <hr class="my-2">
-
-                            <div class="buttons is-right">
-                                <a class="button is-light is-small" href="{% url 'products:detail' product.id %}?back={{ current_path|urlencode }}">Ver detalhes</a>
-                                {% if product.stock > 0 %}
-                                    <form method="post" action="{% url 'orders:add_to_cart' product.id %}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="next" value="{{ current_path }}">
-                                        <input type="hidden" name="quantity" value="1">
-                                        <button type="submit" class="button is-success is-small" title="Adicionar ao carrinho">
-                                            <span class="icon"><i class="fas fa-shopping-basket"></i></span>
-                                            <span>Adicionar</span>
-                                        </button>
-                                    </form>
-                                {% else %}
-                                    <button class="button is-light is-small" disabled title="Produto esgotado">Esgotado</button>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-
-        {% if page_obj.paginator.num_pages > 1 %}
-            <nav class="pagination is-centered mt-6" role="navigation" aria-label="pagination">
-                {% if page_obj.has_previous %}
-                    <a class="pagination-previous" href="?page={{ page_obj.previous_page_number }}&q={{ filters.q|urlencode }}&category={{ filters.category }}&certification={{ filters.certification }}&producer={{ filters.producer }}&sort={{ filters.sort }}&in_stock={{ filters.in_stock }}">Anterior</a>
-                {% else %}
-                    <a class="pagination-previous" disabled>Anterior</a>
-                {% endif %}
-
-                {% if page_obj.has_next %}
-                    <a class="pagination-next" href="?page={{ page_obj.next_page_number }}&q={{ filters.q|urlencode }}&category={{ filters.category }}&certification={{ filters.certification }}&producer={{ filters.producer }}&sort={{ filters.sort }}&in_stock={{ filters.in_stock }}">Seguinte</a>
-                {% else %}
-                    <a class="pagination-next" disabled>Seguinte</a>
-                {% endif %}
-
-                <ul class="pagination-list">
-                    <li><span class="pagination-ellipsis">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span></li>
-                </ul>
-            </nav>
-        {% endif %}
-    {% else %}
-        <div class="notification is-warning">
-            <p><i class="fas fa-info-circle mr-2"></i>Não foram encontrados produtos com estes filtros.</p>
-        </div>
-    {% endif %}
+  </div>
 </div>
 
-<style>
-.product-card { border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s ease; border: none; }
-.product-card:hover { box-shadow: 0 8px 16px rgba(0,0,0,0.12); transform: translateY(-4px); }
-.h-100 { height: 100%; }
-.title.is-6 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.button.is-success { background-color: #2e7d32; }
-.button.is-success:hover { background-color: #1b5e20; }
+<div class="card filter-card border-0 shadow-sm mb-4">
+  <div class="card-body">
+    <form method="get" class="row g-3 align-items-end">
 
-@media screen and (max-width: 768px) {
-    .level { flex-direction: column; align-items: flex-start; }
-    .title.is-2 { font-size: 1.5rem; }
-}
-</style>
+      <div class="col-md-5">
+        <label class="form-label fw-semibold">Pesquisar</label>
+        <input type="text"
+               name="q"
+               value="{{ request.GET.q }}"
+               class="form-control"
+               placeholder="Produto, produtor, categoria ou localização">
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label fw-semibold">Categoria</label>
+        <select name="category" class="form-select">
+          <option value="">Todas as categorias</option>
+          {% for category in categories %}
+            <option value="{{ category.id }}"
+              {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
+              {{ category.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-2">
+        <label class="form-label fw-semibold">Ordenar por</label>
+        <select name="order" class="form-select">
+          <option value="">Mais recentes</option>
+          <option value="price_asc" {% if request.GET.order == "price_asc" %}selected{% endif %}>Preço mais baixo</option>
+          <option value="price_desc" {% if request.GET.order == "price_desc" %}selected{% endif %}>Preço mais alto</option>
+          <option value="rating" {% if request.GET.order == "rating" %}selected{% endif %}>Melhor avaliação</option>
+        </select>
+      </div>
+
+      <div class="col-md-2 d-grid">
+        <button type="submit" class="btn btn-success">
+          <i class="fa-solid fa-magnifying-glass me-1"></i>
+          Filtrar
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+{% if total_products %}
+
+  <div class="row g-4">
+    {% for product in page_obj %}
+      <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+        <div class="card product-card h-100 shadow-sm">
+
+          <div class="position-relative">
+            {% if product.main_image %}
+              <img src="{{ product.main_image.url }}"
+                   class="card-img-top product-image"
+                   alt="{{ product.name }}"
+                   loading="lazy">
+            {% else %}
+              <img src="{% static 'images/placeholders/products/product_placeholder.svg' %}"
+                   class="card-img-top product-image"
+                   alt="{{ product.name }}"
+                   loading="lazy">
+            {% endif %}
+
+            <div class="position-absolute top-0 start-0 p-2">
+              {% if product.certification %}
+                <span class="badge badge-soft-success">
+                  {{ product.get_certification_display }}
+                </span>
+              {% else %}
+                <span class="badge badge-soft-success">
+                  Fresco
+                </span>
+              {% endif %}
+            </div>
+
+            {% if product.producer.is_verified %}
+              <div class="position-absolute top-0 end-0 p-2">
+                <span class="badge badge-soft-info">
+                  Verificado
+                </span>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="card-body d-flex flex-column">
+
+            <h2 class="product-title mb-2" title="{{ product.name }}">
+              {{ product.name }}
+            </h2>
+
+            <p class="product-description text-muted small mb-3">
+              {{ product.description|default:"Produto agrícola de qualidade."|truncatewords:14 }}
+            </p>
+
+            <div class="small text-muted mb-2">
+              <div class="mb-1">
+                <i class="fa-solid fa-seedling text-success me-1"></i>
+                {{ product.producer.name }}
+              </div>
+
+              {% if product.producer.location %}
+                <div>
+                  <i class="fa-solid fa-location-dot text-success me-1"></i>
+                  {{ product.producer.location }}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center small text-muted border-top pt-2 mb-2">
+              <span>
+                {% if product.category %}
+                  {{ product.category.name }}
+                {% else %}
+                  Sem categoria
+                {% endif %}
+              </span>
+
+              <span>{{ product.get_unit_display }}</span>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              {% if product.stock > 0 %}
+                <span class="small text-success fw-semibold">
+                  {{ product.stock }} em stock
+                </span>
+              {% else %}
+                <span class="small text-danger fw-semibold">
+                  Esgotado
+                </span>
+              {% endif %}
+
+              <span class="price">
+                €{{ product.price }}
+              </span>
+            </div>
+
+            <div class="small mb-3">
+              {% if product.total_reviews > 0 %}
+                <span class="text-warning">
+                  <i class="fa-solid fa-star"></i>
+                  {{ product.average_rating|floatformat:1 }}
+                </span>
+                <span class="text-muted">
+                  ({{ product.total_reviews }})
+                </span>
+              {% else %}
+                <span class="text-muted">Sem avaliações</span>
+              {% endif %}
+            </div>
+
+            <div class="mt-auto d-grid gap-2">
+              <a class="btn btn-outline-success btn-sm"
+                 href="{% url 'users:product_detail' product.id %}?back={{ current_path|urlencode }}">
+                Ver detalhes
+              </a>
+
+              {% if product.stock > 0 %}
+                <form method="post"
+                      action="{% url 'orders:add_to_cart' product.id %}">
+                  {% csrf_token %}
+
+                  <input type="hidden" name="next" value="{{ current_path }}">
+                  <input type="hidden" name="quantity" value="1">
+
+                  <button type="submit" class="btn btn-success btn-sm w-100">
+                    <i class="fa-solid fa-basket-shopping me-1"></i>
+                    Adicionar ao carrinho
+                  </button>
+                </form>
+              {% else %}
+                <button class="btn btn-light btn-sm w-100" disabled>
+                  Produto esgotado
+                </button>
+              {% endif %}
+            </div>
+
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  {% if page_obj.has_other_pages %}
+    <nav class="mt-5" aria-label="Paginação de produtos">
+      <ul class="pagination justify-content-center">
+
+        {% if page_obj.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">Anterior</span>
+          </li>
+        {% endif %}
+
+        <li class="page-item active">
+          <span class="page-link">
+            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+          </span>
+        </li>
+
+        {% if page_obj.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Seguinte</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">Seguinte</span>
+          </li>
+        {% endif %}
+
+      </ul>
+    </nav>
+  {% endif %}
+
+{% else %}
+
+  <div class="empty-state bg-white p-5 text-center shadow-sm">
+    <div class="display-5 text-success mb-3">
+      <i class="fa-solid fa-basket-shopping"></i>
+    </div>
+
+    <h2 class="h4 fw-bold mb-2">Ainda não existem produtos disponíveis</h2>
+
+    <p class="text-muted mb-4">
+      Assim que os produtores publicarem produtos, estes serão apresentados nesta página.
+    </p>
+
+    <a href="{% url 'home' %}" class="btn btn-success">
+      Voltar ao início
+    </a>
+  </div>
+
+{% endif %}
+
 {% endblock %}

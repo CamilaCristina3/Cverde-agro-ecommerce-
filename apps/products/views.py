@@ -1,162 +1,96 @@
-from django.core.paginator import Paginator
-from django.db.models import Q
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.conf import settings
-from django.urls import reverse
-from django.utils.http import url_has_allowed_host_and_scheme
+"""
+COVERDE - apps/products/views.py
+Views de produtos (Portugal).
+"""
 
-from apps.users.models import Producer, Product, Category
-from django.conf import settings
-from forms import ProductForm
+from django.shortcuts import render, get_object_or_404
+from django.db.models import Q
+from apps.users.models import Product, Category  # Product e Category estão em users
 
 
 def product_list(request):
-    q = (request.GET.get("q") or "").strip()
-    category_id = (request.GET.get("category") or "").strip()
-    certification = (request.GET.get("certification") or "").strip()
-    producer_id = (request.GET.get("producer") or "").strip()
-    sort = (request.GET.get("sort") or "newest").strip()
-    in_stock = (request.GET.get("in_stock") or "0").strip()  # default: mostrar todos
+    """
+    Lista de produtos com filtros (Portugal).
+    """
+    # Produtos aprovados e ativos
+    products = Product.objects.filter(
+        is_active=True,
+        status='approved'  # Verificar se o modelo tem este campo
+    ).select_related('store', 'category')
 
-    products_qs = (
-        Product.objects.filter(is_active=True, producer__is_active=True)
-        .select_related("producer", "category")
-        .order_by("-created_at")
-    )
+    # Categorias principais (sem pai)
+    categories = Category.objects.filter(is_active=True, parent__isnull=True)
 
+    # ========== FILTROS ==========
+    cat_slug = request.GET.get('categoria')
+    if cat_slug:
+        try:
+            cat = Category.objects.get(slug=cat_slug)
+            products = products.filter(category=cat)
+        except Category.DoesNotExist:
+            pass
+
+    # Filtro por preço (Portugal: Euro)
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+    if min_price:
+        products = products.filter(price__gte=min_price)
+    if max_price:
+        products = products.filter(price__lte=max_price)
+
+    # Filtro por pesquisa (Portugal)
+    q = request.GET.get('q')
     if q:
-        products_qs = products_qs.filter(
-            Q(name__icontains=q)
-            | Q(description__icontains=q)
-            | Q(category__name__icontains=q)
-            | Q(producer__name__icontains=q)
-            | Q(producer__location__icontains=q)
+        products = products.filter(
+            Q(name__icontains=q) |
+            Q(description__icontains=q) |
+            Q(store__name__icontains=q)
         )
 
-    if category_id.isdigit():
-        products_qs = products_qs.filter(category_id=int(category_id))
-
-    if certification:
-        products_qs = products_qs.filter(certification=certification)
-
-    if producer_id.isdigit():
-        products_qs = products_qs.filter(producer_id=int(producer_id))
-
-    if in_stock == "1":
-        products_qs = products_qs.filter(stock__gt=0)
-
-    if sort == "price_asc":
-        products_qs = products_qs.order_by("price", "-created_at")
-    elif sort == "price_desc":
-        products_qs = products_qs.order_by("-price", "-created_at")
-    elif sort == "rating_desc":
-        products_qs = products_qs.order_by("-average_rating", "-total_reviews", "-created_at")
-    elif sort == "name_asc":
-        products_qs = products_qs.order_by("name", "-created_at")
+    # ========== ORDENAÇÃO ==========
+    sort = request.GET.get('sort', 'newest')
+    if sort == 'price_asc':
+        products = products.order_by('price')
+    elif sort == 'price_desc':
+        products = products.order_by('-price')
+    elif sort == 'name_asc':
+        products = products.order_by('name')
     else:  # newest
-        products_qs = products_qs.order_by("-created_at")
+        products = products.order_by('-created_at')
 
-    total_products = products_qs.count()
-    paginator = Paginator(products_qs, 12)
-    page_obj = paginator.get_page(request.GET.get("page"))
-
-    categories = Category.objects.filter(is_active=True).order_by("order", "name")
-    # annotate categories with image_url: prefer uploaded image, otherwise use static placeholder
-    for c in categories:
-        try:
-            if c.image and hasattr(c.image, 'url'):
-                c.image_url = c.image.url
-            else:
-                c.image_url = settings.STATIC_URL + f"images/placeholders/categories/{c.slug}.svg"
-        except Exception:
-            c.image_url = settings.STATIC_URL + f"images/placeholders/categories/{c.slug}.svg"
-    producers = Producer.objects.filter(is_active=True).order_by("name")
-    return render(
-        request,
-        "products/list.html",
-        {
-            "page_obj": page_obj,
-            "total_products": total_products,
-            "categories": categories,
-            "producers": producers,
-            "current_path": request.get_full_path(),
-            "filters": {
-                "q": q,
-                "category": category_id,
-                "certification": certification,
-                "producer": producer_id,
-                "sort": sort,
-                "in_stock": in_stock,
-            },
-        },
-    )
+    return render(request, 'products/list.html', {
+        'products': products,
+        'categories': categories,
+        'title': 'Produtos',
+        'filters': {
+            'min_price': min_price,
+            'max_price': max_price,
+            'q': q,
+            'sort': sort,
+        }
+    })
 
 
-def product_detail(request, product_id):
+def product_detail(request, slug):
+    """
+    Detalhe de um produto (Portugal).
+    """
     product = get_object_or_404(
-        Product.objects.select_related("producer", "category"),
-        pk=product_id,
+        Product,
+        slug=slug,
         is_active=True,
-        producer__is_active=True,
+        status='approved'  # Verificar
     )
 
-    back = (request.GET.get("back") or "").strip()
-    if back and url_has_allowed_host_and_scheme(
-        url=back,
-        allowed_hosts={request.get_host()},
-        require_https=request.is_secure(),
-    ):
-        back_url = back
-    else:
-        back_url = reverse("products:list")
+    # Produtos relacionados (mesma categoria)
+    related = Product.objects.filter(
+        category=product.category,
+        is_active=True,
+        status='approved'
+    ).exclude(id=product.id)[:4]
 
-    related_products = (
-        Product.objects.filter(is_active=True, producer__is_active=True, category=product.category)
-        .exclude(id=product.id)
-        .select_related("producer", "category")
-        .order_by("-created_at")[:6]
-    )
-
-    return render(
-        request,
-        "products/detail.html",
-        {
-            "product": product,
-            "related_products": related_products,
-            "back_url": back_url,
-        },
-    )
-
-
-@login_required
-def create_product(request):
-    """Create a new product for the logged-in producer."""
-    try:
-        producer = request.user.producer
-    except Producer.DoesNotExist:
-        messages.error(request, 'Precisa de um perfil de produtor para criar produtos.')
-        return redirect('users:profile')
-
-    if getattr(settings, "REQUIRE_PRODUCER_VERIFICATION", False) and not producer.is_verified:
-        messages.warning(request, 'A verificação do produtor é necessária para publicar produtos.')
-        return redirect('users:producer_panel')
-
-    if not producer.is_verified:
-        messages.info(request, "Conta de produtor ainda não verificada (opcional nesta fase). Pode publicar produtos.")
-
-    if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)
-        if form.is_valid():
-            product = form.save(commit=False)
-            product.producer = producer
-            product.save()
-            messages.success(request, f'Produto "{product.name}" criado com sucesso!')
-            return redirect('products:list')
-        else:
-            messages.error(request, 'Erro ao criar o produto. Verifique os dados.')
-    else:
-        form = ProductForm()
-
-    return render(request, 'products/create.html', {'form': form, 'producer': producer})
+    return render(request, 'products/detail.html', {
+        'product': product,
+        'related': related,
+        'title': product.name
+    })

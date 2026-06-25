@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="level-right">
-      <a class="button is-light" href="{% url 'products:list' %}">
+      <a class="button is-light" href="{% url 'users:product_list' %}">
         <span class="icon"><i class="fas fa-store"></i></span>
         <span>Continuar a comprar</span>
       </a>
@@ -80,6 +80,24 @@
         {% if order.invoice_number %}
           <hr class="my-3">
           <p><strong>Fatura:</strong> {{ order.invoice_number }}</p>
+        {% endif %}
+
+        <!-- Seção de Pagamento -->
+        {% if order.status == "pending" %}
+          <hr class="my-3">
+          <div class="notification is-warning is-light">
+            <p class="mb-2"><strong>⏳ Pagamento Pendente</strong></p>
+            <p class="is-size-7 mb-3">Finalizar o pagamento para confirmar a encomenda.</p>
+            <a href="{% url 'payments:checkout' order.id %}" class="button is-success is-fullwidth">
+              <span class="icon"><i class="fas fa-credit-card"></i></span>
+              <span>Ir para Pagamento</span>
+            </a>
+          </div>
+        {% elif order.status == "confirmed" %}
+          <hr class="my-3">
+          <div class="notification is-success is-light">
+            <p class="mb-0"><strong>✅ Pagamento Confirmado</strong></p>
+          </div>
         {% endif %}
       </div>
     </div>

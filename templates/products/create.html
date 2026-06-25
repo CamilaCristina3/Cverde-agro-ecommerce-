@@ -1,226 +1,256 @@
 {% extends "base.html" %}
 {% block title %}
-  {% if is_edit %}
-    Editar Produto | Cverde
-  {% else %}
-    Novo Produto | Cverde
-  {% endif %}
+  {% if is_edit %}Editar Produto | COVERDE{% else %}Novo Produto | COVERDE{% endif %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  .product-form-header {
+    background: linear-gradient(135deg, #198754, #157347);
+    border-radius: 1.25rem;
+  }
+
+  .product-form-card {
+    border: 0;
+    border-radius: 1.25rem;
+    box-shadow: 0 20px 45px rgba(15, 23, 42, 0.10);
+  }
+
+  .section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #198754;
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: .75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .form-control:focus,
+  .form-select:focus,
+  .form-check-input:focus {
+    border-color: #198754;
+    box-shadow: 0 0 0 .25rem rgba(25, 135, 84, .18);
+  }
+
+  .producer-box {
+    border-left: 4px solid #198754;
+    background: #f0f8f4;
+  }
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="container">
-  <div class="columns is-centered">
-    <div class="column is-8-desktop is-12-tablet">
-      <div class="card coverde-form-card">
-        <header class="card-header coverde-form-header">
-          <p class="card-header-title has-text-white">
-            <span class="icon mr-2"><i class="fas fa-leaf"></i></span>
-            {% if is_edit %}Editar produto{% else %}Adicionar novo produto{% endif %}
-          </p>
-        </header>
 
-        <div class="card-content">
-          <p class="has-text-grey mb-5">
-            Preencha os dados abaixo para publicar o seu produto na plataforma Coverde.
-          </p>
-
-          {% if producer %}
-            <article class="message is-success is-light coverde-producer-box mb-5">
-              <div class="message-body">
-                <div class="level is-mobile">
-                  <div class="level-left">
-                    <div>
-                      <p class="has-text-weight-semibold">
-                        <span class="icon has-text-success"><i class="fas fa-store"></i></span>
-                        Produtor: {{ producer.name }}
-                      </p>
-                      {% if producer.location %}
-                        <p class="is-size-7 has-text-grey">
-                          <span class="icon"><i class="fas fa-map-marker-alt"></i></span>
-                          {{ producer.location }}
-                        </p>
-                      {% endif %}
-                    </div>
-                  </div>
-                  <div class="level-right">
-                    {% if producer.is_active %}
-                      <span class="tag is-success is-light">Ativo</span>
-                    {% else %}
-                      <span class="tag is-warning is-light">Inativo</span>
-                    {% endif %}
-                  </div>
-                </div>
-              </div>
-            </article>
-          {% endif %}
-
-          <form method="post" enctype="multipart/form-data" novalidate>
-            {% csrf_token %}
-
-            {% if form.non_field_errors %}
-              <div class="notification is-danger is-light">
-                <strong>Não foi possível guardar.</strong>
-                <p class="is-size-7 mt-2">{{ form.non_field_errors.0 }}</p>
-              </div>
-            {% endif %}
-
-            <h3 class="title is-5 has-text-success mb-4">
-              <span class="icon mr-2"><i class="fas fa-info-circle"></i></span>
-              Informações básicas
-            </h3>
-
-            <div class="field">
-              <label class="label">{{ form.name.label }}</label>
-              <div class="control has-icons-left">
-                {{ form.name }}
-                <span class="icon is-left has-text-success"><i class="fas fa-tag"></i></span>
-              </div>
-              {% if form.name.errors %}<p class="help is-danger">{{ form.name.errors.0 }}</p>{% endif %}
-            </div>
-
-            <div class="field">
-              <label class="label">{{ form.description.label }}</label>
-              <div class="control">{{ form.description }}</div>
-              <p class="help">Origem, qualidade, modo de produção, benefícios.</p>
-              {% if form.description.errors %}<p class="help is-danger">{{ form.description.errors.0 }}</p>{% endif %}
-            </div>
-
-            <div class="field">
-              <label class="label">{{ form.category.label }}</label>
-              <div class="control has-icons-left">
-                <div class="select is-fullwidth">
-                  {{ form.category }}
-                </div>
-                <span class="icon is-left has-text-success"><i class="fas fa-list"></i></span>
-              </div>
-              {% if form.category.errors %}<p class="help is-danger">{{ form.category.errors.0 }}</p>{% endif %}
-            </div>
-
-            <div class="field">
-              <label class="label">{{ form.certification.label }}</label>
-              <div class="control">
-                <div class="select is-fullwidth">
-                  {{ form.certification }}
-                </div>
-              </div>
-              {% if form.certification.errors %}<p class="help is-danger">{{ form.certification.errors.0 }}</p>{% endif %}
-              <p class="help">Se aplicável (Biológico, DOP, IGP, etc.).</p>
-            </div>
-
-            <hr>
-
-            <h3 class="title is-5 has-text-success mb-4">
-              <span class="icon mr-2"><i class="fas fa-calculator"></i></span>
-              Preço e stock
-            </h3>
-
-            <div class="columns is-variable is-4">
-              <div class="column is-4">
-                <div class="field">
-                  <label class="label">{{ form.price.label }}</label>
-                  <div class="control has-icons-left">
-                    {{ form.price }}
-                    <span class="icon is-left has-text-success"><i class="fas fa-euro-sign"></i></span>
-                  </div>
-                  {% if form.price.errors %}<p class="help is-danger">{{ form.price.errors.0 }}</p>{% endif %}
-                </div>
-              </div>
-
-              <div class="column is-4">
-                <div class="field">
-                  <label class="label">{{ form.unit.label }}</label>
-                  <div class="control has-icons-left">
-                    {{ form.unit }}
-                    <span class="icon is-left has-text-success"><i class="fas fa-ruler"></i></span>
-                  </div>
-                  {% if form.unit.errors %}<p class="help is-danger">{{ form.unit.errors.0 }}</p>{% endif %}
-                </div>
-              </div>
-
-              <div class="column is-4">
-                <div class="field">
-                  <label class="label">{{ form.stock.label }}</label>
-                  <div class="control has-icons-left">
-                    {{ form.stock }}
-                    <span class="icon is-left has-text-success"><i class="fas fa-boxes"></i></span>
-                  </div>
-                  {% if form.stock.errors %}<p class="help is-danger">{{ form.stock.errors.0 }}</p>{% endif %}
-                </div>
-              </div>
-            </div>
-
-            <hr>
-
-            <h3 class="title is-5 has-text-success mb-4">
-              <span class="icon mr-2"><i class="fas fa-leaf"></i></span>
-              Publicação
-            </h3>
-
-            <div class="field">
-              <label class="label">{{ form.main_image.label }}</label>
-              <div class="control">
-                {{ form.main_image }}
-              </div>
-              {% if form.main_image.errors %}<p class="help is-danger">{{ form.main_image.errors.0 }}</p>{% endif %}
-              <p class="help">Formatos: JPG/PNG. Otimize a imagem para carregar mais rápido.</p>
-            </div>
-
-            <div class="field">
-              <div class="control">
-                <label class="checkbox">
-                  {{ form.is_active }} {{ form.is_active.label }}
-                </label>
-              </div>
-              <p class="help ml-4">
-                <span id="activeHint">Produto aparece no catálogo.</span>
-              </p>
-            </div>
-
-            <div class="buttons is-right mt-5">
-              <a href="{% url 'products:list' %}" class="button is-light">
-                <span class="icon"><i class="fas fa-arrow-left"></i></span>
-                <span>Cancelar</span>
-              </a>
-              <button type="submit" class="button is-primary">
-                <span class="icon"><i class="fas fa-save"></i></span>
-                <span>{% if is_edit %}Atualizar{% else %}Publicar{% endif %}</span>
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
+<div class="product-form-header text-white p-4 p-md-5 mb-4">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+    <div>
+      <h1 class="h3 fw-bold mb-2">
+        <i class="fa-solid fa-leaf me-2"></i>
+        {% if is_edit %}Editar Produto{% else %}Adicionar Novo Produto{% endif %}
+      </h1>
+      <p class="mb-0">
+        Preencha os dados do produto para o publicar no catálogo da COVERDE.
+      </p>
     </div>
+
+    <a href="{% url 'users:product_list' %}" class="btn btn-light">
+      <i class="fa-solid fa-arrow-left me-1"></i>
+      Voltar aos produtos
+    </a>
   </div>
 </div>
 
-<style>
-  .coverde-form-card { border-radius: 20px; overflow: hidden; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
-  .coverde-form-header { background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%); }
-  .coverde-form-header .card-header-title { font-weight: 700; }
-  .coverde-producer-box { border-left: 4px solid #2e7d32; }
-  .input, .textarea, select { border-radius: 12px; border: 1.5px solid #e0e0e0; transition: all 0.2s; }
-  .input:focus, .textarea:focus, select:focus { border-color: #2e7d32; box-shadow: 0 0 0 3px rgba(46,125,50,0.15); }
-  @media (max-width: 768px) {
-    .buttons.is-right { justify-content: stretch; }
-    .buttons.is-right .button { flex: 1; }
-  }
-</style>
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-10 col-xl-9">
 
+    {% if producer %}
+      <div class="producer-box rounded-4 p-4 mb-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+          <div>
+            <h2 class="h6 fw-bold mb-1">
+              <i class="fa-solid fa-store text-success me-2"></i>
+              Produtor: {{ producer.name }}
+            </h2>
+
+            {% if producer.location %}
+              <p class="text-muted small mb-0">
+                <i class="fa-solid fa-location-dot me-1"></i>
+                {{ producer.location }}
+              </p>
+            {% endif %}
+          </div>
+
+          <div>
+            {% if producer.is_active %}
+              <span class="badge bg-success-subtle text-success px-3 py-2">Activo</span>
+            {% else %}
+              <span class="badge bg-warning-subtle text-warning px-3 py-2">Inactivo</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="card product-form-card">
+      <div class="card-body p-4 p-md-5">
+
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger" role="alert">
+            <strong>Não foi possível guardar.</strong><br>
+            {{ form.non_field_errors.0 }}
+          </div>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data" novalidate>
+          {% csrf_token %}
+
+          <h2 class="section-title">
+            <i class="fa-solid fa-circle-info me-2"></i>
+            Informações básicas
+          </h2>
+
+          <div class="row g-3 mb-4">
+            <div class="col-12">
+              <label class="form-label" for="{{ form.name.id_for_label }}">Nome do produto</label>
+              {{ form.name }}
+              {% if form.name.errors %}
+                <div class="invalid-feedback d-block">{{ form.name.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <div class="col-12">
+              <label class="form-label" for="{{ form.description.id_for_label }}">Descrição</label>
+              {{ form.description }}
+              <div class="form-text">
+                Indique a origem, qualidade, modo de produção e principais características.
+              </div>
+              {% if form.description.errors %}
+                <div class="invalid-feedback d-block">{{ form.description.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label" for="{{ form.category.id_for_label }}">Categoria</label>
+              {{ form.category }}
+              {% if form.category.errors %}
+                <div class="invalid-feedback d-block">{{ form.category.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label" for="{{ form.certification.id_for_label }}">Certificação</label>
+              {{ form.certification }}
+              <div class="form-text">Ex.: Biológico, DOP, IGP ou sem certificação.</div>
+              {% if form.certification.errors %}
+                <div class="invalid-feedback d-block">{{ form.certification.errors.0 }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <h2 class="section-title">
+            <i class="fa-solid fa-euro-sign me-2"></i>
+            Preço e stock
+          </h2>
+
+          <div class="row g-3 mb-4">
+            <div class="col-md-4">
+              <label class="form-label" for="{{ form.price.id_for_label }}">Preço</label>
+              {{ form.price }}
+              {% if form.price.errors %}
+                <div class="invalid-feedback d-block">{{ form.price.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label" for="{{ form.unit.id_for_label }}">Unidade</label>
+              {{ form.unit }}
+              {% if form.unit.errors %}
+                <div class="invalid-feedback d-block">{{ form.unit.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label" for="{{ form.stock.id_for_label }}">Quantidade em stock</label>
+              {{ form.stock }}
+              {% if form.stock.errors %}
+                <div class="invalid-feedback d-block">{{ form.stock.errors.0 }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <h2 class="section-title">
+            <i class="fa-solid fa-image me-2"></i>
+            Imagem e publicação
+          </h2>
+
+          <div class="row g-3 mb-4">
+            <div class="col-12">
+              <label class="form-label" for="{{ form.main_image.id_for_label }}">Imagem principal</label>
+              {{ form.main_image }}
+              <div class="form-text">Formatos recomendados: JPG ou PNG.</div>
+              {% if form.main_image.errors %}
+                <div class="invalid-feedback d-block">{{ form.main_image.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <div class="col-12">
+              <div class="form-check">
+                {{ form.is_active }}
+                <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+                  Publicar produto no catálogo
+                </label>
+              </div>
+              <div class="form-text" id="activeHint">
+                O produto aparece no catálogo público.
+              </div>
+              {% if form.is_active.errors %}
+                <div class="invalid-feedback d-block">{{ form.is_active.errors.0 }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="d-flex flex-column flex-md-row justify-content-end gap-2 pt-3 border-top">
+            <a href="{% url 'users:product_list' %}" class="btn btn-outline-secondary">
+              <i class="fa-solid fa-xmark me-1"></i>
+              Cancelar
+            </a>
+
+            <button type="submit" class="btn btn-success">
+              <i class="fa-solid fa-floppy-disk me-1"></i>
+              {% if is_edit %}Actualizar Produto{% else %}Publicar Produto{% endif %}
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const nameInput = document.getElementById('id_name');
-    if (nameInput && !nameInput.value) nameInput.focus();
+  document.addEventListener("DOMContentLoaded", function () {
+    const nameInput = document.getElementById("id_name");
+    if (nameInput && !nameInput.value) {
+      nameInput.focus();
+    }
 
-    const activeToggle = document.getElementById('id_is_active');
-    const hint = document.getElementById('activeHint');
+    const activeToggle = document.getElementById("id_is_active");
+    const hint = document.getElementById("activeHint");
+
     if (activeToggle && hint) {
-      const update = () => {
+      const updateHint = function () {
         hint.textContent = activeToggle.checked
-          ? 'Produto aparece no catálogo.'
-          : 'Produto fica oculto no catálogo.';
+          ? "O produto aparece no catálogo público."
+          : "O produto fica oculto no catálogo público.";
       };
-      update();
-      activeToggle.addEventListener('change', update);
+
+      updateHint();
+      activeToggle.addEventListener("change", updateHint);
     }
   });
 </script>

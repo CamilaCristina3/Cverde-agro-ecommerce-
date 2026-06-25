@@ -11,7 +11,10 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from urllib.parse import urlencode
 from django.views.decorators.http import require_POST
 
-from apps.users.models import Cart, Order, OrderItem, Product
+# ✅ Importações corrigidas
+from apps.cart.models import Cart  # Cart está em cart app
+from apps.users.models import Product  # Product está em users
+from apps.orders.models import Order, OrderItem
 from forms import CheckoutForm
 
 
@@ -285,16 +288,6 @@ def _send_order_emails(order: Order):
     except Exception:
         pass
 
-
-def _safe_redirect_next(request, next_url: str, fallback: str):
-    if next_url and url_has_allowed_host_and_scheme(
-        url=next_url,
-        allowed_hosts={request.get_host()},
-        require_https=request.is_secure(),
-    ):
-        return redirect(next_url)
-    return redirect(fallback)
-
     # Email aos produtores (um email por produtor)
     producer_emails = set()
     for item in order.items.select_related("product__producer__user").all():
@@ -313,3 +306,13 @@ def _safe_redirect_next(request, next_url: str, fallback: str):
             )
         except Exception:
             pass
+
+
+def _safe_redirect_next(request, next_url: str, fallback: str):
+    if next_url and url_has_allowed_host_and_scheme(
+        url=next_url,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        return redirect(next_url)
+    return redirect(fallback)

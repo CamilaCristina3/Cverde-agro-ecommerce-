@@ -2,5 +2,6 @@ from django.apps import AppConfig
 
 
 class ProducersConfig(AppConfig):
-    default_auto_field = "django.db.models.BigAutoField"
-    name = "apps.producers"
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'apps.producers'
+    verbose_name = 'Producers (Farms & Agricultural Businesses)'

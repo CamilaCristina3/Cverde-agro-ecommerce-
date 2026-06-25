@@ -1,9 +1,14 @@
-from django.urls import path
+"""
+COVERDE - apps/payments/urls.py
+URLs de pagamentos (Portugal).
+"""
 
+from django.urls import path
 from . import views
 
-app_name = "payments"
+app_name = 'payments'
 
 urlpatterns = [
-    path("status/", views.payment_status, name="status"),
+    path('encomenda/<uuid:order_id>/pagar/', views.payment_checkout, name='checkout'),
+    path('confirmacao/<uuid:payment_id>/', views.payment_success, name='success'),
 ]

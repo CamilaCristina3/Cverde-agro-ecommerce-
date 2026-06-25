@@ -2,37 +2,38 @@
 {% block title %}Verificação de Produtor | Cverde{% endblock %}
 
 {% block content %}
-<section class="section">
+<section class="py-5">
   <div class="container">
-    <div class="columns is-centered">
-      <div class="column is-7">
-        <div class="box">
-          <h1 class="title is-4">Verificação de produtor</h1>
-          <p class="subtitle is-6 has-text-grey">
-            Envie o NIF e um documento que comprove atividade agrícola para verificação.
-          </p>
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-7">
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <h1 class="h4 mb-2">Verificação de produtor</h1>
+            <p class="text-muted mb-4">
+              Envie o NIF e um documento que comprove atividade agrícola para verificação.
+            </p>
 
-          <form method="post" enctype="multipart/form-data" novalidate>
-            {% csrf_token %}
+            <form method="post" enctype="multipart/form-data" novalidate>
+              {% csrf_token %}
+              <div class="mb-3">
+                <label class="form-label" for="{{ form.nif.auto_id }}">{{ form.nif.label }}</label>
+                {{ form.nif }}
+                {% if form.nif.errors %}<div class="invalid-feedback d-block">{{ form.nif.errors.0 }}</div>{% endif %}
+              </div>
 
-            <div class="field">
-              <label class="label">{{ form.nif.label }}</label>
-              <div class="control">{{ form.nif }}</div>
-              {% if form.nif.errors %}<p class="help is-danger">{{ form.nif.errors.0 }}</p>{% endif %}
-            </div>
+              <div class="mb-3">
+                <label class="form-label" for="{{ form.verification_document.auto_id }}">{{ form.verification_document.label }}</label>
+                {{ form.verification_document }}
+                {% if form.verification_document.errors %}<div class="invalid-feedback d-block">{{ form.verification_document.errors.0 }}</div>{% endif %}
+                <div class="form-text">PDF ou imagem legível.</div>
+              </div>
 
-            <div class="field">
-              <label class="label">{{ form.verification_document.label }}</label>
-              <div class="control">{{ form.verification_document }}</div>
-              {% if form.verification_document.errors %}<p class="help is-danger">{{ form.verification_document.errors.0 }}</p>{% endif %}
-              <p class="help">PDF ou imagem legível.</p>
-            </div>
-
-            <div class="buttons is-right mt-5">
-              <a class="button is-light" href="{% url 'users:producer_panel' %}">Cancelar</a>
-              <button class="button is-primary" type="submit">Submeter</button>
-            </div>
-          </form>
+              <div class="d-flex justify-content-end gap-2 mt-4">
+                <a class="btn btn-outline-secondary" href="{% url 'users:producer_panel' %}">Cancelar</a>
+                <button class="btn btn-primary" type="submit">Submeter</button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>

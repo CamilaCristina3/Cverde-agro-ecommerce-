@@ -1,306 +1,95 @@
-{% extends "base.html" %}
-{% load static %}
+{% extends "auth_base.html" %}
 
-{% block title %}Criar conta | Coverde{% endblock %}
+{% block title %}Criar conta | Cverde{% endblock %}
 
 {% block extra_css %}
 <style>
-  /* Hero Section */
-  .hero-auth {
-    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-    border-radius: 30px;
-    padding: 2rem 2rem 3rem;
-    margin-bottom: 2rem;
-    text-align: center;
-  }
-
-  .hero-auth h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #1b5e20;
-    margin-bottom: 0.5rem;
-  }
-
-  .hero-auth p {
-    font-size: 1rem;
-    color: #2e7d32;
-    max-width: 500px;
-    margin: 0 auto;
-  }
-
-  /* Cartões de perfil */
-  .profile-card {
-    border-radius: 28px;
-    transition: all 0.3s ease;
-    height: 100%;
-    border: 1px solid #e0e0e0;
-    background: white;
-    overflow: hidden;
-  }
-
-  .profile-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.15);
-    border-color: #c8e6c9;
-  }
-
-  .profile-card-header {
-    padding: 1.8rem 1.5rem 1rem;
-    text-align: center;
-    background: #fafdfa;
-  }
-
-  .profile-icon {
-    width: 80px;
-    height: 80px;
-    background: #e8f5e9;
-    border-radius: 60px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1rem;
-  }
-
-  .profile-icon i {
-    font-size: 2.8rem;
-    color: #2e7d32;
-  }
-
-  .profile-card-header h3 {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: #1b5e20;
-    margin-bottom: 0.3rem;
-  }
-
-  .profile-card-header p {
-    color: #5a6e5c;
-    font-size: 0.85rem;
-    margin-bottom: 0;
-  }
-
-  .profile-divider {
-    height: 4px;
-    width: 50px;
-    background: #c8e6c9;
-    margin: 0.75rem auto 0;
-    border-radius: 4px;
-  }
-
-  .profile-features {
-    padding: 1.5rem;
-    background: white;
-  }
-
-  .feature-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 0.9rem;
-    color: #2c3e2f;
-    font-size: 0.9rem;
-  }
-
-  .feature-item i {
-    width: 24px;
-    color: #2e7d32;
-    font-size: 1rem;
-    text-align: center;
-  }
-
-  .btn-outline-success-custom {
-    background: transparent;
-    border: 2px solid #2e7d32;
-    color: #2e7d32;
-    border-radius: 40px;
-    padding: 0.7rem 1rem;
-    font-weight: 600;
-    width: 100%;
-    transition: all 0.2s;
-  }
-
-  .btn-outline-success-custom:hover {
-    background: #2e7d32;
-    color: white;
-    transform: scale(1.01);
-  }
-
-  .btn-success-custom {
-    background: #2e7d32;
-    border: none;
-    border-radius: 40px;
-    padding: 0.7rem 1rem;
-    font-weight: 600;
-    width: 100%;
-    color: white;
-    transition: all 0.2s;
-  }
-
-  .btn-success-custom:hover {
-    background: #1b5e20;
-    transform: scale(1.01);
-    box-shadow: 0 6px 12px rgba(46,125,50,0.2);
-  }
-
-  .info-note {
-    background: #f9fbf9;
-    border-radius: 20px;
-    padding: 1rem 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-    justify-content: center;
-    border: 1px solid #e0f0e0;
-  }
-
-  .info-note i {
-    font-size: 1.3rem;
-    color: #2e7d32;
-  }
-
-  /* Accessibility helpers */
-  .sr-only {
-    position: absolute !important;
-    width: 1px !important;
-    height: 1px !important;
-    padding: 0 !important;
-    margin: -1px !important;
-    overflow: hidden !important;
-    clip: rect(0, 0, 0, 0) !important;
-    white-space: nowrap !important;
-    border: 0 !important;
-  }
-
-  .cards-grid {
-    gap: 1.5rem 0;
-  }
-
-  .btn-success-custom:focus, .btn-outline-success-custom:focus, .button:focus {
-    outline: 3px solid rgba(46,125,50,0.25);
-    outline-offset: 3px;
-  }
-
-  @media (max-width: 768px) {
-    .hero-auth {
-      padding: 1.5rem;
-    }
-    .hero-auth h1 {
-      font-size: 1.6rem;
-    }
-    .profile-card-header h3 {
-      font-size: 1.3rem;
-    }
-    .feature-item {
-      font-size: 0.8rem;
-    }
-  }
+.auth-card {
+  border-radius: 1.5rem;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+}
+.auth-hero {
+  max-width: 44rem;
+}
+.profile-card {
+  border-radius: 1.4rem;
+  border: 1px solid #e6f4ea;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.profile-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.12);
+}
+.profile-card-header {
+  background: #f3fbf6;
+}
+.profile-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #e6f4ea;
+}
+.profile-icon i {
+  color: #198754;
+}
 </style>
 {% endblock %}
 
-{% block content %}
-<div class="container py-5">
-  <div class="columns is-centered">
-    <div class="column is-10-desktop is-12-tablet">
-
-      <!-- Hero -->
-      <div class="hero-auth" role="region" aria-labelledby="register-hero-title">
-        <h1 id="register-hero-title"><span aria-hidden="true">🌱</span> Criar conta</h1>
-        <p>Escolha o tipo de conta. Pode alterar ou completar os seus dados depois.</p>
-        <div class="info-note mt-4" role="status" aria-live="polite">
-          <i class="fas fa-envelope" aria-hidden="true"></i>
-          <span>Após o registo, enviamos um link de confirmação por email.</span>
+{% block auth_content %}
+<div class="row justify-content-center">
+  <div class="col-xl-10 col-lg-11">
+    <div class="card auth-card">
+      <div class="card-body p-5">
+        <div class="text-center auth-hero mb-4 mx-auto">
+          <h1 class="h3 mb-3">Criar conta</h1>
+          <p class="text-muted mb-0">Escolha o tipo de conta e comece a usar a Coverde com um processo simples e rápido.</p>
         </div>
-      </div>
 
-      <!-- Cards de escolha -->
-      <div class="columns is-multiline is-vcentered cards-grid">
-        
-        <!-- Consumidor -->
-        <div class="column is-6-desktop is-12-tablet">
-          <div class="profile-card" role="group" aria-labelledby="consumer-title">
-            <div class="profile-card-header">
-              <div class="profile-icon">
-                <i class="fas fa-user" aria-hidden="true"></i>
-              </div>
-              <h3 id="consumer-title">Consumidor</h3>
-              <p>Compre direto do produtor</p>
-              <div class="profile-divider"></div>
-            </div>
-            <div class="profile-features">
-              <div class="feature-item">
-                <i class="fas fa-shopping-cart" aria-hidden="true"></i>
-                <span>Adicionar ao carrinho e acompanhar encomendas</span>
-              </div>
-              <div class="feature-item">
-                <i class="fas fa-bolt" aria-hidden="true"></i>
-                <span>Checkout rápido</span>
-              </div>
-              <div class="feature-item">
-                <i class="fas fa-clock" aria-hidden="true"></i>
-                <span>Histórico de encomendas</span>
-              </div>
-              <div class="feature-item">
-                <i class="fas fa-heart" aria-hidden="true"></i>
-                <span>Favoritos e avaliações</span>
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="card profile-card h-100">
+              <div class="card-body p-4 profile-card-header text-center">
+                <div class="profile-icon mb-3">
+                  <i class="fas fa-user fa-lg"></i>
+                </div>
+                <h2 class="h5 mb-2">Consumidor</h2>
+                <p class="text-muted mb-4">Compra produtos locais e acompanha encomendas com um login rápido.</p>
+                <ul class="list-unstyled text-start text-muted mb-4" style="line-height:1.8;">
+                  <li><span class="text-success me-2">✓</span>Checkout rápido</li>
+                  <li><span class="text-success me-2">✓</span>Histórico de pedidos</li>
+                  <li><span class="text-success me-2">✓</span>Interface simples</li>
+                </ul>
+                <a href="{% url 'users:register_consumer' %}{% if next_url %}?next={{ next_url|urlencode }}{% endif %}" class="btn btn-outline-success w-100">Registar como Consumidor</a>
               </div>
             </div>
-            <div class="px-4 pb-4">
-              <a href="{% url 'users:register_consumer' %}" class="button btn-success-custom" role="button" aria-label="Registrar como Consumidor">
-                Registrar como Consumidor
-              </a>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card profile-card h-100">
+              <div class="card-body p-4 profile-card-header text-center">
+                <div class="profile-icon mb-3">
+                  <i class="fas fa-tractor fa-lg"></i>
+                </div>
+                <h2 class="h5 mb-2">Produtor</h2>
+                <p class="text-muted mb-4">Crie o seu perfil de vendedor e apresente os seus produtos a consumidores locais.</p>
+                <ul class="list-unstyled text-start text-muted mb-4" style="line-height:1.8;">
+                  <li><span class="text-success me-2">✓</span>Gestão de catálogo</li>
+                  <li><span class="text-success me-2">✓</span>Perfil público opcional</li>
+                  <li><span class="text-success me-2">✓</span>Painel de vendas</li>
+                </ul>
+                <a href="{% url 'users:register_producer' %}{% if next_url %}?next={{ next_url|urlencode }}{% endif %}" class="btn btn-success w-100">Registar como Produtor</a>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Produtor -->
-        <div class="column is-6-desktop is-12-tablet">
-          <div class="profile-card" role="group" aria-labelledby="producer-title">
-            <div class="profile-card-header">
-              <div class="profile-icon">
-                <i class="fas fa-tractor" aria-hidden="true"></i>
-              </div>
-              <h3 id="producer-title">Produtor</h3>
-              <p>Venda os seus produtos</p>
-              <div class="profile-divider"></div>
-            </div>
-            <div class="profile-features">
-              <div class="feature-item">
-                <i class="fas fa-boxes" aria-hidden="true"></i>
-                <span>Gestão de catálogo e stock</span>
-              </div>
-              <div class="feature-item">
-                <i class="fas fa-chart-line" aria-hidden="true"></i>
-                <span>Indicadores de desempenho</span>
-              </div>
-              <div class="feature-item">
-                <i class="fas fa-check-circle" aria-hidden="true"></i>
-                <span>Verificação opcional (confiança)</span>
-              </div>
-              <div class="feature-item">
-                <i class="fas fa-store" aria-hidden="true"></i>
-                <span>Venda para toda a região</span>
-              </div>
-            </div>
-            <div class="px-4 pb-4">
-              <a href="{% url 'users:register_producer' %}" class="button btn-outline-success-custom" role="button" aria-label="Registrar como Produtor">
-                Registrar como Produtor
-              </a>
-            </div>
-          </div>
+        <div class="text-center mt-5">
+          <p class="mb-0 text-muted">Já tem conta? <a href="{% url 'users:login' %}{% if next_url %}?next={{ next_url|urlencode }}{% endif %}" class="link-success">Iniciar Sessão</a></p>
         </div>
       </div>
-
-      <!-- Link para login -->
-      <div class="has-text-centered mt-5 pt-3">
-        <p class="is-size-6 has-text-grey">
-          Já tem conta?
-          <a href="{% url 'users:login' %}" class="has-text-weight-semibold" style="color: #2e7d32;">
-            <i class="fas fa-sign-in-alt mr-1"></i> Entrar
-          </a>
-        </p>
-      </div>
-
     </div>
   </div>
 </div>

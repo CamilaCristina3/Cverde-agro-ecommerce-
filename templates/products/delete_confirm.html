@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Deletar Produto | COVERDE{% endblock %}
+
+{% block extra_css %}
+<style>
+  .delete-header {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    border-radius: 1.25rem;
+  }
+
+  .delete-card {
+    border: 2px solid #dc3545;
+    border-radius: 1.25rem;
+    background: #fff5f5;
+  }
+
+  .product-preview {
+    border-radius: 1rem;
+    overflow: hidden;
+    background: #f8f9fa;
+  }
+
+  .product-preview img {
+    width: 100%;
+    height: 250px;
+    object-fit: contain;
+    padding: 1rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      
+      <!-- Header -->
+      <div class="delete-header text-white p-4 mb-4">
+        <h1 class="h3 fw-bold mb-2">
+          <i class="fa-solid fa-triangle-exclamation me-2"></i>Deletar Produto
+        </h1>
+        <p class="mb-0 text-white-50">Esta ação é irreversível</p>
+      </div>
+
+      <!-- Card com detalhes do produto -->
+      <div class="delete-card p-4 mb-4">
+        
+        <!-- Imagem do produto -->
+        {% if product.main_image %}
+          <div class="product-preview mb-4">
+            <img src="{{ product.main_image.url }}" alt="{{ product.name }}">
+          </div>
+        {% else %}
+          <div class="product-preview mb-4 d-flex align-items-center justify-content-center">
+            <i class="fa-solid fa-image fa-3x text-muted"></i>
+          </div>
+        {% endif %}
+
+        <!-- Info do produto -->
+        <div class="mb-4">
+          <h4 class="fw-bold mb-2">{{ product.name }}</h4>
+          <p class="text-muted mb-1">
+            <strong>Preço:</strong> €{{ product.price }}
+          </p>
+          <p class="text-muted mb-1">
+            <strong>Stock:</strong> {{ product.stock }} {{ product.get_unit_display }}
+          </p>
+          <p class="text-muted">
+            <strong>Categoria:</strong> {{ product.category.name }}
+          </p>
+        </div>
+
+        <!-- Aviso -->
+        <div class="alert alert-danger" role="alert">
+          <i class="fa-solid fa-exclamation-circle me-2"></i>
+          <strong>Atenção!</strong> Ao deletar este produto:
+          <ul class="mb-0 mt-2">
+            <li>Será removido permanentemente da sua loja</li>
+            <li>Encomendas existentes não serão afetadas</li>
+            <li>Estatísticas de vendas serão preservadas</li>
+            <li>Esta ação <strong>não pode ser desfeita</strong></li>
+          </ul>
+        </div>
+
+        <!-- Botões de confirmação -->
+        <form method="post" onsubmit="return confirm('Tem a certeza que quer deletar este produto? Esta ação é irreversível.');">
+          {% csrf_token %}
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-danger btn-lg fw-bold">
+              <i class="fa-solid fa-trash me-2"></i>Sim, Deletar Produto
+            </button>
+            <a href="{% url 'users:producer_products' %}" class="btn btn-outline-secondary btn-lg fw-bold">
+              <i class="fa-solid fa-times me-2"></i>Cancelar
+            </a>
+          </div>
+        </form>
+      </div>
+
+      <!-- Link voltar -->
+      <div class="text-center">
+        <a href="{% url 'users:producer_products' %}" class="text-decoration-none text-muted">
+          <i class="fa-solid fa-arrow-left me-2"></i>Voltar para meus produtos
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base_layout.html" %}
+
+{% block body_class %}bg-light{% endblock %}
+
+{% block extra_css %}
+<style>
+.auth-page {
+  min-height: calc(100vh - 220px);
+  display: flex;
+  align-items: center;
+  padding: 3rem 0;
+}
+.auth-card {
+  border-radius: 1.5rem;
+}
+.auth-hero {
+  max-width: 640px;
+  margin: 0 auto 2rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12">
+        {% block auth_content %}{% endblock %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

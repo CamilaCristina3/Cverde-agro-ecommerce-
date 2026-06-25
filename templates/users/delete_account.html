@@ -2,24 +2,25 @@
 {% block title %}Eliminar Conta | Cverde{% endblock %}
 
 {% block content %}
-<section class="section">
+<section class="py-5">
   <div class="container">
-    <div class="columns is-centered">
-      <div class="column is-6">
-        <div class="box">
-          <h1 class="title is-4 has-text-danger">Eliminar conta</h1>
-          <p class="has-text-grey">
-            Esta ação irá desativar a sua conta e anonimizar os seus dados pessoais (RGPD).
-            Não é possível reverter.
-          </p>
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <h1 class="h4 text-danger mb-3">Eliminar conta</h1>
+            <p class="text-muted mb-4">
+              Esta ação irá desativar a sua conta e anonimizar os seus dados pessoais (RGPD). Não é possível reverter.
+            </p>
 
-          <form method="post" class="mt-5">
-            {% csrf_token %}
-            <div class="buttons is-right">
-              <a class="button is-light" href="{% url 'users:profile' %}">Cancelar</a>
-              <button class="button is-danger" type="submit">Confirmar eliminação</button>
-            </div>
-          </form>
+            <form method="post" class="mt-4">
+              {% csrf_token %}
+              <div class="d-flex justify-content-end gap-2">
+                <a class="btn btn-outline-secondary" href="{% url 'users:profile' %}">Cancelar</a>
+                <button class="btn btn-danger" type="submit">Confirmar eliminação</button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>

@@ -1,59 +1,69 @@
 {% load static %}
-<footer class="footer coverde-footer mt-6">
+
+<footer class="bg-light py-5 border-top">
   <div class="container">
-    <div class="columns">
-      <div class="column is-4">
-        <div class="coverde-footer__brand">
-          <img src="{% static 'images/logo.svg' %}" alt="Cverde" class="coverde-footer__logo">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="d-flex gap-3 align-items-start">
+          <img src="{% static 'images/logo.svg' %}" alt="Cverde" height="48">
           <div>
-            <p class="title is-6 mb-1">Cverde</p>
-            <p class="is-size-7 has-text-grey">
+            <h5 class="fw-bold mb-1">Cverde</h5>
+            <p class="text-muted mb-0">
               Mercado local de produtos agrícolas — fresco, sustentável e transparente.
             </p>
           </div>
         </div>
       </div>
 
-      <div class="column is-3">
-        <p class="title is-6">Links</p>
-        <ul class="coverde-footer__links">
-          <li><a href="{% url 'products:list' %}">Produtos</a></li>
-          <li><a href="{% url 'pages:terms_of_use' %}">Termos de Utilização</a></li>
-          <li><a href="{% url 'pages:privacy_policy' %}">Política de Privacidade</a></li>
-          <li><a href="{% url 'pages:cookies_policy' %}">Política de Cookies</a></li>
+      <div class="col-lg-3">
+        <h6 class="fw-semibold">Links</h6>
+        <ul class="list-unstyled mb-0">
+          <li>
+            <a href="/" class="text-secondary text-decoration-none">
+              Home
+            </a>
+          </li>
+          <li>
+            <a href="/products/" class="text-secondary text-decoration-none">
+              Produtos
+            </a>
+          </li>
         </ul>
       </div>
 
-      <div class="column is-3">
-        <p class="title is-6">Contacto</p>
-        <p class="is-size-7 has-text-grey mb-2">Suporte por email:</p>
-        <p><a href="mailto:suporte@cverde.co.mz">suporte@cverde.co.mz</a></p>
+      <div class="col-lg-3">
+        <h6 class="fw-semibold">Contacto</h6>
+        <p class="text-secondary mb-1">Suporte por email:</p>
+        <p class="mb-0">
+          <a href="mailto:suporte@cverde.co.mz" class="text-decoration-none">
+            suporte@cverde.co.mz
+          </a>
+        </p>
       </div>
 
-      <div class="column is-2">
-        <p class="title is-6">Social</p>
-        <div class="buttons">
-          <a class="button is-light is-small" href="#" aria-label="Instagram" title="Instagram">
-            <span class="icon"><i class="fab fa-instagram"></i></span>
+      <div class="col-lg-2">
+        <h6 class="fw-semibold">Social</h6>
+        <div class="d-flex gap-2">
+          <a class="btn btn-outline-secondary btn-sm" href="#" aria-label="Instagram">
+            <i class="fab fa-instagram"></i>
           </a>
-          <a class="button is-light is-small" href="#" aria-label="Facebook" title="Facebook">
-            <span class="icon"><i class="fab fa-facebook"></i></span>
+          <a class="btn btn-outline-secondary btn-sm" href="#" aria-label="Facebook">
+            <i class="fab fa-facebook"></i>
           </a>
-          <a class="button is-light is-small" href="#" aria-label="LinkedIn" title="LinkedIn">
-            <span class="icon"><i class="fab fa-linkedin"></i></span>
+          <a class="btn btn-outline-secondary btn-sm" href="#" aria-label="LinkedIn">
+            <i class="fab fa-linkedin"></i>
           </a>
         </div>
       </div>
     </div>
 
-    <hr class="coverde-footer__divider">
-    <div class="level is-mobile is-size-7 has-text-grey">
-      <div class="level-left">
-        <div class="level-item">© {% now "Y" %} Cverde. Todos os direitos reservados.</div>
-      </div>
-      <div class="level-right">
-        <div class="level-item">Feito com Django + Bulma.</div>
-      </div>
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center pt-4 mt-4 border-top">
+      <p class="mb-2 mb-md-0 text-muted">
+        © {% now "Y" %} Cverde. Todos os direitos reservados.
+      </p>
+      <p class="mb-0 text-muted">
+        Feito com Django + Bootstrap 5.
+      </p>
     </div>
   </div>
 </footer>

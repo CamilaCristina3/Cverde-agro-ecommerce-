@@ -1,583 +1,173 @@
-{% extends "base.html" %}
+{% extends "auth_base.html" %}
 {% load static %}
 
-{% block title %}Entrar | Coverde{% endblock %}
+{% block title %}Iniciar Sessão | COVERDE{% endblock %}
 
 {% block extra_css %}
 <style>
-    /* Estilos (manter os mesmos da versão anterior) */
-    .login-container {
-        min-height: calc(100vh - 300px);
-        display: flex;
-        align-items: center;
-        padding: 2rem 1rem;
-        background: linear-gradient(135deg, #f5f5f5 0%, #e8f5e9 100%);
+  .auth-card {
+    border: 0;
+    border-radius: 1.25rem;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.10);
+  }
+
+  .auth-side {
+    background: linear-gradient(135deg, #198754, #157347);
+  }
+
+  .auth-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #212529;
+  }
+
+  .auth-subtitle {
+    color: #6c757d;
+  }
+
+  .auth-icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #6c757d;
+    margin: 1.75rem 0;
+  }
+
+  .auth-divider::before,
+  .auth-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #dee2e6;
+  }
+
+  .form-control:focus,
+  .form-check-input:focus {
+    border-color: #198754;
+    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.20);
+  }
+
+  @media (max-width: 991.98px) {
+    .auth-side {
+      text-align: center;
     }
-    
-    .login-card {
-        border-radius: 24px;
-        overflow: hidden;
-        box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
-        border: none;
-        transition: transform 0.3s ease;
-    }
-    
-    .login-card:hover {
-        transform: translateY(-5px);
-    }
-    
-    .login-card .card-header {
-        background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
-        padding: 1.5rem;
-        text-align: center;
-    }
-    
-    .input {
-        border-radius: 12px;
-        border: 1.5px solid #e0e0e0;
-        padding: 0.85rem 1rem 0.85rem 2.5rem;
-        transition: all 0.2s;
-    }
-    
-    .input:focus {
-        border-color: #2e7d32;
-        box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15);
-        outline: none;
-    }
-    
-    .btn-login {
-        background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
-        border: none;
-        border-radius: 40px;
-        padding: 14px;
-        font-weight: 600;
-        transition: all 0.3s;
-    }
-    
-    .btn-login:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(46, 125, 50, 0.3);
-    }
-    
-    .btn-register {
-        border-radius: 40px;
-        padding: 12px;
-        font-weight: 500;
-        border: 2px solid #2e7d32;
-        color: #2e7d32;
-        background: transparent;
-        transition: all 0.3s;
-    }
-    
-    .btn-register:hover {
-        background-color: #2e7d32;
-        color: white;
-    }
-    
-    .divider {
-        display: flex;
-        align-items: center;
-        text-align: center;
-        color: #999;
-        margin: 1.5rem 0;
-    }
-    
-    .divider::before,
-    .divider::after {
-        content: "";
-        flex: 1;
-        border-bottom: 1px solid #ddd;
-    }
-    
-    .divider::before {
-        margin-right: 1rem;
-    }
-    
-    .divider::after {
-        margin-left: 1rem;
-    }
-    
-    .rgpd-badge {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        z-index: 1000;
-    }
-    
-    .cookie-banner {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: #1a3a1a;
-        color: white;
-        padding: 1rem;
-        z-index: 1000;
-        transform: translateY(100%);
-        transition: transform 0.3s ease;
-    }
-    
-    .cookie-banner.show {
-        transform: translateY(0);
-    }
-    
-    @media (max-width: 768px) {
-        .btn-login, .btn-register {
-            width: 100%;
-        }
-    }
-    
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    .login-card {
-        animation: fadeInUp 0.5s ease-out;
-    }
-    
-    /* Badge de segurança RGPD */
-    .security-badge {
-        background: rgba(46, 125, 50, 0.9);
-        backdrop-filter: blur(5px);
-        border-radius: 40px;
-        padding: 8px 16px;
-        font-size: 0.7rem;
-        color: white;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .checkbox-custom {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        user-select: none;
-    }
-    
-    .checkbox-custom input {
-        width: 18px;
-        height: 18px;
-        margin-right: 10px;
-        cursor: pointer;
-        accent-color: #2e7d32;
-    }
-    
-    .card-content {
-        padding: 2rem;
-    }
-    
-    .card-header p {
-        opacity: 0.85;
-    }
-    
-    .toggle-password {
-        cursor: pointer;
-        transition: color 0.2s ease;
-    }
-    
-    .toggle-password:hover {
-        color: #2e7d32;
-    }
+  }
 </style>
 {% endblock %}
 
-{% block content %}
-<div class="login-container">
-    <div class="container">
-        <div class="columns is-centered">
-            <div class="column is-5-desktop is-8-tablet is-12-mobile">
-                
-                <!-- Cartão de Login -->
-                <div class="card login-card">
-                    <div class="card-header">
-                        <div>
-                            <i class="fas fa-leaf fa-3x has-text-white"></i>
-                            <h2 class="title is-4 has-text-white mt-3 mb-0">Bem-vindo de volta</h2>
-                            <p class="has-text-white is-size-7 mt-1">
-                                Aceda à sua conta Coverde de forma segura
-                            </p>
-                            <!-- Badge de segurança RGPD -->
-                            <div class="mt-2">
-                                <span class="security-badge">
-                                    <i class="fas fa-shield-alt"></i>
-                                    Dados protegidos (RGPD)
-                                </span>
-                            </div>
-                        </div>
-                    </div>
+{% block auth_content %}
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-10 col-xl-8">
+    <div class="card auth-card overflow-hidden">
+      <div class="row g-0">
 
-                    <div class="card-content">
-                        
-                        <!-- Aviso de segurança -->
-                        <div class="notification is-info is-light mb-4">
-                            <i class="fas fa-lock mr-2"></i>
-                            <strong>Ambiente seguro</strong>
-                            <p class="is-size-7 mt-1">As suas credenciais são encriptadas e nunca são partilhadas com terceiros.</p>
-                        </div>
-                        
-                        <!-- Mensagens -->
-                        {% if messages %}
-                            {% for message in messages %}
-                                <div class="notification is-{{ message.tags|default:'info' }} is-light">
-                                    <button class="delete"></button>
-                                    <i class="fas fa-{% if 'success' in message.tags %}check-circle{% else %}info-circle{% endif %} mr-2"></i>
-                                    {{ message }}
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-
-                        {% if form.non_field_errors %}
-                            <div class="notification is-danger is-light">
-                                <button class="delete"></button>
-                                <i class="fas fa-exclamation-triangle mr-2"></i>
-                                <strong>Falha na autenticação</strong>
-                                <p class="is-size-7 mt-1">{{ form.non_field_errors.0 }}</p>
-                                <p class="is-size-7 mt-1">
-                                    <i class="fas fa-info-circle"></i>
-                                    Após 5 tentativas falhadas, a sua conta será temporariamente bloqueada.
-                                </p>
-                            </div>
-                        {% endif %}
-
-                        <form method="post" class="login-form" novalidate>
-                            {% csrf_token %}
-                            
-                            <!-- Campos do Formulário -->
-                            {% for field in form %}
-                                {% if field.name != 'remember_me' %}
-                                    <div class="field mb-4">
-                                        <label class="label has-text-grey-dark">
-                                            {% if field.name == 'username' %}
-                                                <i class="fas fa-envelope has-text-success mr-1"></i>
-                                            {% elif field.name == 'password' %}
-                                                <i class="fas fa-lock has-text-success mr-1"></i>
-                                            {% endif %}
-                                            {{ field.label }}
-                                            <span class="has-text-danger">*</span>
-                                        </label>
-                                        <div class="control {% if field.name == 'password' %}has-icons-left has-icons-right{% else %}has-icons-left{% endif %}">
-                                            {{ field }}
-                                            <span class="icon is-left has-text-success">
-                                                {% if field.name == 'username' %}
-                                                    <i class="fas fa-envelope"></i>
-                                                {% elif field.name == 'password' %}
-                                                    <i class="fas fa-key"></i>
-                                                {% endif %}
-                                            </span>
-                                            {% if field.name == 'password' %}
-                                                <span class="icon is-right toggle-password" data-target="{{ field.auto_id }}" role="button" tabindex="0" aria-label="Mostrar/Ocultar palavra-passe">
-                                                    <i class="fas fa-eye"></i>
-                                                </span>
-                                            {% endif %}
-                                        </div>
-                                        {% if field.help_text %}
-                                            <p class="help is-size-7">{{ field.help_text }}</p>
-                                        {% endif %}
-                                        {% if field.errors %}
-                                            <p class="help is-danger mt-1">{{ field.errors.0 }}</p>
-                                        {% endif %}
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
-
-                            <!-- Campo Remember Me -->
-                            <div class="field mb-4">
-                                <label class="checkbox-custom">
-                                    {{ form.remember_me }}
-                                    <span class="is-size-7 has-text-grey">
-                                        <i class="fas fa-clock mr-1"></i>
-                                        {{ form.remember_me.label }} (recomendado apenas em dispositivos pessoais)
-                                    </span>
-                                </label>
-                            </div>
-
-                            <!-- Botão Entrar -->
-                            <div class="field">
-                                <button type="submit" class="button btn-login is-fullwidth has-text-white">
-                                    <span class="icon">
-                                        <i class="fas fa-arrow-right-to-bracket"></i>
-                                    </span>
-                                    <span>Entrar na minha conta</span>
-                                </button>
-                            </div>
-
-                            <!-- Link Recuperar Palavra-passe -->
-                            <div class="has-text-centered mb-3">
-                                <a href="{% url 'users:password_reset' %}" class="is-size-7 has-text-success">
-                                    <i class="fas fa-question-circle mr-1"></i>Esqueceu a palavra-passe?
-                                </a>
-                            </div>
-
-                            <!-- Limite de tentativas -->
-                            <div class="has-text-centered mt-3">
-                                <p class="is-size-7 has-text-grey">
-                                    <i class="fas fa-shield-alt mr-1"></i>
-                                    Proteção contra acessos não autorizados
-                                </p>
-                            </div>
-
-                            {% if request.GET.next %}
-                                <input type="hidden" name="next" value="{{ request.GET.next }}">
-                            {% endif %}
-                        </form>
-
-                        <!-- Divisor -->
-                        <div class="divider">ou</div>
-
-                        <!-- Criar conta -->
-                        <div class="has-text-centered">
-                            <p class="is-size-7 has-text-grey mb-3">Ainda não faz parte da comunidade Coverde?</p>
-                            <a href="{% url 'users:register' %}" class="button btn-register is-fullwidth">
-                                <span class="icon">
-                                    <i class="fas fa-user-plus"></i>
-                                </span>
-                                <span>Criar nova conta</span>
-                            </a>
-                        </div>
-
-                        <!-- Link para política de privacidade -->
-                        <div class="has-text-centered mt-4">
-                            <a href="{% url 'pages:privacy_policy' %}" class="is-size-7 has-text-grey">
-                                <i class="fas fa-shield-alt mr-1"></i> Política de Privacidade (RGPD)
-                            </a>
-                            <span class="mx-1 has-text-grey-light">•</span>
-                            <a href="{% url 'pages:terms_of_use' %}" class="is-size-7 has-text-grey">
-                                Termos de Utilização
-                            </a>
-                            <span class="mx-1 has-text-grey-light">•</span>
-                            <a href="{% url 'pages:cookies_policy' %}" class="is-size-7 has-text-grey">
-                                Política de Cookies
-                            </a>
-                        </div>
-                        
-                        <!-- Informação RGPD -->
-                        <div class="mt-4 pt-3 has-text-centered">
-                            <p class="is-size-7 has-text-grey-light">
-                                <i class="fas fa-database mr-1"></i>
-                                Os seus dados são tratados conforme o Regulamento Geral sobre a Proteção de Dados (RGPD).
-                                <a href="{% url 'pages:privacy_policy' %}" class="has-text-success">Saiba mais</a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Selo de conformidade RGPD -->
-                <div class="mt-4 has-text-centered">
-                    <div class="tags is-centered">
-                        <span class="tag is-success is-light">
-                            <i class="fas fa-check-circle mr-1"></i> Conformidade RGPD
-                        </span>
-                        <span class="tag is-success is-light">
-                            <i class="fas fa-lock mr-1"></i> Dados Encriptados
-                        </span>
-                        <span class="tag is-success is-light">
-                            <i class="fas fa-user-shield mr-1"></i> Proteção de Dados
-                        </span>
-                    </div>
-                </div>
+        <div class="col-lg-6 auth-side text-white p-5 d-flex align-items-center">
+          <div>
+            <div class="bg-white bg-opacity-10 rounded-4 d-inline-flex align-items-center justify-content-center auth-icon mb-4">
+              <i class="fas fa-leaf fa-lg"></i>
             </div>
+
+            <h1 class="fs-3 fw-bold mb-3">Bem-vindo à COVERDE</h1>
+
+            <p class="mb-4">
+              Aceda à sua conta para continuar a comprar produtos locais e acompanhar as suas encomendas.
+            </p>
+
+            <ul class="list-unstyled small mb-0">
+              <li class="mb-2">✓ Acesso seguro</li>
+              <li class="mb-2">✓ Gestão de encomendas</li>
+              <li>✓ Protecção dos seus dados</li>
+            </ul>
+          </div>
         </div>
-    </div>
-</div>
 
-<!-- Banner de Cookies (RGPD) -->
-<div id="cookieBanner" class="cookie-banner">
-    <div class="container">
-        <div class="columns is-vcentered">
-            <div class="column is-9">
-                <p class="has-text-weight-bold mb-1">
-                    <i class="fas fa-cookie-bite mr-2"></i>Utilizamos cookies
-                </p>
-                <p class="is-size-7">
-                    Utilizamos cookies para melhorar a sua experiência na nossa plataforma, analisar tráfego 
-                    e personalizar conteúdo. Ao continuar, concorda com a nossa 
-                    <a href="#cookies" class="has-text-success-light">Política de Cookies</a>.
-                </p>
+        <div class="col-lg-6 p-4 p-md-5 bg-white">
+          <div class="mb-4">
+            <h2 class="auth-title mb-2">Iniciar Sessão</h2>
+            <p class="auth-subtitle mb-0">
+              Introduza o seu email e a sua palavra-passe.
+            </p>
+          </div>
+
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+              {{ form.non_field_errors.0 }}
             </div>
-            <div class="column is-3 has-text-right">
-                <button id="acceptCookies" class="button is-success is-small" aria-label="Aceitar cookies">Aceitar</button>
-                <button id="rejectCookies" class="button is-light is-small ml-2" aria-label="Rejeitar cookies">Rejeitar</button>
+          {% endif %}
+
+          <form method="post" novalidate>
+            {% csrf_token %}
+
+            {% for field in form %}
+              {% if field.name != "remember_me" %}
+                <div class="mb-3">
+                  <label for="{{ field.id_for_label }}" class="form-label">
+                    {{ field.label }}
+                  </label>
+
+                  {{ field }}
+
+                  {% if field.help_text %}
+                    <div class="form-text">{{ field.help_text }}</div>
+                  {% endif %}
+
+                  {% if field.errors %}
+                    <div class="invalid-feedback d-block">
+                      {{ field.errors.0 }}
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            {% endfor %}
+
+            {% if form.remember_me %}
+              <div class="form-check mb-3">
+                {{ form.remember_me }}
+                <label class="form-check-label" for="{{ form.remember_me.id_for_label }}">
+                  Manter sessão iniciada
+                </label>
+              </div>
+            {% endif %}
+
+            {% if request.GET.next %}
+              <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% endif %}
+
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-success btn-lg">
+                Iniciar Sessão
+              </button>
+
+              <a href="{% url 'users:password_reset' %}" class="btn btn-link link-success text-decoration-none">
+                Esqueceu-se da palavra-passe?
+              </a>
             </div>
+          </form>
+
+          <div class="auth-divider">
+            <span>ou</span>
+          </div>
+
+          <div class="text-center">
+            <p class="text-muted mb-3">
+              Ainda não tem conta?
+            </p>
+
+            <a href="{% url 'users:register' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}"
+               class="btn btn-outline-success w-100">
+              Criar Conta
+            </a>
+          </div>
+
         </div>
-    </div>
-</div>
 
-<!-- Badge RGPD fixo -->
-<div class="rgpd-badge">
-    <div class="security-badge">
-        <i class="fas fa-shield-alt"></i>
-        <span class="is-size-7">Protegido por RGPD</span>
+      </div>
     </div>
+  </div>
 </div>
-
-<script>
-    'use strict';
-    
-    // ============================================
-    // MOSTRAR/OCULTAR PASSWORD
-    // ============================================
-    function initPasswordToggle() {
-        document.querySelectorAll('.toggle-password').forEach(button => {
-            const handleToggle = function(event) {
-                event.preventDefault();
-                const targetId = this.getAttribute('data-target');
-                const passwordInput = document.getElementById(targetId);
-                
-                if (passwordInput) {
-                    const isPassword = passwordInput.type === 'password';
-                    passwordInput.type = isPassword ? 'text' : 'password';
-                    
-                    const icon = this.querySelector('i');
-                    if (icon) {
-                        icon.classList.toggle('fa-eye');
-                        icon.classList.toggle('fa-eye-slash');
-                    }
-                }
-            };
-            
-            button.addEventListener('click', handleToggle);
-            // Suporte para teclado (Enter e Space)
-            button.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    handleToggle.call(this, e);
-                }
-            });
-        });
-    }
-    
-    // ============================================
-    // FECHAR NOTIFICAÇÕES
-    // ============================================
-    function initNotificationDismiss() {
-        document.querySelectorAll('.notification .delete').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                const notification = this.closest('.notification');
-                if (notification) {
-                    notification.style.opacity = '0';
-                    setTimeout(() => notification.remove(), 300);
-                }
-            });
-        });
-    }
-    
-    // ============================================
-    // BANNER DE COOKIES (RGPD)
-    // ============================================
-    function initCookieBanner() {
-        const cookieBanner = document.getElementById('cookieBanner');
-        if (!cookieBanner) return;
-        
-        const acceptBtn = document.getElementById('acceptCookies');
-        const rejectBtn = document.getElementById('rejectCookies');
-        
-        // Verificar se o consentimento já foi dado
-        if (!localStorage.getItem('cookieConsent')) {
-            cookieBanner.classList.add('show');
-        }
-        
-        if (acceptBtn) {
-            acceptBtn.addEventListener('click', () => {
-                localStorage.setItem('cookieConsent', 'accepted');
-                cookieBanner.classList.remove('show');
-                sendConsentLog('accepted');
-            });
-        }
-        
-        if (rejectBtn) {
-            rejectBtn.addEventListener('click', () => {
-                localStorage.setItem('cookieConsent', 'rejected');
-                cookieBanner.classList.remove('show');
-                sendConsentLog('rejected');
-            });
-        }
-    }
-    
-    function sendConsentLog(status) {
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
-        if (!csrfToken) return;
-        
-        fetch('/api/consent-log/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken.value
-            },
-            body: JSON.stringify({
-                consent_type: 'cookies',
-                status: status,
-                timestamp: new Date().toISOString()
-            })
-        }).catch(err => {
-            console.debug('Consentimento registado localmente (endpoint indisponível)');
-        });
-    }
-    
-    // ============================================
-    // AUTO-FOCUS NO PRIMEIRO CAMPO
-    // ============================================
-    function initAutoFocus() {
-        const firstInput = document.querySelector('.login-form input[type="text"], .login-form input[type="email"]');
-        if (firstInput) {
-            firstInput.focus();
-        }
-    }
-    
-    // ============================================
-    // LIMITE DE TENTATIVAS
-    // ============================================
-    function initLoginProtection() {
-        let attemptCount = parseInt(sessionStorage.getItem('loginAttempts') || '0');
-        const form = document.querySelector('.login-form');
-        
-        if (attemptCount >= 5 && form) {
-            form.style.opacity = '0.5';
-            const submitBtn = form.querySelector('button[type="submit"]');
-            if (submitBtn) submitBtn.disabled = true;
-            
-            const warning = document.createElement('div');
-            warning.className = 'notification is-danger is-light mt-3';
-            warning.innerHTML = `
-                <i class="fas fa-ban mr-2"></i>
-                <strong>Conta temporariamente bloqueada</strong>
-                <p class="is-size-7 mt-1">Número excessivo de tentativas falhadas. Aguarde 15 minutos ou recupere a sua palavra-passe.</p>
-                <a href="/password-reset/" class="button is-small is-danger is-light mt-2">Recuperar palavra-passe</a>
-            `;
-            form.parentNode.insertBefore(warning, form.nextSibling);
-        }
-        
-        // Incrementar tentativas em caso de erro (notificações de perigo, menos a de info)
-        const dangerNotifications = document.querySelectorAll('.notification.is-danger:not(.is-info)');
-        if (dangerNotifications.length > 0 && form) {
-            attemptCount++;
-            sessionStorage.setItem('loginAttempts', attemptCount);
-        }
-    }
-    
-    // ============================================
-    // INICIALIZAÇÃO GERAL
-    // ============================================
-    function initLogin() {
-        initPasswordToggle();
-        initNotificationDismiss();
-        initCookieBanner();
-        initAutoFocus();
-        initLoginProtection();
-    }
-    
-    // Aguardar DOMContentLoaded se necessário
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initLogin);
-    } else {
-        initLogin();
-    }
-</script>
 {% endblock %}
