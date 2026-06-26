@@ -57,7 +57,7 @@ def register_client(request):
     else:
         form = ClientRegisterForm()
 
-    return render(request, 'users/register_client.html', {'form': form, 'title': 'Criar Conta de Cliente'})
+    return render(request, 'users/register_consumer.html', {'form': form, 'title': 'Criar Conta de Cliente'})
 
 
 def register_producer(request):

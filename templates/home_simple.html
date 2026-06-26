@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}COVERDE | Produtos Locais e Sustentáveis{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row align-items-center mb-5">
+    <div class="col-md-6">
+      <h1 class="display-4 fw-bold text-success mb-3">
+        Bem-vindo ao <span class="text-success">COVERDE</span>
+      </h1>
+      <p class="lead text-muted mb-4">
+        A plataforma de ecommerce para produtos locais e sustentáveis.
+      </p>
+      <div class="d-flex gap-2">
+        <a href="/admin/" class="btn btn-success btn-lg">Admin</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>Notificação:</strong> O sistema está em fase de migração. As páginas de produtos e utilizador serão restauradas em breve.
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-md-4 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ featured_products.count|default:"0" }} Produtos</h5>
+          <p class="card-text text-muted">Produtos em destaque</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ categories.count|default:"0" }} Categorias</h5>
+          <p class="card-text text-muted">Categorias de produtos</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ local_producers.count|default:"0" }} Produtores</h5>
+          <p class="card-text text-muted">Produtores locais</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

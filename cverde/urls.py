@@ -87,6 +87,9 @@ urlpatterns = [
     # Suporte
     path('suporte/', include('apps.support.urls', namespace='support')),
 
+    # Páginas (privacidade, termos, etc)
+    path('paginas/', include('apps.pages.urls', namespace='pages')),
+
     # Relatórios (Portugal)
     path('relatorios/', include('apps.reports.urls', namespace='reports')),
 
