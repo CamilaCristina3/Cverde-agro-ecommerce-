@@ -80,20 +80,80 @@
 
     <!-- CATEGORIAS -->
     <h2 class="section-title">Categorias de Produtos</h2>
-    <div class="row g-3 mb-5">
+    <div class="row g-4 mb-5">
         {% if categories %}
             {% for cat in categories %}
-            <div class="col-6 col-md-3 col-lg-2">
+            <div class="col-6 col-md-4 col-lg-3">
                 <a href="/produtos/?categoria={{ cat.slug }}" class="text-decoration-none">
-                    <div class="card-coverde text-center p-3">
+                    <div class="category-card-dynamic" style="
+                        background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%);
+                        border-radius: 12px;
+                        overflow: hidden;
+                        transition: all 0.3s ease;
+                        height: 200px;
+                        position: relative;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: flex-end;
+                        color: white;
+                        padding: 20px;
+                    "
+                    onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)';">
+                        
+                        <!-- Imagem de fundo -->
                         {% if cat.image %}
-                            <img src="{{ cat.image.url }}" alt="{{ cat.name }}" style="width:50px; height:50px; object-fit:cover; border-radius:50%; margin-bottom:8px;">
+                            <div style="
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                right: 0;
+                                bottom: 0;
+                                background: url('{{ cat.image.url }}') center/cover;
+                                opacity: 0.4;
+                                z-index: 1;
+                            "></div>
                         {% else %}
-                            <div style="width:50px; height:50px; border-radius:50%; background:#E8F5E9; display:flex; align-items:center; justify-content:center; margin:0 auto 8px;">
-                                <i class="fas fa-{{ cat.icon|default:'leaf' }}" style="color:#2E7D32; font-size:1.3rem;"></i>
-                            </div>
+                            <div style="
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                right: 0;
+                                bottom: 0;
+                                background: linear-gradient(135deg, rgba(46, 125, 50, 0.8) 0%, rgba(27, 94, 32, 0.8) 100%);
+                                z-index: 1;
+                            "></div>
                         {% endif %}
-                        <div style="font-size:0.85rem; font-weight:600; color:#212121;">{{ cat.name }}</div>
+                        
+                        <!-- Overlay escuro -->
+                        <div style="
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            right: 0;
+                            bottom: 0;
+                            background: rgba(0,0,0,0.3);
+                            z-index: 2;
+                        "></div>
+                        
+                        <!-- Conteúdo -->
+                        <div style="position: relative; z-index: 3;">
+                            {% if cat.icon %}
+                                <div style="font-size: 2.5rem; margin-bottom: 8px;">
+                                    <i class="fas fa-{{ cat.icon }}"></i>
+                                </div>
+                            {% else %}
+                                <div style="font-size: 2.5rem; margin-bottom: 8px;">
+                                    <i class="fas fa-leaf"></i>
+                                </div>
+                            {% endif %}
+                            
+                            <div style="font-weight: 700; font-size: 1.1rem;">{{ cat.name }}</div>
+                            {% if cat.description %}
+                                <div style="font-size: 0.75rem; opacity: 0.9; margin-top: 4px;">{{ cat.description|truncatewords:5 }}</div>
+                            {% endif %}
+                        </div>
                     </div>
                 </a>
             </div>
@@ -101,12 +161,25 @@
         {% else %}
             <!-- Fallback: Categorias padrão Portugal -->
             {% for cat in default_categories %}
-            <div class="col-6 col-md-3 col-lg-2">
-                <div class="card-coverde text-center p-3">
-                    <div style="width:50px; height:50px; border-radius:50%; background:#E8F5E9; display:flex; align-items:center; justify-content:center; margin:0 auto 8px;">
-                        <i class="fas fa-seedling" style="color:#2E7D32; font-size:1.3rem;"></i>
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="category-card-dynamic" style="
+                    background: linear-gradient(135deg, #43A047 0%, #2E7D32 100%);
+                    border-radius: 12px;
+                    overflow: hidden;
+                    transition: all 0.3s ease;
+                    height: 200px;
+                    position: relative;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-end;
+                    padding: 20px;
+                    color: white;
+                ">
+                    <div style="font-size: 2.5rem; margin-bottom: 8px;">
+                        <i class="fas fa-seedling"></i>
                     </div>
-                    <div style="font-size:0.85rem; font-weight:600; color:#212121;">{{ cat }}</div>
+                    <div style="font-weight: 700; font-size: 1.1rem;">{{ cat }}</div>
                 </div>
             </div>
             {% endfor %}
