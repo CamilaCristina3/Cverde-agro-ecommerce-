@@ -20,7 +20,7 @@
       <!-- Detalhes da Encomenda -->
       <div class="card shadow-sm mb-4">
         <div class="card-header bg-success text-white">
-          <h3 class="h6 mb-0">Detalhes da Encomenda #{{ order.id }}</h3>
+          <h3 class="h6 mb-0">Detalhes da Encomenda #{{ payment.order.id }}</h3>
         </div>
         
         <div class="card-body">
@@ -34,13 +34,13 @@
                 <td class="fw-bold">Status:</td>
                 <td>
                   <span class="badge bg-success">
-                    {{ order.get_status_display }}
+                    {{ payment.order.get_status_display }}
                   </span>
                 </td>
               </tr>
               <tr>
                 <td class="fw-bold">Método de Pagamento:</td>
-                <td>{{ payment.get_payment_method_display }}</td>
+                <td>{{ payment.get_method_display }}</td>
               </tr>
               <tr>
                 <td class="fw-bold">Tipo:</td>
@@ -64,19 +64,19 @@
             <tbody>
               <tr>
                 <td>Subtotal:</td>
-                <td class="text-end">€{{ order.subtotal }}</td>
+                <td class="text-end">€{{ payment.order.subtotal }}</td>
               </tr>
               <tr>
                 <td>Portes:</td>
-                <td class="text-end">€{{ order.shipping_cost }}</td>
+                <td class="text-end">€{{ payment.order.delivery_fee }}</td>
               </tr>
               <tr>
-                <td>IVA:</td>
-                <td class="text-end">€{{ order.vat }}</td>
+                <td>Desconto:</td>
+                <td class="text-end">€{{ payment.order.discount }}</td>
               </tr>
               <tr class="fw-bold border-top">
                 <td>Total Pago:</td>
-                <td class="text-end text-success">€{{ order.total }}</td>
+                <td class="text-end text-success">€{{ payment.order.total }}</td>
               </tr>
             </tbody>
           </table>
@@ -107,11 +107,11 @@
       
       <!-- Botões de Ação -->
       <div class="d-grid gap-2">
-        <a href="{% url 'orders:detail' order.id %}" class="btn btn-success btn-lg">
+        <a href="{% url 'orders:detail' order_id=payment.order.id %}" class="btn btn-success btn-lg">
           <i class="fa-solid fa-box me-2"></i>
           Ver Detalhes da Encomenda
         </a>
-        <a href="{% url 'users:product_list' %}" class="btn btn-outline-success">
+        <a href="{% url 'products:list' %}" class="btn btn-outline-success">
           <i class="fa-solid fa-shopping-bag me-2"></i>
           Continuar Compras
         </a>

@@ -11,7 +11,8 @@ app_name = 'users'
 
 urlpatterns = [
     # Registo
-    path('registar/', views.register_client, name='register'),          # ← Cliente
+    path('registar/', views.register, name='register'),
+    path('registar/consumidor/', views.register_client, name='register_consumer'),
     path('registar/produtor/', views.register_producer, name='register_producer'),  # ← Produtor
 
     # Ativação
@@ -23,7 +24,20 @@ urlpatterns = [
 
     # Perfil
     path('perfil/', views.profile, name='profile'),
+    path('perfil/editar/', views.profile_edit, name='profile_edit'),
+    path('perfil/eliminar/', views.delete_account, name='delete_account'),
     path('perfil/moradas/adicionar/', views.add_address, name='add_address'),  # ← Portugal: moradas
+
+    # Painel do produtor
+    path('produtor/', views.producer_panel, name='producer_panel'),
+    path('produtor/verificacao/', views.producer_verification, name='producer_verification'),
+    path('produtor/produtos/', views.producer_products, name='producer_products'),
+    path('produtor/produtos/novo/', views.product_create, name='product_create'),
+    path('produtor/produtos/<uuid:product_id>/editar/', views.product_edit, name='product_edit'),
+    path('produtor/produtos/<uuid:product_id>/eliminar/', views.product_delete, name='product_delete'),
+
+    # Compatibilidade com templates legados
+    path('produtos/', views.product_list_redirect, name='product_list'),
 
     # Recuperação de password
     path('password-reset/', auth_views.PasswordResetView.as_view(

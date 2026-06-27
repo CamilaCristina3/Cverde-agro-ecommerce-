@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Confirmação de Conta COVERDE</title>
+</head>
+<body style="margin:0;padding:0;background:#f5f7fa;font-family:Segoe UI,Arial,sans-serif;color:#1f2937;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f5f7fa;padding:24px 0;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="640" cellspacing="0" cellpadding="0" style="max-width:640px;background:#ffffff;border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;">
+          <tr>
+            <td style="background:linear-gradient(90deg,#15803d,#14532d);padding:24px 28px;color:#ffffff;">
+              <h1 style="margin:0;font-size:24px;line-height:1.2;">Bem-vindo(a) a COVERDE</h1>
+              <p style="margin:8px 0 0 0;font-size:14px;opacity:0.95;">Confirmação de conta e início no marketplace agrícola</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:28px;">
+              <p style="margin:0 0 12px 0;">Olá {{ user.get_full_name|default:user.username }},</p>
+              <p style="margin:0 0 12px 0;">O seu registo foi recebido com sucesso na plataforma COVERDE.</p>
+              <p style="margin:0 0 12px 0;"><strong>Tipo de conta:</strong> {{ account_type_label }}</p>
+
+              {% if is_pending_validation %}
+              <p style="margin:0 0 12px 0;color:#92400e;background:#fffbeb;border:1px solid #fcd34d;padding:12px;border-radius:8px;">
+                A sua conta ficará pendente de validação da equipa COVERDE após a confirmação do email.
+              </p>
+              {% else %}
+              <p style="margin:0 0 12px 0;color:#14532d;background:#ecfdf5;border:1px solid #86efac;padding:12px;border-radius:8px;">
+                Depois de confirmar o email, a sua conta ficará ativa para começar a comprar.
+              </p>
+              {% endif %}
+
+              <p style="margin:0 0 18px 0;">Clique no botão abaixo para confirmar a sua conta:</p>
+
+              <p style="margin:0 0 20px 0;">
+                <a href="{{ activation_url }}" style="display:inline-block;background:#15803d;color:#ffffff;text-decoration:none;font-weight:700;padding:12px 18px;border-radius:999px;">Confirmar Conta</a>
+              </p>
+
+              <p style="margin:0 0 8px 0;font-size:13px;color:#6b7280;">Se o botão não funcionar, use este link:</p>
+              <p style="margin:0 0 18px 0;font-size:13px;word-break:break-all;"><a href="{{ activation_url }}">{{ activation_url }}</a></p>
+
+              <p style="margin:0;font-size:13px;color:#6b7280;">Suporte: {{ support_email }}</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

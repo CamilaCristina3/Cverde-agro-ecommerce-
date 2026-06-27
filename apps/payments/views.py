@@ -6,9 +6,12 @@ Views de pagamento em modo teste (Portugal).
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from django.conf import settings
 from .models import Payment
 from apps.orders.models import Order
+from apps.users.services import (
+    send_new_order_notification_to_producer,
+    send_order_confirmation_email,
+)
 
 
 @login_required
@@ -17,8 +20,14 @@ def payment_checkout(request, order_id):
     order = get_object_or_404(Order, id=order_id, customer=request.user, status='pending')
 
     if request.method == 'POST':
-        method = request.POST.get('method', 'test_card')
-        credential = request.POST.get('test_credential', '').strip()
+        method = request.POST.get('payment_method') or request.POST.get('method') or Payment.Method.CARD_TEST
+        method = method.strip() or Payment.Method.CARD_TEST
+
+        password = (request.POST.get('test_password') or '').strip()
+        signature = (request.POST.get('test_signature') or '').strip()
+        credential = (request.POST.get('test_credential') or '').strip()
+        if not credential:
+            credential = password or signature
 
         # Criar registo de pagamento
         payment = Payment.objects.create(
@@ -33,8 +42,6 @@ def payment_checkout(request, order_id):
         success, msg = payment.approve_test_payment(credential)
 
         if success:
-            # Notificar produtores
-            from apps.users.services import send_order_confirmation_email, send_new_order_notification_to_producer
             send_order_confirmation_email(request.user, order, payment)
 
             for seller_order in order.seller_orders.all():

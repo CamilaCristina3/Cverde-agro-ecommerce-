@@ -19,12 +19,12 @@
         <h6 class="fw-semibold">Links</h6>
         <ul class="list-unstyled mb-0">
           <li>
-            <a href="/" class="text-secondary text-decoration-none">
+            <a href="{% url 'home' %}" class="text-secondary text-decoration-none">
               Home
             </a>
           </li>
           <li>
-            <a href="/products/" class="text-secondary text-decoration-none">
+            <a href="{% url 'products:list' %}" class="text-secondary text-decoration-none">
               Produtos
             </a>
           </li>

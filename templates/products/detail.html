@@ -9,7 +9,7 @@
     <nav class="breadcrumb is-small mb-4" aria-label="breadcrumbs">
         <ul>
             <li><a href="{% url 'home' %}">Início</a></li>
-            <li><a href="{% url 'users:product_list' %}">Produtos</a></li>
+            <li><a href="{% url 'products:list' %}">Produtos</a></li>
             <li class="is-active">
                 <a href="#" aria-current="page">{{ product.name }}</a>
             </li>
@@ -278,7 +278,7 @@
                                     </span>
 
                                     {% if related.stock > 0 %}
-                                                     <a href="{% url 'users:product_detail' related.id %}?back={{ back_url|urlencode }}"
+                                        <a href="{% url 'products:detail' related.slug %}?back={{ back_url|urlencode }}"
                                            class="button is-success is-small is-rounded">
                                             Ver detalhes
                                         </a>

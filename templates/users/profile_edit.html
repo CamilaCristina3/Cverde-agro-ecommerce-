@@ -34,21 +34,6 @@
                   {{ form.profile_image }}
                   {% if form.profile_image.errors %}<div class="invalid-feedback d-block">{{ form.profile_image.errors.0 }}</div>{% endif %}
                 </div>
-                <div class="col-md-4">
-                  <label class="form-label" for="{{ form.district.auto_id }}">{{ form.district.label }}</label>
-                  {{ form.district }}
-                  {% if form.district.errors %}<div class="invalid-feedback d-block">{{ form.district.errors.0 }}</div>{% endif %}
-                </div>
-                <div class="col-md-4">
-                  <label class="form-label" for="{{ form.county.auto_id }}">{{ form.county.label }}</label>
-                  {{ form.county }}
-                  {% if form.county.errors %}<div class="invalid-feedback d-block">{{ form.county.errors.0 }}</div>{% endif %}
-                </div>
-                <div class="col-md-4">
-                  <label class="form-label" for="{{ form.parish.auto_id }}">{{ form.parish.label }}</label>
-                  {{ form.parish }}
-                  {% if form.parish.errors %}<div class="invalid-feedback d-block">{{ form.parish.errors.0 }}</div>{% endif %}
-                </div>
               </div>
 
               <hr class="my-4">

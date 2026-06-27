@@ -11,7 +11,7 @@ class SalesReport(models.Model):
         ('yearly', 'Yearly'),
     )
     
-    producer = models.ForeignKey('products.ProducerProfile', on_delete=models.CASCADE, related_name='sales_reports', null=True, blank=True)
+    producer = models.ForeignKey('users.Producer', on_delete=models.CASCADE, related_name='sales_reports', null=True, blank=True)
     period = models.CharField(max_length=10, choices=PERIOD_CHOICES)
     start_date = models.DateField()
     end_date = models.DateField()
@@ -31,7 +31,7 @@ class SalesReport(models.Model):
 class CommissionReport(models.Model):
     """Platform commission calculations"""
     
-    producer = models.ForeignKey('products.ProducerProfile', on_delete=models.CASCADE, related_name='commission_reports')
+    producer = models.ForeignKey('users.Producer', on_delete=models.CASCADE, related_name='commission_reports')
     period_start = models.DateField()
     period_end = models.DateField()
     gross_revenue = models.DecimalField(max_digits=12, decimal_places=2)

@@ -12,6 +12,7 @@ class Migration(migrations.Migration):
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('products', '0003_producerprofile_remove_productapproval_product_and_more'),
         ('stores', '0001_initial'),
+        ('users', '0002_remove_product_image_remove_product_is_organic_and_more'),
     ]
 
     operations = [
@@ -173,7 +174,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='store',
             name='producer',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='stores', to='products.producerprofile', verbose_name='Produtor'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='stores', to='users.Producer', verbose_name='Produtor'),
         ),
         migrations.AlterField(
             model_name='store',

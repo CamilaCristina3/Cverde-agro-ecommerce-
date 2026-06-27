@@ -6,8 +6,18 @@ Administração dos modelos da app users (Portugal).
 from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 
-from .models import CustomerProfile, SupplierProfile, Address, AccountActivationToken, Notification
+from .models import (
+    CustomerProfile,
+    SupplierProfile,
+    Address,
+    AccountActivationToken,
+    Notification,
+    Producer,
+    Product,
+    Category,
+)
 # Nota: User é gerido em apps.users_auth.admin.py (AUTH_USER_MODEL)
 
 
@@ -31,7 +41,6 @@ class SupplierProfileAdmin(admin.ModelAdmin):
 
     def approve_suppliers(self, request, queryset):
         """Aprovar produtores selecionados."""
-        from django.utils import timezone
         queryset.update(
             status=SupplierProfile.Status.APPROVED,
             approved_by=request.user,
@@ -79,3 +88,61 @@ class NotificationAdmin(admin.ModelAdmin):
     list_display = ['user', 'title', 'notif_type', 'is_read', 'created_at']
     list_filter = ['notif_type', 'is_read']
     search_fields = ['user__email', 'title']
+
+
+@admin.register(Producer)
+class ProducerAdmin(admin.ModelAdmin):
+    """Administração de produtores com ações de aprovação."""
+
+    list_display = ['name', 'user', 'status', 'is_verified', 'is_active', 'rating', 'created_at']
+    list_filter = ['status', 'is_verified', 'is_active', 'created_at']
+    search_fields = ['name', 'user__email', 'nif', 'location']
+    actions = ['approve_producers', 'suspend_producers', 'reject_producers']
+
+    def approve_producers(self, request, queryset):
+        now = timezone.now()
+        queryset.update(
+            status=Producer.Status.APPROVED,
+            is_verified=True,
+            verified_at=now,
+            verified_by=request.user,
+            is_active=True,
+        )
+        self.message_user(request, 'Produtores aprovados com sucesso.')
+    approve_producers.short_description = 'Aprovar produtores selecionados'
+
+    def suspend_producers(self, request, queryset):
+        queryset.update(status=Producer.Status.SUSPENDED, is_active=False)
+        self.message_user(request, 'Produtores suspensos com sucesso.')
+    suspend_producers.short_description = 'Suspender produtores selecionados'
+
+    def reject_producers(self, request, queryset):
+        queryset.update(status=Producer.Status.REJECTED, is_active=False)
+        self.message_user(request, 'Produtores rejeitados.')
+    reject_producers.short_description = 'Rejeitar produtores selecionados'
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['name', 'parent', 'is_active', 'ordering']
+    list_filter = ['is_active']
+    search_fields = ['name', 'slug']
+    prepopulated_fields = {'slug': ('name',)}
+
+
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ['name', 'producer', 'category', 'price', 'stock', 'status', 'is_active', 'created_at']
+    list_filter = ['status', 'is_active', 'is_featured', 'category']
+    search_fields = ['name', 'slug', 'producer__name']
+    actions = ['activate_products', 'deactivate_products']
+
+    def activate_products(self, request, queryset):
+        queryset.update(status='active', is_active=True)
+        self.message_user(request, 'Produtos ativados com sucesso.')
+    activate_products.short_description = 'Ativar produtos selecionados'
+
+    def deactivate_products(self, request, queryset):
+        queryset.update(status='inactive', is_active=False)
+        self.message_user(request, 'Produtos desativados com sucesso.')
+    deactivate_products.short_description = 'Desativar produtos selecionados'

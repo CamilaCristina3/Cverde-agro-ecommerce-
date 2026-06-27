@@ -1,0 +1,77 @@
+{% load static %}
+
+<nav class="navbar navbar-expand-lg coverde-navbar sticky-top">
+    <div class="container">
+
+        <a class="navbar-brand coverde-brand" href="{% url 'home' %}">
+            <img src="/media/products/logo.png" alt="COVERDE">
+            <span>COVERDE</span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                aria-controls="mainNavbar" aria-expanded="false" aria-label="Abrir menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNavbar">
+
+            <form class="coverde-search mx-lg-4 my-3 my-lg-0" action="{% url 'products:list' %}" method="get">
+                <input type="search" name="q" placeholder="Pesquisar frutas, legumes, verduras...">
+                <button type="submit" aria-label="Pesquisar">
+                    <i class="fa-solid fa-search"></i>
+                </button>
+            </form>
+
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0 align-items-lg-center gap-lg-1">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">
+                        <i class="fa-solid fa-house me-1"></i>Início
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'products:list' %}">
+                        <i class="fa-solid fa-store me-1"></i>Produtos
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'users:register_producer' %}">
+                        <i class="fa-solid fa-tractor me-1"></i>Sou produtor
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link cart-badge" href="{% url 'orders:cart' %}">
+                        <i class="fa-solid fa-cart-shopping me-1"></i>Carrinho
+                        <span class="badge rounded-pill bg-warning text-dark">0</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="navbar-actions d-flex flex-wrap gap-2 align-items-center">
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'users:profile' %}" class="btn-coverde-outline text-decoration-none">
+                        <i class="fa-solid fa-user me-1"></i>Perfil
+                    </a>
+
+                    <a href="{% url 'users:logout' %}" class="btn-coverde text-decoration-none">
+                        <i class="fa-solid fa-right-from-bracket me-1"></i>Sair
+                    </a>
+                {% else %}
+                    <a href="{% url 'users:login' %}" class="btn-coverde-outline text-decoration-none">
+                        <i class="fa-solid fa-user me-1"></i>Entrar
+                    </a>
+
+                    <a href="{% url 'users:register' %}" class="btn-coverde text-decoration-none">
+                        <i class="fa-solid fa-user-plus me-1"></i>Criar Conta
+                    </a>
+                {% endif %}
+
+                <a href="/admin/" class="btn btn-dark rounded-pill fw-bold px-3">
+                    <i class="fa-solid fa-lock me-1"></i>Admin
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>

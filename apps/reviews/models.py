@@ -6,10 +6,9 @@ Modelos de avaliações (Portugal).
 from django.db import models
 from django.conf import settings
 
-# ✅ Importações corrigidas
-from apps.users.models import Product  # Product está em users
+# ✅ Importações corrigidas - usar apenas apps que estão no INSTALLED_APPS
+from apps.users.models import Product, Producer  # ← Producer está em users
 from apps.users_auth.models import User
-from apps.products.models import ProducerProfile  # ProducerProfile está em products
 
 
 class Review(models.Model):
@@ -32,7 +31,7 @@ class Review(models.Model):
 
     # Avaliação de produto ou produtor (apenas um)
     product = models.ForeignKey(
-        Product,  # ← agora importado corretamente
+        Product,  # ← apps.users.models.Product
         on_delete=models.CASCADE,
         null=True,
         blank=True,
@@ -41,7 +40,7 @@ class Review(models.Model):
     )
 
     producer = models.ForeignKey(
-        ProducerProfile,
+        Producer,  # ← apps.users.models.Producer (não ProducerProfile)
         on_delete=models.CASCADE,
         null=True,
         blank=True,

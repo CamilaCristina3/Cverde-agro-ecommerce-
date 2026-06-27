@@ -5,13 +5,75 @@
 
 {% block extra_css %}
 <style>
+  .market-shell {
+    display: grid;
+    gap: 1.5rem;
+  }
+
   .market-header {
-    background: linear-gradient(135deg, #198754, #157347);
+    background:
+      radial-gradient(circle at top right, rgba(255,255,255,.18), transparent 32%),
+      linear-gradient(135deg, #0f5132, #198754 55%, #3aa76d);
     border-radius: 1.25rem;
+  }
+
+  .market-kpis {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: .75rem;
+  }
+
+  .market-kpi {
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 1rem;
+    padding: 1rem;
+    backdrop-filter: blur(10px);
+  }
+
+  .market-kpi strong {
+    display: block;
+    font-size: 1.35rem;
+  }
+
+  .market-kpi span {
+    font-size: .85rem;
+    color: rgba(255,255,255,.86);
   }
 
   .filter-card {
     border-left: 4px solid #198754;
+  }
+
+  .market-toolbar {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .market-summary {
+    color: #5c6b63;
+    font-size: .95rem;
+  }
+
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    padding: .45rem .8rem;
+    border-radius: 999px;
+    background: #edf7f0;
+    color: #0f5132;
+    font-size: .875rem;
+    font-weight: 600;
   }
 
   .product-card {
@@ -27,8 +89,8 @@
 
   .product-image {
     height: 210px;
-    object-fit: contain;
-    background: #f8f9fa;
+    object-fit: cover;
+    background: linear-gradient(180deg, #f5f7f2, #eef4ee);
     padding: 1rem;
     border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;
@@ -63,80 +125,201 @@
   .empty-state {
     border: 2px dashed #dee2e6;
     border-radius: 1rem;
+    background: linear-gradient(180deg, #ffffff, #f7faf7);
+  }
+
+  .group-divider {
+    border: 1px solid #d1e7dd;
+    background: linear-gradient(90deg, #edf7f0, #ffffff);
+    border-radius: 1rem;
+    padding: .8rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+  }
+
+  .group-divider-title {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    color: #0f5132;
+    font-weight: 800;
+    margin: 0;
+  }
+
+  .group-divider-badge {
+    background: #e8f5ee;
+    color: #198754;
+    border: 1px solid #c6e9d5;
+    border-radius: 999px;
+    padding: .3rem .7rem;
+    font-size: .78rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .page-link {
+    color: #0f5132;
+  }
+
+  .page-item.active .page-link {
+    background-color: #198754;
+    border-color: #198754;
+  }
+
+  @media (max-width: 991.98px) {
+    .market-kpis {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
 {% endblock %}
 
 {% block content %}
+<div class="market-shell">
+  <div class="market-header text-white p-4 p-md-5 shadow-sm">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-7">
+        <span class="text-uppercase small fw-semibold" style="letter-spacing:.12em; color:rgba(255,255,255,.8);">
+          Marketplace COVERDE
+        </span>
+        <h1 class="display-6 fw-bold mb-2 mt-2">Produtos frescos com padrão de marketplace profissional</h1>
+        <p class="lead mb-0">
+          Descubra frutas, legumes e mercearia agrícola com pesquisa, filtros claros e navegação orientada à conversão.
+        </p>
+      </div>
 
-<div class="market-header text-white p-4 p-md-5 mb-4 shadow-sm">
-  <div class="row align-items-center g-4">
-    <div class="col-lg-8">
-      <h1 class="display-6 fw-bold mb-2">Produtos Agrícolas</h1>
-      <p class="lead mb-0">
-        Compre produtos locais, frescos e sustentáveis directamente aos produtores.
+      <div class="col-lg-5">
+        <div class="market-kpis">
+          <div class="market-kpi">
+            <strong>{{ total_products }}</strong>
+            <span>produto{{ total_products|pluralize }} encontrado{{ total_products|pluralize }}</span>
+          </div>
+          <div class="market-kpi">
+            <strong>{{ in_stock_count }}</strong>
+            <span>com stock imediato</span>
+          </div>
+          <div class="market-kpi">
+            <strong>{{ featured_count }}</strong>
+            <span>em destaque</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card filter-card border-0 shadow-sm">
+    <div class="card-body">
+      <form method="get" class="row g-3 align-items-end">
+
+        <div class="col-lg-4">
+          <label class="form-label fw-semibold">Pesquisar</label>
+          <input type="text"
+                 name="q"
+                 value="{{ filters.q }}"
+                 class="form-control"
+                 placeholder="Produto, produtor, categoria ou localização">
+        </div>
+
+        <div class="col-md-6 col-lg-2">
+          <label class="form-label fw-semibold">Categoria</label>
+          <select name="category" class="form-select">
+            <option value="">Todas</option>
+            {% for category in categories %}
+              <option value="{{ category.id }}"
+                {% if filters.category == category.id|stringformat:"s" %}selected{% endif %}>
+                {{ category.name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-md-6 col-lg-2">
+          <label class="form-label fw-semibold">Disponibilidade</label>
+          <select name="availability" class="form-select">
+            <option value="">Todas</option>
+            <option value="in_stock" {% if filters.availability == 'in_stock' %}selected{% endif %}>Em stock</option>
+            <option value="featured" {% if filters.availability == 'featured' %}selected{% endif %}>Destaques</option>
+          </select>
+        </div>
+
+        <div class="col-md-3 col-lg-1">
+          <label class="form-label fw-semibold">Min €</label>
+          <input type="number" step="0.01" min="0" name="min_price" value="{{ filters.min_price }}" class="form-control" placeholder="0">
+        </div>
+
+        <div class="col-md-3 col-lg-1">
+          <label class="form-label fw-semibold">Max €</label>
+          <input type="number" step="0.01" min="0" name="max_price" value="{{ filters.max_price }}" class="form-control" placeholder="999">
+        </div>
+
+        <div class="col-md-6 col-lg-2">
+          <label class="form-label fw-semibold">Ordenar por</label>
+          <select name="sort" class="form-select">
+            <option value="market_story" {% if filters.sort == 'market_story' %}selected{% endif %}>Narrativa COVERDE</option>
+            <option value="newest" {% if filters.sort == 'newest' %}selected{% endif %}>Mais recentes</option>
+            <option value="price_asc" {% if filters.sort == 'price_asc' %}selected{% endif %}>Preço mais baixo</option>
+            <option value="price_desc" {% if filters.sort == 'price_desc' %}selected{% endif %}>Preço mais alto</option>
+            <option value="rating" {% if filters.sort == 'rating' %}selected{% endif %}>Melhor avaliação</option>
+            <option value="best_sellers" {% if filters.sort == 'best_sellers' %}selected{% endif %}>Mais vendidos</option>
+          </select>
+        </div>
+
+        <div class="col-md-6 col-lg-12">
+          <div class="d-flex gap-2 flex-wrap justify-content-lg-end">
+            <a href="{% url 'products:list' %}" class="btn btn-light border">Limpar</a>
+            <button type="submit" class="btn btn-success px-4">
+              <i class="fa-solid fa-magnifying-glass me-1"></i>
+              Aplicar filtros
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="market-toolbar">
+    <div>
+      <h2 class="h5 mb-1 fw-bold">Catálogo</h2>
+      <p class="market-summary mb-0">
+        {% if selected_category %}
+          A mostrar resultados para <strong>{{ selected_category.name }}</strong>.
+        {% else %}
+          Explore o catálogo completo da COVERDE.
+        {% endif %}
       </p>
     </div>
 
-    <div class="col-lg-4 text-lg-end">
-      <span class="badge bg-light text-success fs-6 px-3 py-2">
-        {{ total_products }} resultado{{ total_products|pluralize }}
-      </span>
-    </div>
+    {% if filters.q or selected_category or filters.availability or filters.min_price or filters.max_price %}
+      <div class="chip-row">
+        {% if filters.q %}<span class="chip"><i class="fa-solid fa-magnifying-glass"></i>{{ filters.q }}</span>{% endif %}
+        {% if selected_category %}<span class="chip"><i class="fa-solid fa-tag"></i>{{ selected_category.name }}</span>{% endif %}
+        {% if filters.availability == 'in_stock' %}<span class="chip"><i class="fa-solid fa-box"></i>Em stock</span>{% endif %}
+        {% if filters.availability == 'featured' %}<span class="chip"><i class="fa-solid fa-star"></i>Destaques</span>{% endif %}
+        {% if filters.min_price %}<span class="chip">Min €{{ filters.min_price }}</span>{% endif %}
+        {% if filters.max_price %}<span class="chip">Max €{{ filters.max_price }}</span>{% endif %}
+      </div>
+    {% endif %}
   </div>
-</div>
-
-<div class="card filter-card border-0 shadow-sm mb-4">
-  <div class="card-body">
-    <form method="get" class="row g-3 align-items-end">
-
-      <div class="col-md-5">
-        <label class="form-label fw-semibold">Pesquisar</label>
-        <input type="text"
-               name="q"
-               value="{{ request.GET.q }}"
-               class="form-control"
-               placeholder="Produto, produtor, categoria ou localização">
-      </div>
-
-      <div class="col-md-3">
-        <label class="form-label fw-semibold">Categoria</label>
-        <select name="category" class="form-select">
-          <option value="">Todas as categorias</option>
-          {% for category in categories %}
-            <option value="{{ category.id }}"
-              {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
-              {{ category.name }}
-            </option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="col-md-2">
-        <label class="form-label fw-semibold">Ordenar por</label>
-        <select name="order" class="form-select">
-          <option value="">Mais recentes</option>
-          <option value="price_asc" {% if request.GET.order == "price_asc" %}selected{% endif %}>Preço mais baixo</option>
-          <option value="price_desc" {% if request.GET.order == "price_desc" %}selected{% endif %}>Preço mais alto</option>
-          <option value="rating" {% if request.GET.order == "rating" %}selected{% endif %}>Melhor avaliação</option>
-        </select>
-      </div>
-
-      <div class="col-md-2 d-grid">
-        <button type="submit" class="btn btn-success">
-          <i class="fa-solid fa-magnifying-glass me-1"></i>
-          Filtrar
-        </button>
-      </div>
-
-    </form>
-  </div>
-</div>
 
 {% if total_products %}
 
   <div class="row g-4">
-    {% for product in page_obj %}
+    {% for card in page_cards %}
+      {% if card.show_group %}
+        <div class="col-12">
+          <div class="group-divider">
+            <p class="group-divider-title">
+              <i class="fa-solid {{ card.group.icon }}"></i>
+              {{ card.group.label }}
+            </p>
+            <span class="group-divider-badge">Narrativa COVERDE</span>
+          </div>
+        </div>
+      {% endif %}
+
+      {% with product=card.product %}
       <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
         <div class="card product-card h-100 shadow-sm">
 
@@ -230,7 +413,7 @@
               {% if product.total_reviews > 0 %}
                 <span class="text-warning">
                   <i class="fa-solid fa-star"></i>
-                  {{ product.average_rating|floatformat:1 }}
+                  {{ product.rating|floatformat:1 }}
                 </span>
                 <span class="text-muted">
                   ({{ product.total_reviews }})
@@ -242,7 +425,7 @@
 
             <div class="mt-auto d-grid gap-2">
               <a class="btn btn-outline-success btn-sm"
-                 href="{% url 'users:product_detail' product.id %}?back={{ current_path|urlencode }}">
+                 href="{% url 'products:detail' product.slug %}?back={{ current_path|urlencode }}">
                 Ver detalhes
               </a>
 
@@ -269,6 +452,7 @@
           </div>
         </div>
       </div>
+      {% endwith %}
     {% endfor %}
   </div>
 
@@ -278,7 +462,7 @@
 
         {% if page_obj.has_previous %}
           <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+            <a class="page-link" href="?{% if current_query %}{{ current_query }}&{% endif %}page={{ page_obj.previous_page_number }}">Anterior</a>
           </li>
         {% else %}
           <li class="page-item disabled">
@@ -294,7 +478,7 @@
 
         {% if page_obj.has_next %}
           <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Seguinte</a>
+            <a class="page-link" href="?{% if current_query %}{{ current_query }}&{% endif %}page={{ page_obj.next_page_number }}">Seguinte</a>
           </li>
         {% else %}
           <li class="page-item disabled">
@@ -316,14 +500,25 @@
     <h2 class="h4 fw-bold mb-2">Ainda não existem produtos disponíveis</h2>
 
     <p class="text-muted mb-4">
-      Assim que os produtores publicarem produtos, estes serão apresentados nesta página.
+      {% if filters.q or selected_category or filters.availability or filters.min_price or filters.max_price %}
+        Nenhum produto corresponde aos filtros aplicados. Ajuste os critérios e tente novamente.
+      {% else %}
+        Assim que os produtores publicarem produtos, estes serão apresentados nesta página.
+      {% endif %}
     </p>
 
-    <a href="{% url 'home' %}" class="btn btn-success">
-      Voltar ao início
-    </a>
+    <div class="d-flex justify-content-center gap-2 flex-wrap">
+      <a href="{% url 'products:list' %}" class="btn btn-outline-success">
+        Ver catálogo completo
+      </a>
+      <a href="{% url 'home' %}" class="btn btn-success">
+        Voltar ao início
+      </a>
+    </div>
   </div>
 
 {% endif %}
+
+</div>
 
 {% endblock %}

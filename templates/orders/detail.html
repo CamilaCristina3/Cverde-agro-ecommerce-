@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="level-right">
-      <a class="button is-light" href="{% url 'users:product_list' %}">
+      <a class="button is-light" href="{% url 'products:list' %}">
         <span class="icon"><i class="fas fa-store"></i></span>
         <span>Continuar a comprar</span>
       </a>
@@ -36,9 +36,9 @@
               {% for item in order.items.all %}
                 <tr>
                   <td>{{ item.product_name|default:item.product }}</td>
-                  <td class="has-text-right">€{{ item.price }}</td>
+                  <td class="has-text-right">€{{ item.unit_price }}</td>
                   <td class="has-text-centered">{{ item.quantity }}</td>
-                  <td class="has-text-right">€{{ item.total }}</td>
+                  <td class="has-text-right">€{{ item.subtotal }}</td>
                 </tr>
               {% endfor %}
             </tbody>
@@ -48,11 +48,9 @@
 
       <div class="box">
         <h2 class="title is-5">Entrega</h2>
-        <p><strong>Morada:</strong> {{ order.shipping_address }}</p>
-        <p><strong>Contacto:</strong> {{ order.shipping_contact }}</p>
-        {% if order.tracking_code %}
-          <p><strong>Rastreio:</strong> {{ order.tracking_code }}</p>
-        {% endif %}
+        <p><strong>Nome:</strong> {{ order.delivery_name }}</p>
+        <p><strong>Morada:</strong> {{ order.full_delivery_address }}</p>
+        <p><strong>Contacto:</strong> {{ order.delivery_phone }}</p>
       </div>
     </div>
 
@@ -65,11 +63,11 @@
         </div>
         <div class="is-flex is-justify-content-space-between mb-2">
           <span>Portes</span>
-          <span>€{{ order.shipping_cost }}</span>
+          <span>€{{ order.delivery_fee }}</span>
         </div>
         <div class="is-flex is-justify-content-space-between mb-3">
           <span>IVA</span>
-          <span>€{{ order.vat }}</span>
+          <span>€{{ vat_amount }}</span>
         </div>
         <hr class="my-3">
         <div class="is-flex is-justify-content-space-between">
@@ -77,18 +75,13 @@
           <span class="has-text-weight-bold has-text-success">€{{ order.total }}</span>
         </div>
 
-        {% if order.invoice_number %}
-          <hr class="my-3">
-          <p><strong>Fatura:</strong> {{ order.invoice_number }}</p>
-        {% endif %}
-
         <!-- Seção de Pagamento -->
         {% if order.status == "pending" %}
           <hr class="my-3">
           <div class="notification is-warning is-light">
             <p class="mb-2"><strong>⏳ Pagamento Pendente</strong></p>
             <p class="is-size-7 mb-3">Finalizar o pagamento para confirmar a encomenda.</p>
-            <a href="{% url 'payments:checkout' order.id %}" class="button is-success is-fullwidth">
+            <a href="{% url 'payments:checkout' order_id=order.id %}" class="button is-success is-fullwidth">
               <span class="icon"><i class="fas fa-credit-card"></i></span>
               <span>Ir para Pagamento</span>
             </a>

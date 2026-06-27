@@ -9,17 +9,18 @@ class Migration(migrations.Migration):
     dependencies = [
         ('products', '0003_producerprofile_remove_productapproval_product_and_more'),
         ('reports', '0001_initial'),
+        ('users', '0002_remove_product_image_remove_product_is_organic_and_more'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='commissionreport',
             name='producer',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='commission_reports', to='products.producerprofile'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='commission_reports', to='users.Producer'),
         ),
         migrations.AlterField(
             model_name='salesreport',
             name='producer',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='sales_reports', to='products.producerprofile'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='sales_reports', to='users.Producer'),
         ),
     ]

@@ -35,6 +35,7 @@ class PaymentAdmin(admin.ModelAdmin):
         "order",
         "created_at",
         "paid_at",
+        "test_approved_at",
         "reference",
     )
     fieldsets = (
@@ -57,9 +58,10 @@ class PaymentAdmin(admin.ModelAdmin):
             ),
             "classes": ("collapse",)
         }),
-        (_("Segurança e Auditoria"), {
+        (_("Falhas e Notas"), {
             "fields": (
-                ("retry_count", "error_message"),
+                "failure_reason",
+                "notes",
             ),
             "classes": ("collapse",)
         }),
@@ -72,22 +74,19 @@ class PaymentAdmin(admin.ModelAdmin):
     
     def is_test_badge(self, obj):
         if obj.is_test_payment:
-            return "🧪 TESTE"
-        return "💳 Real"
+            return "TESTE"
+        return "REAL"
     is_test_badge.short_description = "Tipo"
     
     @admin.action(description="Marcar como pago")
     def mark_as_paid(self, request, queryset):
         for payment in queryset:
-            payment.status = 'paid'
+            payment.status = Payment.Status.PAID
             payment.paid_at = timezone.now() if not payment.paid_at else payment.paid_at
-            payment.save()
+            payment.save(update_fields=["status", "paid_at", "updated_at"])
         self.message_user(request, f"{queryset.count()} pagamento(s) marcado(s) como pago.")
     
     @admin.action(description="Marcar como falha")
     def mark_as_failed(self, request, queryset):
-        updated = queryset.update(status='failed')
+        updated = queryset.update(status=Payment.Status.FAILED)
         self.message_user(request, f"{updated} pagamento(s) marcado(s) como falha.")
-
-
-from django.utils import timezone

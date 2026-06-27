@@ -9,11 +9,11 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
-# ✅ Importações corrigidas - cada modelo na sua app correta
-from apps.users.models import Product  # Product está em users
-from apps.producers.models import Producer
+# ✅ Importações corrigidas
+from apps.users.models import Product, Producer  # ← Producer em users
+from apps.reviews.models import Review
 
-# Buscar o modelo User (ainda está em users)
+# Buscar o modelo User
 User = get_user_model()
 
 
@@ -103,7 +103,7 @@ class ProducerVerificationRequestForm(forms.ModelForm):
     """Formulário para produtor pedir verificação"""
     
     class Meta:
-        model = Producer
+        model = Producer  # ← Agora importado de users
         fields = ["nif", "verification_document"]
         widgets = {
             "nif": forms.TextInput(attrs={"class": "form-control", "placeholder": "501234567"}),
@@ -272,7 +272,9 @@ class RegistrationForm(BaseRegisterForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.user_type = self.cleaned_data.get("account_type", "consumer")
-        user.is_verified = False
+        user.is_verified = user.user_type == "consumer"
+        if user.is_verified:
+            user.email_verified_at = timezone.now()
         if commit:
             user.save()
             if user.user_type == "producer":
@@ -293,7 +295,8 @@ class ConsumerRegisterForm(BaseRegisterForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.user_type = "consumer"
-        user.is_verified = False
+        user.is_verified = True
+        user.email_verified_at = timezone.now()
         if commit:
             user.save()
         return user
@@ -378,8 +381,6 @@ class CheckoutForm(forms.Form):
 # FORMULÁRIOS DE AVALIAÇÕES (REVIEWS)
 # ============================================
 
-from apps.reviews.models import Review
-
 class ReviewForm(forms.ModelForm):
     """Formulário para criar/editar avaliações de produtos e produtores"""
     
@@ -421,7 +422,7 @@ class ProductForm(forms.ModelForm):
         model = Product
         fields = [
             "name", "description", "category", "certification",
-            "price", "stock", "image", "status"
+            "price", "stock", "unit", "main_image", "is_active", "is_featured"
         ]
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: Tomate Cereja'}),
@@ -430,8 +431,10 @@ class ProductForm(forms.ModelForm):
             'certification': forms.Select(attrs={'class': 'form-select'}),
             'price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': '5.99'}),
             'stock': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': '0'}),
-            'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'status': forms.Select(attrs={'class': 'form-select'}),
+            'unit': forms.Select(attrs={'class': 'form-select'}),
+            'main_image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'is_featured': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
         labels = {
             'name': 'Nome do produto',
@@ -440,6 +443,8 @@ class ProductForm(forms.ModelForm):
             'certification': 'Certificação',
             'price': 'Preço (€)',
             'stock': 'Stock',
-            'image': 'Imagem principal',
-            'status': 'Status do produto',
+            'unit': 'Unidade',
+            'main_image': 'Imagem principal',
+            'is_active': 'Ativo para venda',
+            'is_featured': 'Destacar produto',
         }

@@ -1,171 +1,462 @@
-{% extends "auth_base.html" %}
-{% block title %}Registar como Produtor | Cverde{% endblock %}
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Registar como Produtor | COVERDE{% endblock %}
 
 {% block extra_css %}
 <style>
-.auth-card { border-radius: 1.5rem; box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08); }
-.section-note { border-radius: 1rem; background: #f4fbf6; padding: 1rem 1.25rem; border: 1px solid #d8f0de; }
+  .producer-register-wrap {
+    max-width: 980px;
+    margin: 0 auto;
+  }
+
+  .producer-register-card {
+    border: 0;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 28px 70px rgba(15, 23, 42, 0.10);
+  }
+
+  .producer-register-header {
+    background:
+      linear-gradient(135deg, rgba(20, 83, 45, 0.96), rgba(21, 128, 61, 0.88)),
+      url('/media/categories/hero-frutas.png');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 34px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .producer-register-header::after {
+    content: "PRODUTOR";
+    position: absolute;
+    right: -30px;
+    bottom: -30px;
+    font-size: 6rem;
+    font-weight: 950;
+    color: rgba(255, 255, 255, 0.06);
+    letter-spacing: -0.08em;
+    pointer-events: none;
+  }
+
+  .producer-logo-box {
+    width: 84px;
+    height: 84px;
+    border-radius: 24px;
+    background: white;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
+  }
+
+  .producer-logo-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .producer-register-header h1 {
+    font-weight: 950;
+    letter-spacing: -0.04em;
+    margin-bottom: 8px;
+  }
+
+  .producer-register-header p {
+    max-width: 640px;
+    color: rgba(255,255,255,0.88);
+    margin-bottom: 0;
+  }
+
+  .producer-register-body {
+    padding: 36px;
+    background: #ffffff;
+  }
+
+  .section-note {
+    border-radius: 18px;
+    background: #ecfdf5;
+    padding: 18px 20px;
+    border: 1px solid #bbf7d0;
+    color: #14532d;
+  }
+
+  .form-section {
+    border: 1px solid #e5e7eb;
+    border-radius: 22px;
+    padding: 24px;
+    background: #f9fafb;
+    margin-bottom: 24px;
+  }
+
+  .form-section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 900;
+    color: #14532d;
+    margin-bottom: 18px;
+  }
+
+  .form-section-title i {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    background: #dcfce7;
+    color: #15803d;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .form-label {
+    font-weight: 750;
+    color: #374151;
+    margin-bottom: 6px;
+  }
+
+  .form-control,
+  .form-select {
+    border-radius: 14px;
+    border: 1px solid #d1d5db;
+    padding: 11px 13px;
+  }
+
+  .form-control:focus,
+  .form-select:focus {
+    border-color: #15803d;
+    box-shadow: 0 0 0 0.2rem rgba(21, 128, 61, 0.16);
+  }
+
+  textarea.form-control {
+    min-height: 110px;
+  }
+
+  .form-check {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 12px 14px 12px 42px;
+    margin-bottom: 10px;
+  }
+
+  .form-check-input {
+    margin-left: -26px;
+  }
+
+  .form-check-input:checked {
+    background-color: #15803d;
+    border-color: #15803d;
+  }
+
+  .btn-producer-submit {
+    border: 0;
+    border-radius: 999px;
+    background: #15803d;
+    color: white;
+    font-weight: 900;
+    padding: 14px 22px;
+    transition: all 0.25s ease;
+  }
+
+  .btn-producer-submit:hover {
+    background: #14532d;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 14px 35px rgba(21, 128, 61, 0.25);
+  }
+
+  .producer-login-links a {
+    font-weight: 800;
+    color: #15803d;
+    text-decoration: none;
+  }
+
+  .producer-login-links a:hover {
+    color: #14532d;
+    text-decoration: underline;
+  }
+
+  .required-help {
+    font-size: 0.86rem;
+    color: #6b7280;
+  }
+
+  @media (max-width: 768px) {
+    .producer-register-header,
+    .producer-register-body {
+      padding: 24px;
+    }
+
+    .producer-register-header::after {
+      font-size: 4rem;
+    }
+  }
 </style>
 {% endblock %}
 
 {% block auth_content %}
-<div class="row justify-content-center">
-  <div class="col-xl-8 col-lg-9">
-    <div class="card auth-card">
-      <div class="card-body p-5">
-        <div class="text-center mb-4">
-          <h1 class="h4 mb-2">Registar como Produtor</h1>
-          <p class="text-muted">Crie a sua conta e construa um perfil de produtor para vender online.</p>
-        </div>
+<div class="producer-register-wrap">
+  <div class="card producer-register-card">
 
-        {% if messages %}
-          {% for message in messages %}
-            <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
-              {{ message }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
-            </div>
+    <div class="producer-register-header">
+      <div class="producer-logo-box">
+        <img src="/media/products/logo.png" alt="COVERDE">
+      </div>
+
+      <h1 class="h2">Registar como Produtor</h1>
+
+      <p>
+        Crie a sua conta de produtor e comece a preparar a sua presença no marketplace COVERDE.
+        Depois da submissão, o perfil poderá passar por verificação antes de vender online.
+      </p>
+    </div>
+
+    <div class="producer-register-body">
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+          {% for error in form.non_field_errors %}
+            <div>{{ error }}</div>
           {% endfor %}
+        </div>
+      {% endif %}
+
+      <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+
+        {% if next_url %}
+          <input type="hidden" name="next" value="{{ next_url }}">
         {% endif %}
 
-        <form method="post" enctype="multipart/form-data" novalidate>
-          {% csrf_token %}
-          {% if next_url %}
-            <input type="hidden" name="next" value="{{ next_url }}">
-          {% endif %}
+        <div class="section-note mb-4">
+          <p class="mb-1">
+            <strong>Dica:</strong> preencha os dados essenciais agora. O NIF e o documento de verificação podem ser completados mais tarde, se necessário.
+          </p>
+          <p class="mb-0">
+            No telemóvel, pode usar formatos como <code>912345678</code> ou <code>+351912345678</code>.
+          </p>
+        </div>
 
-          <div class="section-note mb-4">
-            <p class="mb-1"><strong>Dica:</strong> preencha apenas os dados essenciais agora. NIF e documento podem ser adicionados mais tarde.</p>
-            <p class="mb-0">Pode usar <code>912345678</code> ou <code>+351912345678</code> no telemóvel.</p>
-          </div>
+        <div class="form-section">
+          <h2 class="h5 form-section-title">
+            <i class="fa-solid fa-user"></i>
+            Dados da conta
+          </h2>
 
-          <div class="row g-3 mb-4">
+          <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label" for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
               {{ form.username }}
-              {% if form.username.errors %}<div class="invalid-feedback d-block">{{ form.username.errors.0 }}</div>{% endif %}
+              {% if form.username.errors %}
+                <div class="invalid-feedback d-block">{{ form.username.errors.0 }}</div>
+              {% endif %}
             </div>
+
             <div class="col-md-6">
               <label class="form-label" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
               {{ form.email }}
-              {% if form.email.errors %}<div class="invalid-feedback d-block">{{ form.email.errors.0 }}</div>{% endif %}
+              {% if form.email.errors %}
+                <div class="invalid-feedback d-block">{{ form.email.errors.0 }}</div>
+              {% endif %}
             </div>
+
             <div class="col-md-6">
               <label class="form-label" for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
               {{ form.password }}
-              {% if form.password.errors %}<div class="invalid-feedback d-block">{{ form.password.errors.0 }}</div>{% endif %}
+              {% if form.password.errors %}
+                <div class="invalid-feedback d-block">{{ form.password.errors.0 }}</div>
+              {% endif %}
             </div>
+
             <div class="col-md-6">
               <label class="form-label" for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
               {{ form.password2 }}
-              {% if form.password2.errors %}<div class="invalid-feedback d-block">{{ form.password2.errors.0 }}</div>{% endif %}
+              {% if form.password2.errors %}
+                <div class="invalid-feedback d-block">{{ form.password2.errors.0 }}</div>
+              {% endif %}
             </div>
-            <div class="col-md-6">
-              <label class="form-label" for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
-              {{ form.phone }}
-              {% if form.phone.errors %}<div class="invalid-feedback d-block">{{ form.phone.errors.0 }}</div>{% endif %}
-            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2 class="h5 form-section-title">
+            <i class="fa-solid fa-address-card"></i>
+            Dados pessoais e contacto
+          </h2>
+
+          <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label" for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
               {{ form.first_name }}
-              {% if form.first_name.errors %}<div class="invalid-feedback d-block">{{ form.first_name.errors.0 }}</div>{% endif %}
+              {% if form.first_name.errors %}
+                <div class="invalid-feedback d-block">{{ form.first_name.errors.0 }}</div>
+              {% endif %}
             </div>
+
             <div class="col-md-6">
               <label class="form-label" for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
               {{ form.last_name }}
-              {% if form.last_name.errors %}<div class="invalid-feedback d-block">{{ form.last_name.errors.0 }}</div>{% endif %}
+              {% if form.last_name.errors %}
+                <div class="invalid-feedback d-block">{{ form.last_name.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label" for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+              {{ form.phone }}
+              {% if form.phone.errors %}
+                <div class="invalid-feedback d-block">{{ form.phone.errors.0 }}</div>
+              {% endif %}
             </div>
           </div>
+        </div>
 
-          <div class="row g-3 mb-4">
-            <div class="col-md-4">
-              <label class="form-label" for="{{ form.district.id_for_label }}">{{ form.district.label }}</label>
-              {{ form.district }}
-              {% if form.district.errors %}<div class="invalid-feedback d-block">{{ form.district.errors.0 }}</div>{% endif %}
+        <div class="form-section">
+          <h2 class="h5 form-section-title">
+            <i class="fa-solid fa-tractor"></i>
+            Dados do produtor
+          </h2>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label" for="{{ form.producer_name.id_for_label }}">{{ form.producer_name.label }}</label>
+              {{ form.producer_name }}
+              {% if form.producer_name.errors %}
+                <div class="invalid-feedback d-block">{{ form.producer_name.errors.0 }}</div>
+              {% endif %}
             </div>
-            <div class="col-md-4">
-              <label class="form-label" for="{{ form.county.id_for_label }}">{{ form.county.label }}</label>
-              {{ form.county }}
-              {% if form.county.errors %}<div class="invalid-feedback d-block">{{ form.county.errors.0 }}</div>{% endif %}
+
+            <div class="col-md-6">
+              <label class="form-label" for="{{ form.producer_location.id_for_label }}">{{ form.producer_location.label }}</label>
+              {{ form.producer_location }}
+              {% if form.producer_location.errors %}
+                <div class="invalid-feedback d-block">{{ form.producer_location.errors.0 }}</div>
+              {% endif %}
             </div>
-            <div class="col-md-4">
-              <label class="form-label" for="{{ form.parish.id_for_label }}">{{ form.parish.label }}</label>
-              {{ form.parish }}
-              {% if form.parish.errors %}<div class="invalid-feedback d-block">{{ form.parish.errors.0 }}</div>{% endif %}
+
+            <div class="col-12">
+              <label class="form-label" for="{{ form.producer_description.id_for_label }}">{{ form.producer_description.label }}</label>
+              {{ form.producer_description }}
+              {% if form.producer_description.errors %}
+                <div class="invalid-feedback d-block">{{ form.producer_description.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label" for="{{ form.nif.id_for_label }}">{{ form.nif.label }}</label>
+              {{ form.nif }}
+              <div class="required-help mt-1">Opcional para produtores individuais, se ainda não estiver disponível.</div>
+              {% if form.nif.errors %}
+                <div class="invalid-feedback d-block">{{ form.nif.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label" for="{{ form.verification_document.id_for_label }}">{{ form.verification_document.label }}</label>
+              {{ form.verification_document }}
+              <div class="required-help mt-1">Pode anexar documento de atividade, licença, certificado ou outro comprovativo.</div>
+              {% if form.verification_document.errors %}
+                <div class="invalid-feedback d-block">{{ form.verification_document.errors.0 }}</div>
+              {% endif %}
             </div>
           </div>
+        </div>
 
-          <div class="border rounded-4 p-4 mb-4 bg-light">
-            <h3 class="h6 mb-3">Dados do produtor</h3>
-            <div class="row g-3">
-              <div class="col-md-6">
-                <label class="form-label" for="{{ form.producer_name.id_for_label }}">{{ form.producer_name.label }}</label>
-                {{ form.producer_name }}
-                {% if form.producer_name.errors %}<div class="invalid-feedback d-block">{{ form.producer_name.errors.0 }}</div>{% endif %}
-              </div>
-              <div class="col-md-6">
-                <label class="form-label" for="{{ form.producer_location.id_for_label }}">{{ form.producer_location.label }}</label>
-                {{ form.producer_location }}
-                {% if form.producer_location.errors %}<div class="invalid-feedback d-block">{{ form.producer_location.errors.0 }}</div>{% endif %}
-              </div>
-              <div class="col-12">
-                <label class="form-label" for="{{ form.producer_description.id_for_label }}">{{ form.producer_description.label }}</label>
-                {{ form.producer_description }}
-                {% if form.producer_description.errors %}<div class="invalid-feedback d-block">{{ form.producer_description.errors.0 }}</div>{% endif %}
-              </div>
-              <div class="col-md-6">
-                <label class="form-label" for="{{ form.nif.id_for_label }}">{{ form.nif.label }}</label>
-                {{ form.nif }}
-                {% if form.nif.errors %}<div class="invalid-feedback d-block">{{ form.nif.errors.0 }}</div>{% endif %}
-              </div>
-              <div class="col-md-6">
-                <label class="form-label" for="{{ form.verification_document.id_for_label }}">{{ form.verification_document.label }}</label>
-                {{ form.verification_document }}
-                {% if form.verification_document.errors %}<div class="invalid-feedback d-block">{{ form.verification_document.errors.0 }}</div>{% endif %}
-              </div>
-            </div>
-          </div>
+        <div class="form-section">
+          <h2 class="h5 form-section-title">
+            <i class="fa-solid fa-shield-halved"></i>
+            Consentimentos
+          </h2>
 
-          <div class="row g-3 mb-4">
+          <div class="row g-2">
             <div class="col-12">
               <div class="form-check">
                 {{ form.accept_privacy_policy }}
-                <label class="form-check-label" for="{{ form.accept_privacy_policy.auto_id }}">{{ form.accept_privacy_policy.label }}</label>
+                <label class="form-check-label" for="{{ form.accept_privacy_policy.auto_id }}">
+                  {{ form.accept_privacy_policy.label }}
+                </label>
               </div>
-              {% if form.accept_privacy_policy.errors %}<div class="invalid-feedback d-block">{{ form.accept_privacy_policy.errors.0 }}</div>{% endif %}
+              {% if form.accept_privacy_policy.errors %}
+                <div class="invalid-feedback d-block">{{ form.accept_privacy_policy.errors.0 }}</div>
+              {% endif %}
             </div>
+
             <div class="col-12">
               <div class="form-check">
                 {{ form.accept_terms }}
-                <label class="form-check-label" for="{{ form.accept_terms.auto_id }}">{{ form.accept_terms.label }}</label>
+                <label class="form-check-label" for="{{ form.accept_terms.auto_id }}">
+                  {{ form.accept_terms.label }}
+                </label>
               </div>
-              {% if form.accept_terms.errors %}<div class="invalid-feedback d-block">{{ form.accept_terms.errors.0 }}</div>{% endif %}
+              {% if form.accept_terms.errors %}
+                <div class="invalid-feedback d-block">{{ form.accept_terms.errors.0 }}</div>
+              {% endif %}
             </div>
+
             <div class="col-12">
               <div class="form-check">
                 {{ form.producer_public_profile_consent }}
-                <label class="form-check-label" for="{{ form.producer_public_profile_consent.auto_id }}">{{ form.producer_public_profile_consent.label }}</label>
+                <label class="form-check-label" for="{{ form.producer_public_profile_consent.auto_id }}">
+                  {{ form.producer_public_profile_consent.label }}
+                </label>
               </div>
-              {% if form.producer_public_profile_consent.errors %}<div class="invalid-feedback d-block">{{ form.producer_public_profile_consent.errors.0 }}</div>{% endif %}
+              {% if form.producer_public_profile_consent.errors %}
+                <div class="invalid-feedback d-block">{{ form.producer_public_profile_consent.errors.0 }}</div>
+              {% endif %}
             </div>
+
             <div class="col-12">
               <div class="form-check">
                 {{ form.marketing_opt_in }}
-                <label class="form-check-label" for="{{ form.marketing_opt_in.auto_id }}">{{ form.marketing_opt_in.label }}</label>
+                <label class="form-check-label" for="{{ form.marketing_opt_in.auto_id }}">
+                  {{ form.marketing_opt_in.label }}
+                </label>
               </div>
-              {% if form.marketing_opt_in.errors %}<div class="invalid-feedback d-block">{{ form.marketing_opt_in.errors.0 }}</div>{% endif %}
+              {% if form.marketing_opt_in.errors %}
+                <div class="invalid-feedback d-block">{{ form.marketing_opt_in.errors.0 }}</div>
+              {% endif %}
             </div>
           </div>
+        </div>
 
-          <div class="d-grid mb-3">
-            <button type="submit" class="btn btn-success btn-lg">Registar como Produtor</button>
-          </div>
+        <div class="d-grid mb-3">
+          <button type="submit" class="btn btn-producer-submit btn-lg">
+            <i class="fa-solid fa-tractor me-2"></i>
+            Registar como Produtor
+          </button>
+        </div>
 
-          <div class="text-center">
-            <p class="mb-1">Já tem conta? <a href="{% url 'users:login' %}{% if next_url %}?next={{ next_url|urlencode }}{% endif %}" class="link-success">Entrar</a></p>
-            <p>Quer outro tipo de conta? <a href="{% url 'users:register' %}{% if next_url %}?next={{ next_url|urlencode }}{% endif %}" class="link-success">Voltar</a></p>
-          </div>
-        </form>
-      </div>
+        <div class="text-center producer-login-links">
+          <p class="mb-1">
+            Já tem conta?
+            <a href="{% url 'users:login' %}{% if next_url %}?next={{ next_url|urlencode }}{% endif %}">
+              Entrar
+            </a>
+          </p>
+
+          <p class="mb-0">
+            Quer outro tipo de conta?
+            <a href="{% url 'users:register' %}{% if next_url %}?next={{ next_url|urlencode }}{% endif %}">
+              Voltar ao registo
+            </a>
+          </p>
+        </div>
+      </form>
+
     </div>
   </div>
 </div>

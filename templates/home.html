@@ -1,382 +1,698 @@
-{% extends "base_layout.html" %}
+{% extends "base.html" %}
 {% load static %}
 
-{% block title %}Início | COVERDE Portugal{% endblock %}
+{% block title %}COVERDE | Marketplace Agrícola{% endblock %}
+
+{% block extra_css %}
+<style>
+    .home-market {
+        --market-green-chrome: #15803d;
+        --market-yellow: #f59e0b;
+        --market-brown: #8a5a3a;
+        --market-gray-light: #f3f4f6;
+    }
+
+    .home-hero {
+        position: relative;
+        overflow: hidden;
+        color: white;
+        padding: 86px 0 96px;
+        background:
+            linear-gradient(90deg, rgba(20, 83, 45, 0.96), rgba(21, 128, 61, 0.82)),
+            url('{{ hero_image }}');
+        background-size: cover;
+        background-position: center;
+    }
+
+    .home-hero::after {
+        content: "COVERDE";
+        position: absolute;
+        right: -80px;
+        bottom: -70px;
+        font-size: clamp(7rem, 22vw, 19rem);
+        font-weight: 950;
+        color: rgba(255, 255, 255, 0.06);
+        letter-spacing: -0.08em;
+        pointer-events: none;
+    }
+
+    .home-hero::before {
+        content: "AGRO MERCADO";
+        position: absolute;
+        left: -36px;
+        top: 20px;
+        font-size: clamp(2.1rem, 8vw, 4.6rem);
+        font-weight: 900;
+        letter-spacing: 0.24em;
+        color: rgba(255, 255, 255, 0.08);
+        transform: rotate(-8deg);
+        pointer-events: none;
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.5);
+        color: #fbbf24;
+        border-radius: 999px;
+        padding: 8px 16px;
+        font-size: 0.82rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        margin-bottom: 20px;
+    }
+
+    .hero-format-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 16px;
+        background: rgba(138, 90, 58, 0.18);
+        border: 1px solid rgba(138, 90, 58, 0.45);
+        border-radius: 999px;
+        color: #fef3c7;
+        font-size: 0.78rem;
+        font-weight: 800;
+        padding: 7px 14px;
+    }
+
+    .home-hero h1 {
+        max-width: 760px;
+        font-size: clamp(2.6rem, 5vw, 5.1rem);
+        line-height: 1.03;
+        font-weight: 950;
+        letter-spacing: -0.06em;
+        margin: 0;
+    }
+
+    .home-hero h1 span {
+        color: var(--coverde-yellow);
+    }
+
+    .home-hero p {
+        max-width: 620px;
+        font-size: 1.15rem;
+        line-height: 1.8;
+        color: rgba(255, 255, 255, 0.92);
+        margin: 22px 0 0;
+    }
+
+    .hero-logo-card {
+        background: rgba(255, 255, 255, 0.14);
+        border: 1px solid rgba(255, 255, 255, 0.26);
+        border-radius: 30px;
+        padding: 32px;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 28px 80px rgba(0, 0, 0, 0.25);
+        text-align: center;
+    }
+
+    .hero-logo-card img {
+        width: 175px;
+        height: 175px;
+        object-fit: contain;
+        background: white;
+        padding: 22px;
+        border-radius: 32px;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+    }
+
+    .btn-market {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        border-radius: 999px;
+        padding: 13px 22px;
+        font-weight: 950;
+        text-decoration: none;
+        border: 0;
+        transition: 0.25s ease;
+    }
+
+    .btn-market-yellow {
+        background: var(--coverde-yellow);
+        color: #111827;
+    }
+
+    .btn-market-yellow:hover {
+        background: #fbbf24;
+        color: #111827;
+        transform: translateY(-2px);
+        box-shadow: 0 14px 35px rgba(245, 158, 11, 0.35);
+    }
+
+    .btn-market-outline {
+        background: rgba(255, 255, 255, 0.12);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.65);
+    }
+
+    .btn-market-outline:hover {
+        background: white;
+        color: var(--coverde-green);
+        transform: translateY(-2px);
+    }
+
+    .home-strip {
+        margin-top: -44px;
+        position: relative;
+        z-index: 5;
+    }
+
+    .strip-card {
+        background: white;
+        border: 1px solid var(--coverde-border);
+        border-radius: 18px;
+        box-shadow: 0 14px 35px rgba(15, 23, 42, 0.08);
+        padding: 20px;
+        height: 100%;
+        text-align: center;
+    }
+
+    .strip-card strong {
+        display: block;
+        color: var(--market-brown);
+        font-size: 1.25rem;
+        font-weight: 950;
+    }
+
+    .strip-card span {
+        color: var(--coverde-muted);
+        font-size: 0.9rem;
+        font-weight: 700;
+    }
+
+    .home-section {
+        padding: 56px 0;
+    }
+
+    .section-head {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-bottom: 24px;
+    }
+
+    .section-title {
+        font-size: clamp(1.8rem, 3vw, 2.6rem);
+        font-weight: 950;
+        letter-spacing: -0.04em;
+        color: var(--coverde-text);
+        margin: 0;
+    }
+
+    .section-subtitle {
+        color: var(--coverde-muted);
+        margin: 6px 0 0;
+    }
+
+
+    .product-card-home {
+        background: white;
+        border: 1px solid var(--coverde-border);
+        border-radius: 18px;
+        overflow: hidden;
+        height: 100%;
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+        transition: 0.25s ease;
+    }
+
+    .product-card-home:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 48px rgba(15, 23, 42, 0.12);
+    }
+
+    .product-img-home {
+        height: 215px;
+        background: #f3f4f6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .product-img-home img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .product-badge-home {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        background: var(--coverde-yellow);
+        color: #111827;
+        border-radius: 999px;
+        padding: 5px 10px;
+        font-size: 0.72rem;
+        font-weight: 950;
+    }
+
+    .product-body-home {
+        padding: 14px;
+    }
+
+    .product-name-home {
+        color: #111827;
+        font-weight: 900;
+        font-size: 1rem;
+        line-height: 1.35;
+        min-height: 42px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .product-producer-home {
+        color: var(--coverde-muted);
+        font-size: 0.82rem;
+        margin-top: 8px;
+    }
+
+    .product-rating-home {
+        color: #f59e0b;
+        font-size: 0.82rem;
+        margin-top: 8px;
+    }
+
+    .product-price-home {
+        color: #b45309;
+        font-size: 1.35rem;
+        font-weight: 950;
+        margin-top: 8px;
+    }
+
+    .product-price-home span {
+        color: var(--coverde-muted);
+        font-size: 0.78rem;
+        font-weight: 750;
+    }
+
+    .product-actions-home {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+        padding: 0 14px 14px;
+    }
+
+    .btn-add-cart {
+        border: 0;
+        background: var(--coverde-green);
+        color: white;
+        border-radius: 999px;
+        padding: 10px 12px;
+        font-weight: 950;
+        transition: 0.25s ease;
+    }
+
+    .btn-add-cart:hover {
+        background: var(--coverde-green-dark);
+    }
+
+    .btn-view-home {
+        border: 1px solid var(--coverde-border);
+        background: white;
+        color: var(--coverde-text);
+        border-radius: 999px;
+        width: 42px;
+        height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+    }
+
+    .empty-market {
+        background: white;
+        border: 1px dashed #bbf7d0;
+        border-radius: 22px;
+        padding: 48px 24px;
+        text-align: center;
+    }
+
+    .how-card {
+        background:
+            radial-gradient(circle at top right, rgba(245, 158, 11, 0.14), transparent 46%),
+            linear-gradient(135deg, #ecfdf5, #ffffff);
+        border: 1px solid #e7d8cd;
+        border-radius: 28px;
+        padding: 44px 24px;
+    }
+
+    .step-number {
+        width: 68px;
+        height: 68px;
+        border-radius: 50%;
+        background: white;
+        color: var(--coverde-green);
+        font-weight: 950;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 16px;
+        box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+        border: 2px solid #f3e7de;
+    }
+
+    @media (max-width: 576px) {
+        .home-hero {
+            padding: 56px 0 80px;
+        }
+
+        .product-img-home {
+            height: 170px;
+        }
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<!-- HERO -->
-<section style="background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 50%, #388E3C 100%); color:white; padding: 70px 0 60px; margin-top:-24px; position:relative; overflow:hidden;">
-    <div style="position:absolute; right:-40px; top:-40px; font-size:22rem; font-weight:900; color:rgba(255,255,255,0.03); pointer-events:none; letter-spacing:-10px; line-height:1;">COVERDE</div>
-    <div style="position:absolute; bottom:0; left:0; right:0; height:60px; background:linear-gradient(to top right, #F5F5F0 50%, transparent 50%);"></div>
-    <div class="container position-relative">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <div style="background:rgba(249,168,37,0.15); border:1px solid rgba(249,168,37,0.3); border-radius:20px; display:inline-block; padding:4px 14px; font-size:0.82rem; font-weight:600; color:#F9A825; margin-bottom:16px; letter-spacing:1px;">
-                    🌱 MARKETPLACE AGRÍCOLA DE PORTUGAL
-                </div>
-                <h1 style="font-size:2.8rem; font-weight:800; line-height:1.2; margin-bottom:20px;">
-                    Produtos Agrícolas <span style="color:#F9A825;">Frescos</span><br>
-                    Diretamente do <span style="color:#A5D6A7;">Produtor</span>
-                </h1>
-                <p style="font-size:1.05rem; color:rgba(255,255,255,0.85); margin-bottom:32px; max-width:480px;">
-                    Conectamos pequenos produtores agrícolas portugueses a consumidores e empresas. 
-                    Qualidade garantida, preço justo, entrega direta.
-                </p>
-                <div class="d-flex gap-3 flex-wrap">
-                    <a href="/produtos/" class="btn btn-warning fw-bold px-4 py-2" style="border-radius:25px; font-size:1rem;">
-                        <i class="fas fa-shopping-basket me-2"></i>Ver Produtos
-                    </a>
-                    <a href="/utilizadores/registar/produtor/" class="btn btn-outline-light fw-bold px-4 py-2" style="border-radius:25px; font-size:1rem;">
-                        <i class="fas fa-tractor me-2"></i>Vender no COVERDE
-                    </a>
-                </div>
-            </div>
-            <div class="col-lg-6 d-none d-lg-flex justify-content-center">
-                <div style="position:relative; width:340px; height:280px;">
-                    <div style="position:absolute; top:0; left:50%; transform:translateX(-50%); background:rgba(255,255,255,0.1); border-radius:50%; width:200px; height:200px; display:flex; align-items:center; justify-content:center;">
-                        <i class="fas fa-seedling" style="font-size:6rem; color:#A5D6A7;"></i>
-                    </div>
-                    <div style="position:absolute; bottom:20px; left:0; background:rgba(255,255,255,0.1); border-radius:12px; padding:12px 16px; backdrop-filter:blur(10px);">
-                        <div style="font-size:0.8rem; color:#F9A825; font-weight:600;">✓ 100% Produtos Frescos</div>
-                    </div>
-                    <div style="position:absolute; bottom:20px; right:0; background:rgba(255,255,255,0.1); border-radius:12px; padding:12px 16px; backdrop-filter:blur(10px);">
-                        <div style="font-size:0.8rem; color:#A5D6A7; font-weight:600;">✓ Produtor Verificado</div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- STATS BAR -->
-        <div class="row g-3 mt-4" style="padding-top:20px;">
-            <div class="col-6 col-md-3">
-                <div style="background:rgba(255,255,255,0.1); border-radius:10px; padding:14px; text-align:center;">
-                    <div style="font-size:1.5rem; font-weight:800; color:#F9A825;">500+</div>
-                    <div style="font-size:0.8rem; color:rgba(255,255,255,0.75);">Produtores</div>
+<section class="home-hero home-market">
+    <div class="container position-relative" style="z-index:2;">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <div class="hero-badge">
+                    <i class="fas fa-seedling"></i>
+                    Marketplace agrícola profissional
+                </div>
+
+                <h1>
+                    Compre produtos agrícolas <span>frescos</span><br>
+                    diretamente ao produtor
+                </h1>
+
+                <p>
+                    Um marketplace moderno para frutas, legumes, verduras e produtos locais.
+                    Pesquise, compare, compre e venda com uma experiência profissional.
+                </p>
+
+                <div class="hero-format-chip">
+                    <i class="fas fa-image"></i>
+                    Formatos recomendados: WebP e JPG otimizado
+                </div>
+
+                <div class="d-flex flex-wrap gap-3 mt-4">
+                    <a href="{% url 'products:list' %}" class="btn-market btn-market-yellow">
+                        <i class="fas fa-basket-shopping"></i>
+                        Comprar agora
+                    </a>
+
+                    <a href="{% url 'users:register_producer' %}" class="btn-market btn-market-outline">
+                        <i class="fas fa-tractor"></i>
+                        Começar a vender
+                    </a>
                 </div>
             </div>
-            <div class="col-6 col-md-3">
-                <div style="background:rgba(255,255,255,0.1); border-radius:10px; padding:14px; text-align:center;">
-                    <div style="font-size:1.5rem; font-weight:800; color:#F9A825;">2.000+</div>
-                    <div style="font-size:0.8rem; color:rgba(255,255,255,0.75);">Produtos</div>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div style="background:rgba(255,255,255,0.1); border-radius:10px; padding:14px; text-align:center;">
-                    <div style="font-size:1.5rem; font-weight:800; color:#F9A825;">10.000+</div>
-                    <div style="font-size:0.8rem; color:rgba(255,255,255,0.75);">Clientes</div>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div style="background:rgba(255,255,255,0.1); border-radius:10px; padding:14px; text-align:center;">
-                    <div style="font-size:1.5rem; font-weight:800; color:#F9A825;">18</div>
-                    <div style="font-size:0.8rem; color:rgba(255,255,255,0.75);">Distritos</div>
+
+            <div class="col-lg-5">
+                <div class="hero-logo-card">
+                    <img src="/media/products/logo.png" alt="Logo COVERDE">
+                    <h4 class="mt-3 fw-bold">COVERDE Marketplace</h4>
+                    <p class="mb-0" style="color:rgba(255,255,255,0.85);">
+                        Produtos locais, frescos e selecionados.
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<div class="container mt-5">
-
-    <!-- CATEGORIAS -->
-    <h2 class="section-title">Categorias de Produtos</h2>
-    <div class="row g-4 mb-5">
-        {% if categories %}
-            {% for cat in categories %}
-            <div class="col-6 col-md-4 col-lg-3">
-                <a href="/produtos/?categoria={{ cat.slug }}" class="text-decoration-none">
-                    <div class="category-card-dynamic" style="
-                        background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%);
-                        border-radius: 12px;
-                        overflow: hidden;
-                        transition: all 0.3s ease;
-                        height: 200px;
-                        position: relative;
-                        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: flex-end;
-                        color: white;
-                        padding: 20px;
-                    "
-                    onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';"
-                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)';">
-                        
-                        <!-- Imagem de fundo -->
-                        {% if cat.image %}
-                            <div style="
-                                position: absolute;
-                                top: 0;
-                                left: 0;
-                                right: 0;
-                                bottom: 0;
-                                background: url('{{ cat.image.url }}') center/cover;
-                                opacity: 0.4;
-                                z-index: 1;
-                            "></div>
-                        {% else %}
-                            <div style="
-                                position: absolute;
-                                top: 0;
-                                left: 0;
-                                right: 0;
-                                bottom: 0;
-                                background: linear-gradient(135deg, rgba(46, 125, 50, 0.8) 0%, rgba(27, 94, 32, 0.8) 100%);
-                                z-index: 1;
-                            "></div>
-                        {% endif %}
-                        
-                        <!-- Overlay escuro -->
-                        <div style="
-                            position: absolute;
-                            top: 0;
-                            left: 0;
-                            right: 0;
-                            bottom: 0;
-                            background: rgba(0,0,0,0.3);
-                            z-index: 2;
-                        "></div>
-                        
-                        <!-- Conteúdo -->
-                        <div style="position: relative; z-index: 3;">
-                            {% if cat.icon %}
-                                <div style="font-size: 2.5rem; margin-bottom: 8px;">
-                                    <i class="fas fa-{{ cat.icon }}"></i>
-                                </div>
-                            {% else %}
-                                <div style="font-size: 2.5rem; margin-bottom: 8px;">
-                                    <i class="fas fa-leaf"></i>
-                                </div>
-                            {% endif %}
-                            
-                            <div style="font-weight: 700; font-size: 1.1rem;">{{ cat.name }}</div>
-                            {% if cat.description %}
-                                <div style="font-size: 0.75rem; opacity: 0.9; margin-top: 4px;">{{ cat.description|truncatewords:5 }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-                </a>
-            </div>
-            {% endfor %}
-        {% else %}
-            <!-- Fallback: Categorias padrão Portugal -->
-            {% for cat in default_categories %}
-            <div class="col-6 col-md-4 col-lg-3">
-                <div class="category-card-dynamic" style="
-                    background: linear-gradient(135deg, #43A047 0%, #2E7D32 100%);
-                    border-radius: 12px;
-                    overflow: hidden;
-                    transition: all 0.3s ease;
-                    height: 200px;
-                    position: relative;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: flex-end;
-                    padding: 20px;
-                    color: white;
-                ">
-                    <div style="font-size: 2.5rem; margin-bottom: 8px;">
-                        <i class="fas fa-seedling"></i>
-                    </div>
-                    <div style="font-weight: 700; font-size: 1.1rem;">{{ cat }}</div>
+<section class="home-strip">
+    <div class="container">
+        <div class="row g-3">
+            <div class="col-6 col-lg-3">
+                <div class="strip-card">
+                    <strong>Entrega direta</strong>
+                    <span>Do produtor ao cliente</span>
                 </div>
             </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="strip-card">
+                    <strong>Produtos frescos</strong>
+                    <span>Com qualidade controlada</span>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="strip-card">
+                    <strong>Compra simples</strong>
+                    <span>Pesquisa e carrinho rápido</span>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="strip-card">
+                    <strong>Produtores locais</strong>
+                    <span>Valorização da produção nacional</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="home-section">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <h2 class="section-title">Comprar por categoria</h2>
+                <p class="section-subtitle">Escolha rapidamente o tipo de produto que procura.</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            {% for cat in categories %}
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="{% url 'products:list' %}?categoria={{ cat.slug }}" class="category-card-home"
+                       style="background-image: url('{{ cat.image }}');">
+                        <div class="category-body-home">
+                            <div class="category-icon-home">
+                                <i class="fas fa-{{ cat.icon }}"></i>
+                            </div>
+                            <div class="category-name-home">{{ cat.name }}</div>
+                        </div>
+                    </a>
+                </div>
             {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="home-section pt-0">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <h2 class="section-title">Produtos no marketplace</h2>
+                <p class="section-subtitle">
+                    Produtos disponíveis e demonstração visual com imagens reais.
+                </p>
+            </div>
+
+            <a href="{% url 'products:list' %}" class="btn-coverde text-decoration-none">
+                Ver todos
+            </a>
+        </div>
+
+        {% if recent_products %}
+            <div class="row g-4">
+                {% for product in recent_products %}
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="product-card-home">
+                            <a href="{% url 'products:detail' product.slug %}" class="text-decoration-none">
+                                <div class="product-img-home">
+                                    {% if product.main_image %}
+                                        <img src="{{ product.main_image.url }}" alt="{{ product.name }}">
+                                    {% else %}
+                                        <img src="/media/products/product_placeholder.png" alt="{{ product.name }}">
+                                    {% endif %}
+
+                                    {% if product.is_featured %}
+                                        <span class="product-badge-home">Destaque</span>
+                                    {% endif %}
+                                </div>
+
+                                <div class="product-body-home">
+                                    <div class="product-name-home">{{ product.name }}</div>
+
+                                    <div class="product-producer-home">
+                                        <i class="fas fa-store me-1"></i>
+                                        {% if product.producer %}
+                                            {{ product.producer.name }}
+                                        {% else %}
+                                            Produtor COVERDE
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="product-rating-home">
+                                        ★★★★☆
+                                        <span class="text-muted">({{ product.total_reviews|default:0 }})</span>
+                                    </div>
+
+                                    <div class="product-price-home">
+                                        {{ product.price|floatformat:2 }} €
+                                        <span>/ {{ product.unit|default:"kg" }}</span>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <div class="product-actions-home">
+                                {% if product.stock > 0 %}
+                                    <form method="post" action="{% url 'orders:add_to_cart' product.id %}" class="flex-grow-1">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="quantity" value="1">
+                                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                        <button type="submit" class="btn-add-cart w-100">
+                                            <i class="fas fa-cart-plus me-1"></i>
+                                            Adicionar
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <button class="btn-add-cart" disabled style="background:#9ca3af;">
+                                        Esgotado
+                                    </button>
+                                {% endif %}
+
+                                <a href="{% url 'products:detail' product.slug %}" class="btn-view-home">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+        {% elif demo_products %}
+            <div class="row g-4">
+                {% for product in demo_products %}
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="product-card-home">
+                            <div class="product-img-home">
+                                <img src="{{ product.image }}" alt="{{ product.name }}">
+                                <span class="product-badge-home">Novo</span>
+                            </div>
+
+                            <div class="product-body-home">
+                                <div class="product-name-home">{{ product.name }}</div>
+
+                                <div class="product-producer-home">
+                                    <i class="fas fa-store me-1"></i>
+                                    {{ product.producer }}
+                                </div>
+
+                                <div class="product-rating-home">
+                                    ★★★★☆
+                                    <span class="text-muted">(0)</span>
+                                </div>
+
+                                <div class="product-price-home">
+                                    {{ product.price }} €
+                                    <span>/ {{ product.unit }}</span>
+                                </div>
+                            </div>
+
+                            <div class="product-actions-home">
+                                <a href="{% url 'users:login' %}" class="btn-add-cart text-center text-decoration-none">
+                                    <i class="fas fa-cart-plus me-1"></i>
+                                    Comprar
+                                </a>
+
+                                <a href="{% url 'products:list' %}" class="btn-view-home">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+        {% else %}
+            <div class="empty-market">
+                <div class="mb-3">
+                    <img src="/media/products/logo.png" alt="COVERDE" style="width:90px; height:90px; object-fit:contain;">
+                </div>
+
+                <h3 class="fw-bold text-success">O marketplace está pronto para crescer.</h3>
+
+                <p class="text-muted">
+                    Ainda não existem produtos registados. Adicione produtos pelo painel de administração
+                    ou use a pasta <strong>media/products</strong> para pré-visualização.
+                </p>
+
+                <div class="d-flex justify-content-center gap-3 flex-wrap mt-4">
+                    <a href="/admin/" class="btn-market btn-market-yellow">
+                        <i class="fas fa-plus-circle"></i>
+                        Adicionar produtos
+                    </a>
+
+                    <a href="{% url 'users:register_producer' %}" class="btn-coverde text-decoration-none">
+                        <i class="fas fa-tractor me-1"></i>
+                        Registar produtor
+                    </a>
+                </div>
+            </div>
         {% endif %}
     </div>
+</section>
 
-    <!-- PRODUTOS EM DESTAQUE -->
-    {% if featured_products %}
-    <h2 class="section-title">⭐ Produtos em Destaque</h2>
-    <div class="row g-3 mb-5">
-        {% for product in featured_products %}
-            <div class="col-6 col-md-4 col-lg-3">
-                <div class="product-card" style="border:1px solid #eee; border-radius:12px; overflow:hidden; transition:all 0.3s; background:white; height:100%;">
-                    <a href="/produtos/{{ product.id }}/" style="text-decoration:none; color:inherit;">
-                        <div style="position:relative; height:180px; background:#f5f5f5; overflow:hidden;">
-                            {% if product.main_image %}
-                                <img src="{{ product.main_image.url }}" alt="{{ product.name }}" style="width:100%; height:100%; object-fit:cover;">
-                            {% else %}
-                                <div style="display:flex; align-items:center; justify-content:center; height:100%; background:#E8F5E9;">
-                                    <i class="fas fa-image" style="font-size:3rem; color:#A5D6A7;"></i>
-                                </div>
-                            {% endif %}
-                            {% if product.stock <= 0 %}
-                                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.7); color:white; padding:4px 12px; border-radius:20px; font-weight:600; font-size:0.8rem;">
-                                    Esgotado
-                                </div>
-                            {% endif %}
-                        </div>
-                        <div style="padding:12px;">
-                            <div style="font-weight:600; font-size:0.95rem; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:40px;">
-                                {{ product.name }}
-                            </div>
-                            <div style="font-size:0.75rem; color:#888;">
-                                <i class="fas fa-store"></i> {{ product.producer.store.name|default:product.producer.name }}
-                            </div>
-                            <div style="font-weight:700; color:#2E7D32; font-size:1.1rem; margin-top:4px;">
-                                {{ product.price|floatformat:2 }} €
-                                <span style="font-size:0.7rem; font-weight:400; color:#888;">/ {{ product.unit|default:"kg" }}</span>
-                            </div>
-                            {% if product.certification == 'biologico' %}
-                                <span style="background:#E8F5E9; color:#2E7D32; border:1px solid #A5D6A7; font-size:0.6rem; font-weight:600; padding:2px 8px; border-radius:10px; display:inline-block; margin-top:4px;">
-                                    🌱 Biológico
-                                </span>
-                            {% endif %}
-                        </div>
-                    </a>
-                    {% if product.stock > 0 %}
-                        <div style="padding:0 12px 12px;">
-                            <button class="btn btn-success btn-sm w-100 add-to-cart" data-product-id="{{ product.id }}" style="border-radius:8px;">
-                                <i class="fas fa-cart-plus me-1"></i>Adicionar
-                            </button>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-    <div class="text-center mt-2 mb-5">
-        <a href="/produtos/" class="btn-coverde-outline">
-            <i class="fas fa-th-large me-2"></i>Ver Todos os Produtos
-        </a>
-    </div>
-    {% endif %}
+<section class="home-section pt-0">
+    <div class="container">
+        <div class="how-card">
+            <h2 class="section-title text-center text-success mb-4">Como funciona o COVERDE</h2>
 
-    <!-- PRODUTOS RECENTES -->
-    <h2 class="section-title">🌿 Produtos Frescos Disponíveis</h2>
-    {% if recent_products %}
-    <div class="row g-3 mb-5">
-        {% for product in recent_products %}
-            <div class="col-6 col-md-4 col-lg-3">
-                <div class="product-card" style="border:1px solid #eee; border-radius:12px; overflow:hidden; transition:all 0.3s; background:white; height:100%;">
-                    <a href="/produtos/{{ product.id }}/" style="text-decoration:none; color:inherit;">
-                        <div style="position:relative; height:180px; background:#f5f5f5; overflow:hidden;">
-                            {% if product.main_image %}
-                                <img src="{{ product.main_image.url }}" alt="{{ product.name }}" style="width:100%; height:100%; object-fit:cover;">
-                            {% else %}
-                                <div style="display:flex; align-items:center; justify-content:center; height:100%; background:#E8F5E9;">
-                                    <i class="fas fa-image" style="font-size:3rem; color:#A5D6A7;"></i>
-                                </div>
-                            {% endif %}
-                            {% if product.stock <= 0 %}
-                                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.7); color:white; padding:4px 12px; border-radius:20px; font-weight:600; font-size:0.8rem;">
-                                    Esgotado
-                                </div>
-                            {% endif %}
-                        </div>
-                        <div style="padding:12px;">
-                            <div style="font-weight:600; font-size:0.95rem; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:40px;">
-                                {{ product.name }}
-                            </div>
-                            <div style="font-size:0.75rem; color:#888;">
-                                <i class="fas fa-store"></i> {{ product.producer.store.name|default:product.producer.name }}
-                            </div>
-                            <div style="font-weight:700; color:#2E7D32; font-size:1.1rem; margin-top:4px;">
-                                {{ product.price|floatformat:2 }} €
-                                <span style="font-size:0.7rem; font-weight:400; color:#888;">/ {{ product.unit|default:"kg" }}</span>
-                            </div>
-                            {% if product.certification == 'biologico' %}
-                                <span style="background:#E8F5E9; color:#2E7D32; border:1px solid #A5D6A7; font-size:0.6rem; font-weight:600; padding:2px 8px; border-radius:10px; display:inline-block; margin-top:4px;">
-                                    🌱 Biológico
-                                </span>
-                            {% endif %}
-                        </div>
-                    </a>
-                    {% if product.stock > 0 %}
-                        <div style="padding:0 12px 12px;">
-                            <button class="btn btn-success btn-sm w-100 add-to-cart" data-product-id="{{ product.id }}" style="border-radius:8px;">
-                                <i class="fas fa-cart-plus me-1"></i>Adicionar
-                            </button>
-                        </div>
-                    {% endif %}
+            <div class="row g-4 text-center">
+                <div class="col-md-3">
+                    <div class="step-number">1</div>
+                    <h5 class="fw-bold text-success">Crie a sua conta</h5>
+                    <p class="text-muted mb-0">Registo simples para cliente ou produtor.</p>
                 </div>
-            </div>
-        {% endfor %}
-    </div>
-    <div class="text-center mt-2 mb-5">
-        <a href="/produtos/" class="btn-coverde-outline">
-            <i class="fas fa-th-large me-2"></i>Ver Todos os Produtos
-        </a>
-    </div>
-    {% else %}
-    <!-- Estado vazio - sem produtos ainda -->
-    <div class="text-center py-5 mb-5">
-        <div style="background:#E8F5E9; width:100px; height:100px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
-            <i class="fas fa-seedling" style="font-size:3rem; color:#2E7D32;"></i>
-        </div>
-        <h4 style="color:#2E7D32; font-weight:700;">O marketplace está a crescer!</h4>
-        <p style="color:#666; max-width:400px; margin:0 auto 24px;">
-            Ainda não há produtos disponíveis. Seja o primeiro a vender os seus produtos agrícolas no COVERDE.
-        </p>
-        <a href="/utilizadores/registar/produtor/" class="btn-coverde me-2">
-            <i class="fas fa-tractor me-2"></i>Registar como Produtor
-        </a>
-        <a href="/utilizadores/registar/" class="btn-coverde-outline">
-            <i class="fas fa-user me-2"></i>Criar Conta de Cliente
-        </a>
-    </div>
-    {% endif %}
 
-    <!-- COMO FUNCIONA -->
-    <div style="background:linear-gradient(135deg, #E8F5E9, #F1F8E9); border-radius:16px; padding:40px; margin-bottom:40px;">
-        <h2 class="text-center mb-4" style="color:#1B5E20; font-weight:700;">Como Funciona o COVERDE</h2>
-        <div class="row g-4 text-center">
-            <div class="col-md-3">
-                <div style="background:white; border-radius:50%; width:64px; height:64px; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; box-shadow:0 4px 12px rgba(46,125,50,0.15);">
-                    <span style="font-size:1.5rem; font-weight:900; color:#2E7D32;">1</span>
+                <div class="col-md-3">
+                    <div class="step-number">2</div>
+                    <h5 class="fw-bold text-success">Escolha produtos</h5>
+                    <p class="text-muted mb-0">Pesquise e filtre produtos frescos.</p>
                 </div>
-                <h6 style="color:#1B5E20; font-weight:700;">Crie a sua conta</h6>
-                <p style="font-size:0.85rem; color:#555;">Registo gratuito em menos de 2 minutos</p>
-            </div>
-            <div class="col-md-3">
-                <div style="background:white; border-radius:50%; width:64px; height:64px; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; box-shadow:0 4px 12px rgba(46,125,50,0.15);">
-                    <span style="font-size:1.5rem; font-weight:900; color:#2E7D32;">2</span>
+
+                <div class="col-md-3">
+                    <div class="step-number">3</div>
+                    <h5 class="fw-bold text-success">Faça a encomenda</h5>
+                    <p class="text-muted mb-0">Adicione ao carrinho e confirme a compra.</p>
                 </div>
-                <h6 style="color:#1B5E20; font-weight:700;">Escolha os produtos</h6>
-                <p style="font-size:0.85rem; color:#555;">Explore produtos frescos de produtores verificados</p>
-            </div>
-            <div class="col-md-3">
-                <div style="background:white; border-radius:50%; width:64px; height:64px; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; box-shadow:0 4px 12px rgba(46,125,50,0.15);">
-                    <span style="font-size:1.5rem; font-weight:900; color:#2E7D32;">3</span>
+
+                <div class="col-md-3">
+                    <div class="step-number">4</div>
+                    <h5 class="fw-bold text-success">Receba em casa</h5>
+                    <p class="text-muted mb-0">Entrega organizada diretamente ao cliente.</p>
                 </div>
-                <h6 style="color:#1B5E20; font-weight:700;">Faça a encomenda</h6>
-                <p style="font-size:0.85rem; color:#555;">Escolha o endereço e método de pagamento</p>
-            </div>
-            <div class="col-md-3">
-                <div style="background:white; border-radius:50%; width:64px; height:64px; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; box-shadow:0 4px 12px rgba(46,125,50,0.15);">
-                    <span style="font-size:1.5rem; font-weight:900; color:#2E7D32;">4</span>
-                </div>
-                <h6 style="color:#1B5E20; font-weight:700;">Receba em casa</h6>
-                <p style="font-size:0.85rem; color:#555;">Entrega direta do produtor à sua porta</p>
             </div>
         </div>
     </div>
-
-</div>
-
-<!-- CSRF Token para o JavaScript -->
-<form id="csrf-form" style="display:none;">
-    {% csrf_token %}
-</form>
+</section>
 
 {% endblock %}
 
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Obter o token CSRF do formulário oculto
     const csrfToken = document.querySelector('#csrf-form input[name="csrfmiddlewaretoken"]')?.value || '';
 
-    // Adicionar ao carrinho
-    const addButtons = document.querySelectorAll('.add-to-cart');
-    addButtons.forEach(button => {
+    document.querySelectorAll('.add-to-cart').forEach(button => {
         button.addEventListener('click', function(e) {
             e.preventDefault();
+
             const productId = this.dataset.productId;
             if (!productId) {
-                alert('Erro: ID do produto não encontrado.');
+                showCoverdeToast('ID do produto não encontrado.', 'danger');
                 return;
             }
 
@@ -392,45 +708,63 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 body: JSON.stringify({ quantity: 1 })
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro no servidor');
+                }
+                return response.json();
+            })
             .then(data => {
                 this.innerHTML = originalHTML;
                 this.disabled = false;
+
                 if (data.success) {
-                    const badge = document.querySelector('.cart-badge .badge');
-                    if (badge) {
-                        badge.textContent = data.cart_count || 0;
-                    }
-                    showToast('✅ Produto adicionado ao carrinho!', 'success');
+                    updateCartBadge(data.cart_count || 0);
+                    showCoverdeToast('Produto adicionado ao carrinho.', 'success');
                 } else {
-                    showToast('❌ ' + (data.message || 'Erro ao adicionar ao carrinho.'), 'danger');
+                    showCoverdeToast(data.message || 'Não foi possível adicionar ao carrinho.', 'danger');
                 }
             })
             .catch(() => {
                 this.innerHTML = originalHTML;
                 this.disabled = false;
-                showToast('❌ Erro ao comunicar com o servidor.', 'danger');
+                showCoverdeToast('Não foi possível comunicar com o servidor.', 'danger');
             });
         });
     });
 
-    function showToast(message, type) {
-        const container = document.querySelector('.messages-container');
-        if (!container) return;
+    function updateCartBadge(count) {
+        const badge = document.querySelector('.cart-badge .badge');
+        if (badge) {
+            badge.textContent = count;
+        }
+    }
+
+    function showCoverdeToast(message, type) {
+        let container = document.querySelector('.messages-container');
+
+        if (!container) {
+            container = document.createElement('div');
+            container.className = 'messages-container';
+            document.body.appendChild(container);
+        }
 
         const alert = document.createElement('div');
         alert.className = `alert alert-${type} alert-coverde alert-dismissible fade show`;
-        alert.role = 'alert';
         alert.innerHTML = `
             ${message}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         `;
+
         container.appendChild(alert);
 
         setTimeout(() => {
-            const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
-            bsAlert.close();
-        }, 5000);
+            if (window.bootstrap) {
+                bootstrap.Alert.getOrCreateInstance(alert).close();
+            } else {
+                alert.remove();
+            }
+        }, 4500);
     }
 });
 </script>

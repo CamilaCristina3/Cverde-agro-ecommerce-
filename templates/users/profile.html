@@ -16,8 +16,6 @@
               <dd class="col-8">{{ user_name }}</dd>
               <dt class="col-4 text-muted">Email</dt>
               <dd class="col-8">{{ request.user.email }}</dd>
-              <dt class="col-4 text-muted">Localização</dt>
-              <dd class="col-8">{{ request.user.district }}{% if request.user.county %}, {{ request.user.county }}{% endif %}{% if request.user.parish %}, {{ request.user.parish }}{% endif %}</dd>
               <dt class="col-4 text-muted">Encomendas</dt>
               <dd class="col-8">{{ orders_count }}</dd>
               <dt class="col-4 text-muted">Total gasto</dt>
@@ -41,7 +39,7 @@
           <div class="card-body">
             <h2 class="h5 mb-3">Ações rápidas</h2>
             <ul class="list-unstyled mb-0">
-              <li class="mb-2"><a href="{% url 'users:product_list' %}">Ver produtos</a></li>
+              <li class="mb-2"><a href="{% url 'products:list' %}">Ver produtos</a></li>
               <li class="mb-2"><a href="{% url 'orders:cart' %}">Ver carrinho</a></li>
               {% if is_producer %}
                 <li><a href="{% url 'users:producer_panel' %}">Aceder ao painel de produtor</a></li>

@@ -119,36 +119,6 @@
             </div>
           </div>
 
-          <div class="mb-4">
-            <h2 class="h6 fw-bold text-success mb-3">Localização</h2>
-
-            <div class="row g-3">
-              <div class="col-md-4">
-                <label class="form-label" for="{{ form.district.id_for_label }}">{{ form.district.label }}</label>
-                {{ form.district }}
-                {% if form.district.errors %}
-                  <div class="invalid-feedback d-block">{{ form.district.errors.0 }}</div>
-                {% endif %}
-              </div>
-
-              <div class="col-md-4">
-                <label class="form-label" for="{{ form.county.id_for_label }}">{{ form.county.label }}</label>
-                {{ form.county }}
-                {% if form.county.errors %}
-                  <div class="invalid-feedback d-block">{{ form.county.errors.0 }}</div>
-                {% endif %}
-              </div>
-
-              <div class="col-md-4">
-                <label class="form-label" for="{{ form.parish.id_for_label }}">{{ form.parish.label }}</label>
-                {{ form.parish }}
-                {% if form.parish.errors %}
-                  <div class="invalid-feedback d-block">{{ form.parish.errors.0 }}</div>
-                {% endif %}
-              </div>
-            </div>
-          </div>
-
           <div class="alert alert-light border small mb-4">
             Os seus dados serão utilizados apenas para criar e gerir a sua conta e processar encomendas.
             Pode consultar a
