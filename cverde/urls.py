@@ -211,6 +211,7 @@ urlpatterns = [
     path("", homepage, name="home"),
     path("admin/", admin.site.urls),
     path("utilizadores/", include("apps.users.urls", namespace="users")),
+    path("users/", include(("apps.users.urls", "users"), namespace="users_en")),
     path("produtores/", include("apps.producers.urls", namespace="producers")),
     path("lojas/", include("apps.stores.urls", namespace="stores")),
     path("produtos/", include("apps.products.urls", namespace="products")),

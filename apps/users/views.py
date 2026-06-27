@@ -5,6 +5,7 @@ Views de utilizadores.
 
 from decimal import Decimal
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth import login, logout, get_user_model
@@ -27,9 +28,15 @@ from .forms import (
     UserProfileForm,
 )
 from .models import AccountActivationToken, Address, CustomerProfile, Producer, Product, SupplierProfile
-from .services import send_activation_email
 
 User = get_user_model()
+
+
+def _default_auth_backend_path():
+    backends = getattr(settings, "AUTHENTICATION_BACKENDS", [])
+    if backends:
+        return backends[0]
+    return "django.contrib.auth.backends.ModelBackend"
 
 
 def register(request):
@@ -56,7 +63,7 @@ def register_client(request):
                 user.save(update_fields=["is_active", "is_verified", "email_verified_at", "accepted_terms_at", "accepted_privacy_policy_at", "marketing_opt_in", "marketing_opt_in_at", "user_type", "password", "username", "first_name", "last_name", "email", "phone"])
 
                 CustomerProfile.objects.create(user=user)
-            login(request, user)
+            login(request, user, backend=_default_auth_backend_path())
             messages.success(request, "Conta criada com sucesso. A sua conta já está ativa e verificada.")
             return redirect(next_url or "/")
     else:
@@ -82,8 +89,9 @@ def register_producer(request):
             with transaction.atomic():
                 user = form.save(commit=True)
                 user.is_active = True
-                user.is_verified = False
-                user.save(update_fields=["is_active", "is_verified", "accepted_terms_at", "accepted_privacy_policy_at", "marketing_opt_in", "marketing_opt_in_at", "user_type", "password", "username", "first_name", "last_name", "email", "phone"])
+                user.is_verified = True
+                user.email_verified_at = timezone.now()
+                user.save(update_fields=["is_active", "is_verified", "email_verified_at", "accepted_terms_at", "accepted_privacy_policy_at", "marketing_opt_in", "marketing_opt_in_at", "user_type", "password", "username", "first_name", "last_name", "email", "phone"])
 
                 Producer.objects.create(
                     user=user,
@@ -128,17 +136,14 @@ def register_producer(request):
                     },
                 )
 
-                token = AccountActivationToken.objects.create(user=user)
-                send_activation_email(request, user, token)
-
             messages.info(
                 request,
-                f"Registo de produtor submetido. Enviámos um email de confirmação para {user.email}. "
-                "Depois de confirmar o email, a equipa COVERDE irá validar a sua conta.",
+                "Registo de produtor submetido com sucesso e sessão iniciada automaticamente. "
+                "A sua conta já está ativa; a equipa COVERDE irá validar o perfil de produtor "
+                "antes de começar a vender.",
             )
-            if next_url:
-                return redirect(f"{reverse('users:login')}?next={next_url}")
-            return redirect("users:login")
+            login(request, user, backend=_default_auth_backend_path())
+            return redirect(next_url or "/")
     else:
         form = MarketplaceProducerRegisterForm()
 
@@ -176,7 +181,7 @@ def activate_account(request, token):
         user.save(update_fields=["is_verified", "email_verified_at"])
 
     if producer is None:
-        login(request, user)
+        login(request, user, backend=_default_auth_backend_path())
         messages.success(
             request,
             "Conta confirmada com sucesso. Bem-vindo a COVERDE.",
@@ -199,40 +204,70 @@ def user_login(request):
     if request.method == "POST":
         form_data = request.POST.copy()
         identifier = (form_data.get("username") or "").strip()
+
+        # Permite login usando email, mesmo que o username interno seja diferente.
         if identifier:
             matched_user = User.objects.filter(email__iexact=identifier).first()
             if matched_user:
                 form_data["username"] = matched_user.username
 
         form = LoginForm(request, data=form_data)
+
         if form.is_valid():
             user = form.get_user()
             producer = Producer.objects.filter(user=user).first()
 
-            if not user.is_verified:
+            # Em desenvolvimento, não exigir confirmação de email.
+            require_email_verification = getattr(
+                settings,
+                "REQUIRE_EMAIL_VERIFICATION",
+                False
+            )
+
+            if require_email_verification and not getattr(user, "is_verified", False):
                 messages.warning(
                     request,
                     "Por favor confirme o seu email antes de entrar. "
                     "Verifique a sua caixa de entrada.",
                 )
-                return render(request, "users/login.html", {"form": form})
+                return render(
+                    request,
+                    "users/login.html",
+                    {"form": form, "title": "Entrar no COVERDE"},
+                )
 
+            # Em desenvolvimento, produtor pendente pode entrar.
+            # A aprovação controla apenas a venda/publicação, não o acesso à conta.
             if producer and producer.status == Producer.Status.PENDING:
                 messages.info(
                     request,
-                    "A sua conta está pendente de aprovação pela equipa COVERDE.",
+                    "A sua conta de produtor está pendente de aprovação pela equipa COVERDE. "
+                    "Pode aceder à sua conta, mas algumas funcionalidades de venda podem ficar limitadas.",
                 )
-                return render(request, "users/login.html", {"form": form})
 
             if producer and producer.status == Producer.Status.SUSPENDED:
-                messages.error(request, "A sua conta foi suspensa. Contacte suporte@coverde.pt.")
-                return render(request, "users/login.html", {"form": form})
+                messages.error(
+                    request,
+                    "A sua conta foi suspensa. Contacte suporte@coverde.pt."
+                )
+                return render(
+                    request,
+                    "users/login.html",
+                    {"form": form, "title": "Entrar no COVERDE"},
+                )
 
             if producer and producer.status == Producer.Status.REJECTED:
-                messages.error(request, "A sua conta de produtor foi rejeitada. Contacte suporte@coverde.pt.")
-                return render(request, "users/login.html", {"form": form})
+                messages.error(
+                    request,
+                    "A sua conta de produtor foi rejeitada. Contacte suporte@coverde.pt."
+                )
+                return render(
+                    request,
+                    "users/login.html",
+                    {"form": form, "title": "Entrar no COVERDE"},
+                )
 
-            login(request, user)
+            login(request, user, backend=_default_auth_backend_path())
 
             if not form.cleaned_data.get("remember_me"):
                 request.session.set_expiry(0)

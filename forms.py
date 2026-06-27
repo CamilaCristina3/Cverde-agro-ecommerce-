@@ -170,7 +170,7 @@ class BaseRegisterForm(forms.ModelForm):
             'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '912345678'}),
         }
         labels = {
-            "username": "Nome de utilizador",
+            "username": "Utilizador",
             "first_name": "Nome",
             "last_name": "Apelido",
             "email": "Email",
@@ -180,8 +180,28 @@ class BaseRegisterForm(forms.ModelForm):
             "parish": "Freguesia",
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # O username técnico é sempre o email; não expor campo manual.
+        if "username" in self.fields:
+            self.fields["username"].required = False
+            self.fields["username"].widget = forms.HiddenInput()
+
     def clean(self):
         cleaned_data = super().clean()
+        email = (cleaned_data.get("email") or "").strip().lower()
+        if not email:
+            self.add_error("email", "O email é obrigatório.")
+        else:
+            existing = User.objects.filter(email__iexact=email)
+            if self.instance and self.instance.pk:
+                existing = existing.exclude(pk=self.instance.pk)
+            if existing.exists():
+                self.add_error("email", "Já existe uma conta registada com este email.")
+
+        cleaned_data["email"] = email
+        cleaned_data["username"] = email
+
         password = cleaned_data.get("password")
         password2 = cleaned_data.get("password2")
         if password and password2 and password != password2:
@@ -190,6 +210,8 @@ class BaseRegisterForm(forms.ModelForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
+        user.email = (self.cleaned_data.get("email") or "").strip().lower()
+        user.username = user.email
         user.set_password(self.cleaned_data["password"])
         
         # Registar consentimentos

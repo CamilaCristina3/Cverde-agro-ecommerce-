@@ -149,6 +149,11 @@ else:
 
 AUTH_USER_MODEL = "users_auth.User"
 
+AUTHENTICATION_BACKENDS = [
+    "apps.users.backends.EmailAuthBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
 
 # =====================================================
 # PASSWORD VALIDATION
@@ -229,12 +234,28 @@ EMAIL_BACKEND = config(
 
 DEFAULT_FROM_EMAIL = config(
     "DEFAULT_FROM_EMAIL",
-    default="noreply@coverde.pt"
+    default="a2023110951@alumni.iscac.pt"
 )
 
-SUPPORT_EMAIL = config("SUPPORT_EMAIL", default="suporte@coverde.pt")
+SUPPORT_EMAIL = config("SUPPORT_EMAIL", default="a2023110951@alumni.iscac.pt")
 ACCOUNT_ACTIVATION_TOKEN_HOURS = config("ACCOUNT_ACTIVATION_TOKEN_HOURS", default=48, cast=int)
 
+# =====================================================
+# VERIFICAÇÃO DE EMAIL
+# =====================================================
+
+# Em ambiente de desenvolvimento, não exigir confirmação de email
+REQUIRE_EMAIL_VERIFICATION = config(
+    "REQUIRE_EMAIL_VERIFICATION",
+    default=False,
+    cast=bool
+)
+
+EMAIL_VERIFICATION_REQUIRED = config(
+    "EMAIL_VERIFICATION_REQUIRED",
+    default=False,
+    cast=bool
+)
 
 # =====================================================
 # PAGAMENTO DE TESTE (DESENVOLVIMENTO)

@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "auth_base.html" %}
 {% load static %}
 
 {% block title %}Registar como Produtor | COVERDE{% endblock %}
@@ -20,7 +20,7 @@
   .producer-register-header {
     background:
       linear-gradient(135deg, rgba(20, 83, 45, 0.96), rgba(21, 128, 61, 0.88)),
-      url('/media/categories/hero-frutas.png');
+      url('/media/categories/frutas_image.jpg');
     background-size: cover;
     background-position: center;
     color: white;
@@ -212,7 +212,7 @@
 
       <p>
         Crie a sua conta de produtor e comece a preparar a sua presença no marketplace COVERDE.
-        Depois da submissão, o perfil poderá passar por verificação antes de vender online.
+        Depois da submissão, o perfil poderá passar por verificação interna antes de vender online.
       </p>
     </div>
 
@@ -237,6 +237,7 @@
 
       <form method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
+        {{ form.username }}
 
         {% if next_url %}
           <input type="hidden" name="next" value="{{ next_url }}">
@@ -259,19 +260,12 @@
 
           <div class="row g-3">
             <div class="col-md-6">
-              <label class="form-label" for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
-              {{ form.username }}
-              {% if form.username.errors %}
-                <div class="invalid-feedback d-block">{{ form.username.errors.0 }}</div>
-              {% endif %}
-            </div>
-
-            <div class="col-md-6">
               <label class="form-label" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
               {{ form.email }}
               {% if form.email.errors %}
                 <div class="invalid-feedback d-block">{{ form.email.errors.0 }}</div>
               {% endif %}
+              <div class="form-text">Este email será o seu utilizador de acesso.</div>
             </div>
 
             <div class="col-md-6">
