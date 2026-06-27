@@ -1,771 +1,499 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}COVERDE | Marketplace Agrícola{% endblock %}
+{% block title %}COVERDE | Marketplace Agricola{% endblock %}
 
 {% block extra_css %}
 <style>
-    .home-market {
-        --market-green-chrome: #15803d;
-        --market-yellow: #f59e0b;
-        --market-brown: #8a5a3a;
-        --market-gray-light: #f3f4f6;
+  .home-page {
+    background: linear-gradient(180deg, #f8faf9, #ffffff 24%, #f8fafc 100%);
+  }
+
+  .home-hero {
+    padding: 3.4rem 0 2.8rem;
+  }
+
+  .hero-panel {
+    border: 1px solid #e5e7eb;
+    border-radius: 1.3rem;
+    background: linear-gradient(135deg, #f3faf5, #ffffff);
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+    overflow: hidden;
+  }
+
+  .hero-copy {
+    padding: 2rem 1.7rem;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(1.7rem, 3.3vw, 2.6rem);
+    line-height: 1.2;
+    font-weight: 900;
+    margin-bottom: .75rem;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-copy p {
+    color: #4b5563;
+    max-width: 560px;
+    margin-bottom: 1.15rem;
+  }
+
+  .hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .65rem;
+  }
+
+  .hero-visual {
+    padding: 1rem;
+    border-left: 1px solid #edf1f5;
+  }
+
+  .hero-visual-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem;
+    background: #ffffff;
+    padding: .95rem;
+    height: 100%;
+  }
+
+  .hero-visual-card img {
+    width: 100%;
+    height: 245px;
+    object-fit: cover;
+    border-radius: .8rem;
+  }
+
+  .hero-mini-kpis {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: .5rem;
+    margin-top: .65rem;
+  }
+
+  .hero-mini-kpis .kpi {
+    border: 1px solid #e5e7eb;
+    border-radius: .65rem;
+    padding: .5rem .55rem;
+    text-align: center;
+  }
+
+  .hero-mini-kpis .kpi strong {
+    display: block;
+    color: #15803d;
+    font-size: .95rem;
+    line-height: 1.1;
+  }
+
+  .home-section {
+    padding: 2.1rem 0;
+  }
+
+  .section-head {
+    margin-bottom: 1rem;
+  }
+
+  .section-head h2 {
+    font-size: clamp(1.2rem, 2.2vw, 1.8rem);
+    font-weight: 850;
+    margin-bottom: .25rem;
+  }
+
+  .section-head p {
+    color: #6b7280;
+    margin: 0;
+  }
+
+  .category-card {
+    display: block;
+    border: 1px solid #e5e7eb;
+    border-radius: .95rem;
+    background: #fff;
+    padding: .9rem;
+    text-decoration: none;
+    color: #1f2937;
+    height: 100%;
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  }
+
+  .category-card:hover {
+    transform: translateY(-3px);
+    border-color: #bbf7d0;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+    color: #14532d;
+  }
+
+  .category-media {
+    width: 54px;
+    height: 54px;
+    border-radius: .7rem;
+    background: #f0fdf4;
+    border: 1px solid #dcfce7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: .65rem;
+    overflow: hidden;
+  }
+
+  .category-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .category-media i {
+    color: #15803d;
+  }
+
+  .category-title {
+    font-weight: 800;
+    font-size: .95rem;
+  }
+
+  .market-product {
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem;
+    background: #fff;
+    overflow: hidden;
+    height: 100%;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+
+  .market-product:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 35px rgba(15, 23, 42, 0.11);
+  }
+
+  .market-product-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    background: #f8fafc;
+  }
+
+  .market-product-body {
+    padding: .85rem;
+  }
+
+  .market-product-name {
+    font-weight: 800;
+    font-size: .96rem;
+    margin-bottom: .25rem;
+    min-height: 42px;
+  }
+
+  .market-product-meta {
+    color: #6b7280;
+    font-size: .8rem;
+    margin-bottom: .2rem;
+  }
+
+  .market-product-price {
+    font-weight: 900;
+    color: #15803d;
+    font-size: 1.2rem;
+    line-height: 1;
+    margin-bottom: .6rem;
+  }
+
+  .market-product-price small {
+    color: #6b7280;
+    font-size: .72rem;
+    font-weight: 700;
+  }
+
+  .market-product-actions {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: .45rem;
+  }
+
+  .producer-cta {
+    border: 1px solid #d1fae5;
+    border-radius: 1.1rem;
+    background: linear-gradient(135deg, #ecfdf5, #ffffff);
+    padding: 1.35rem;
+  }
+
+  .trust-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: .75rem;
+  }
+
+  .trust-item {
+    border: 1px solid #e5e7eb;
+    border-radius: .9rem;
+    padding: .85rem;
+    background: #fff;
+  }
+
+  .trust-item i {
+    color: #15803d;
+    margin-bottom: .35rem;
+  }
+
+  .trust-item h3 {
+    font-size: .95rem;
+    margin: 0 0 .2rem;
+    font-weight: 800;
+  }
+
+  .trust-item p {
+    margin: 0;
+    color: #6b7280;
+    font-size: .83rem;
+  }
+
+  @media (max-width: 991.98px) {
+    .hero-visual {
+      border-left: 0;
+      border-top: 1px solid #edf1f5;
     }
 
-    .home-hero {
-        position: relative;
-        overflow: hidden;
-        color: white;
-        padding: 86px 0 96px;
-        background:
-            linear-gradient(90deg, rgba(20, 83, 45, 0.96), rgba(21, 128, 61, 0.82)),
-            url('{{ hero_image }}');
-        background-size: cover;
-        background-position: center;
+    .hero-visual-card img {
+      height: 210px;
     }
 
-    .home-hero::after {
-        content: "COVERDE";
-        position: absolute;
-        right: -80px;
-        bottom: -70px;
-        font-size: clamp(7rem, 22vw, 19rem);
-        font-weight: 950;
-        color: rgba(255, 255, 255, 0.06);
-        letter-spacing: -0.08em;
-        pointer-events: none;
+    .trust-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 575.98px) {
+    .hero-copy {
+      padding: 1.25rem 1rem;
     }
 
-    .home-hero::before {
-        content: "AGRO MERCADO";
-        position: absolute;
-        left: -36px;
-        top: 20px;
-        font-size: clamp(2.1rem, 8vw, 4.6rem);
-        font-weight: 900;
-        letter-spacing: 0.24em;
-        color: rgba(255, 255, 255, 0.08);
-        transform: rotate(-8deg);
-        pointer-events: none;
+    .hero-copy p {
+      font-size: .95rem;
     }
 
-    .hero-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: rgba(245, 158, 11, 0.15);
-        border: 1px solid rgba(245, 158, 11, 0.5);
-        color: #fbbf24;
-        border-radius: 999px;
-        padding: 8px 16px;
-        font-size: 0.82rem;
-        font-weight: 950;
-        text-transform: uppercase;
-        letter-spacing: 0.07em;
-        margin-bottom: 20px;
+    .hero-visual {
+      padding: .8rem;
     }
 
-    .hero-format-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        margin-top: 16px;
-        background: rgba(138, 90, 58, 0.18);
-        border: 1px solid rgba(138, 90, 58, 0.45);
-        border-radius: 999px;
-        color: #fef3c7;
-        font-size: 0.78rem;
-        font-weight: 800;
-        padding: 7px 14px;
+    .hero-visual-card img {
+      height: 180px;
     }
 
-    .home-hero h1 {
-        max-width: 760px;
-        font-size: clamp(2.6rem, 5vw, 5.1rem);
-        line-height: 1.03;
-        font-weight: 950;
-        letter-spacing: -0.06em;
-        margin: 0;
+    .hero-mini-kpis {
+      grid-template-columns: 1fr;
     }
 
-    .home-hero h1 span {
-        color: var(--coverde-yellow);
+    .market-product-img {
+      height: 155px;
     }
 
-    .home-hero p {
-        max-width: 620px;
-        font-size: 1.15rem;
-        line-height: 1.8;
-        color: rgba(255, 255, 255, 0.92);
-        margin: 22px 0 0;
-    }
-
-    .hero-logo-card {
-        background: rgba(255, 255, 255, 0.14);
-        border: 1px solid rgba(255, 255, 255, 0.26);
-        border-radius: 30px;
-        padding: 32px;
-        backdrop-filter: blur(12px);
-        box-shadow: 0 28px 80px rgba(0, 0, 0, 0.25);
-        text-align: center;
-    }
-
-    .hero-logo-card img {
-        width: 175px;
-        height: 175px;
-        object-fit: contain;
-        background: white;
-        padding: 22px;
-        border-radius: 32px;
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
-    }
-
-    .btn-market {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 9px;
-        border-radius: 999px;
-        padding: 13px 22px;
-        font-weight: 950;
-        text-decoration: none;
-        border: 0;
-        transition: 0.25s ease;
-    }
-
-    .btn-market-yellow {
-        background: var(--coverde-yellow);
-        color: #111827;
-    }
-
-    .btn-market-yellow:hover {
-        background: #fbbf24;
-        color: #111827;
-        transform: translateY(-2px);
-        box-shadow: 0 14px 35px rgba(245, 158, 11, 0.35);
-    }
-
-    .btn-market-outline {
-        background: rgba(255, 255, 255, 0.12);
-        color: white;
-        border: 1px solid rgba(255, 255, 255, 0.65);
-    }
-
-    .btn-market-outline:hover {
-        background: white;
-        color: var(--coverde-green);
-        transform: translateY(-2px);
-    }
-
-    .home-strip {
-        margin-top: -44px;
-        position: relative;
-        z-index: 5;
-    }
-
-    .strip-card {
-        background: white;
-        border: 1px solid var(--coverde-border);
-        border-radius: 18px;
-        box-shadow: 0 14px 35px rgba(15, 23, 42, 0.08);
-        padding: 20px;
-        height: 100%;
-        text-align: center;
-    }
-
-    .strip-card strong {
-        display: block;
-        color: var(--market-brown);
-        font-size: 1.25rem;
-        font-weight: 950;
-    }
-
-    .strip-card span {
-        color: var(--coverde-muted);
-        font-size: 0.9rem;
-        font-weight: 700;
-    }
-
-    .home-section {
-        padding: 56px 0;
-    }
-
-    .section-head {
-        display: flex;
-        align-items: end;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 14px;
-        margin-bottom: 24px;
-    }
-
-    .section-title {
-        font-size: clamp(1.8rem, 3vw, 2.6rem);
-        font-weight: 950;
-        letter-spacing: -0.04em;
-        color: var(--coverde-text);
-        margin: 0;
-    }
-
-    .section-subtitle {
-        color: var(--coverde-muted);
-        margin: 6px 0 0;
-    }
-
-
-    .product-card-home {
-        background: white;
-        border: 1px solid var(--coverde-border);
-        border-radius: 18px;
-        overflow: hidden;
-        height: 100%;
-        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
-        transition: 0.25s ease;
-    }
-
-    .product-card-home:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 48px rgba(15, 23, 42, 0.12);
-    }
-
-    .product-img-home {
-        height: 215px;
-        background: #f3f4f6;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        position: relative;
-    }
-
-    .product-img-home img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .product-badge-home {
-        position: absolute;
-        top: 12px;
-        left: 12px;
-        background: var(--coverde-yellow);
-        color: #111827;
-        border-radius: 999px;
-        padding: 5px 10px;
-        font-size: 0.72rem;
-        font-weight: 950;
-    }
-
-    .product-body-home {
-        padding: 14px;
-    }
-
-    .product-name-home {
-        color: #111827;
-        font-weight: 900;
-        font-size: 1rem;
-        line-height: 1.35;
-        min-height: 42px;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-
-    .product-producer-home {
-        color: var(--coverde-muted);
-        font-size: 0.82rem;
-        margin-top: 8px;
-    }
-
-    .product-rating-home {
-        color: #f59e0b;
-        font-size: 0.82rem;
-        margin-top: 8px;
-    }
-
-    .product-price-home {
-        color: #b45309;
-        font-size: 1.35rem;
-        font-weight: 950;
-        margin-top: 8px;
-    }
-
-    .product-price-home span {
-        color: var(--coverde-muted);
-        font-size: 0.78rem;
-        font-weight: 750;
-    }
-
-    .product-actions-home {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 8px;
-        padding: 0 14px 14px;
-    }
-
-    .btn-add-cart {
-        border: 0;
-        background: var(--coverde-green);
-        color: white;
-        border-radius: 999px;
-        padding: 10px 12px;
-        font-weight: 950;
-        transition: 0.25s ease;
-    }
-
-    .btn-add-cart:hover {
-        background: var(--coverde-green-dark);
-    }
-
-    .btn-view-home {
-        border: 1px solid var(--coverde-border);
-        background: white;
-        color: var(--coverde-text);
-        border-radius: 999px;
-        width: 42px;
-        height: 42px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        text-decoration: none;
-    }
-
-    .empty-market {
-        background: white;
-        border: 1px dashed #bbf7d0;
-        border-radius: 22px;
-        padding: 48px 24px;
-        text-align: center;
-    }
-
-    .how-card {
-        background:
-            radial-gradient(circle at top right, rgba(245, 158, 11, 0.14), transparent 46%),
-            linear-gradient(135deg, #ecfdf5, #ffffff);
-        border: 1px solid #e7d8cd;
-        border-radius: 28px;
-        padding: 44px 24px;
-    }
-
-    .step-number {
-        width: 68px;
-        height: 68px;
-        border-radius: 50%;
-        background: white;
-        color: var(--coverde-green);
-        font-weight: 950;
-        font-size: 1.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 16px;
-        box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
-        border: 2px solid #f3e7de;
-    }
-
-    @media (max-width: 576px) {
-        .home-hero {
-            padding: 56px 0 80px;
-        }
-
-        .product-img-home {
-            height: 170px;
-        }
-    }
-</style>
-{% endblock %}
-
-{% block content %}
-
-<section class="home-hero home-market">
-    <div class="container position-relative" style="z-index:2;">
-        <div class="row align-items-center g-5">
-            <div class="col-lg-7">
-                <div class="hero-badge">
-                    <i class="fas fa-seedling"></i>
-                    Marketplace agrícola profissional
-                </div>
-
-                <h1>
-                    Compre produtos agrícolas <span>frescos</span><br>
-                    diretamente ao produtor
-                </h1>
-
-                <p>
-                    Um marketplace moderno para frutas, legumes, verduras e produtos locais.
-                    Pesquise, compare, compre e venda com uma experiência profissional.
-                </p>
-
-                <div class="hero-format-chip">
-                    <i class="fas fa-image"></i>
-                    Formatos recomendados: WebP e JPG otimizado
-                </div>
-
-                <div class="d-flex flex-wrap gap-3 mt-4">
-                    <a href="{% url 'products:list' %}" class="btn-market btn-market-yellow">
-                        <i class="fas fa-basket-shopping"></i>
-                        Comprar agora
-                    </a>
-
-                    <a href="{% url 'users:register_producer' %}" class="btn-market btn-market-outline">
-                        <i class="fas fa-tractor"></i>
-                        Começar a vender
-                    </a>
-                </div>
-            </div>
-
-            <div class="col-lg-5">
-                <div class="hero-logo-card">
-                    <img src="/media/products/logo.png" alt="Logo COVERDE">
-                    <h4 class="mt-3 fw-bold">COVERDE Marketplace</h4>
-                    <p class="mb-0" style="color:rgba(255,255,255,0.85);">
-                        Produtos locais, frescos e selecionados.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="home-strip">
-    <div class="container">
-        <div class="row g-3">
-            <div class="col-6 col-lg-3">
-                <div class="strip-card">
-                    <strong>Entrega direta</strong>
-                    <span>Do produtor ao cliente</span>
-                </div>
-            </div>
-
-            <div class="col-6 col-lg-3">
-                <div class="strip-card">
-                    <strong>Produtos frescos</strong>
-                    <span>Com qualidade controlada</span>
-                </div>
-            </div>
-
-            <div class="col-6 col-lg-3">
-                <div class="strip-card">
-                    <strong>Compra simples</strong>
-                    <span>Pesquisa e carrinho rápido</span>
-                </div>
-            </div>
-
-            <div class="col-6 col-lg-3">
-                <div class="strip-card">
-                    <strong>Produtores locais</strong>
-                    <span>Valorização da produção nacional</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="home-section">
-    <div class="container">
-        <div class="section-head">
-            <div>
-                <h2 class="section-title">Comprar por categoria</h2>
-                <p class="section-subtitle">Escolha rapidamente o tipo de produto que procura.</p>
-            </div>
-        </div>
-
-        <div class="row g-4">
-            {% for cat in categories %}
-                <div class="col-6 col-md-4 col-lg-3">
-                    <a href="{% url 'products:list' %}?categoria={{ cat.slug }}" class="category-card-home"
-                       style="background-image: url('{{ cat.image }}');">
-                        <div class="category-body-home">
-                            <div class="category-icon-home">
-                                <i class="fas fa-{{ cat.icon }}"></i>
-                            </div>
-                            <div class="category-name-home">{{ cat.name }}</div>
-                        </div>
-                    </a>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-
-<section class="home-section pt-0">
-    <div class="container">
-        <div class="section-head">
-            <div>
-                <h2 class="section-title">Produtos no marketplace</h2>
-                <p class="section-subtitle">
-                    Produtos disponíveis e demonstração visual com imagens reais.
-                </p>
-            </div>
-
-            <a href="{% url 'products:list' %}" class="btn-coverde text-decoration-none">
-                Ver todos
-            </a>
-        </div>
-
-        {% if recent_products %}
-            <div class="row g-4">
-                {% for product in recent_products %}
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <div class="product-card-home">
-                            <a href="{% url 'products:detail' product.slug %}" class="text-decoration-none">
-                                <div class="product-img-home">
-                                    {% if product.main_image %}
-                                        <img src="{{ product.main_image.url }}" alt="{{ product.name }}">
-                                    {% else %}
-                                        <img src="/media/products/product_placeholder.png" alt="{{ product.name }}">
-                                    {% endif %}
-
-                                    {% if product.is_featured %}
-                                        <span class="product-badge-home">Destaque</span>
-                                    {% endif %}
-                                </div>
-
-                                <div class="product-body-home">
-                                    <div class="product-name-home">{{ product.name }}</div>
-
-                                    <div class="product-producer-home">
-                                        <i class="fas fa-store me-1"></i>
-                                        {% if product.producer %}
-                                            {{ product.producer.name }}
-                                        {% else %}
-                                            Produtor COVERDE
-                                        {% endif %}
-                                    </div>
-
-                                    <div class="product-rating-home">
-                                        ★★★★☆
-                                        <span class="text-muted">({{ product.total_reviews|default:0 }})</span>
-                                    </div>
-
-                                    <div class="product-price-home">
-                                        {{ product.price|floatformat:2 }} €
-                                        <span>/ {{ product.unit|default:"kg" }}</span>
-                                    </div>
-                                </div>
-                            </a>
-
-                            <div class="product-actions-home">
-                                {% if product.stock > 0 %}
-                                    <form method="post" action="{% url 'orders:add_to_cart' product.id %}" class="flex-grow-1">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="quantity" value="1">
-                                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                        <button type="submit" class="btn-add-cart w-100">
-                                            <i class="fas fa-cart-plus me-1"></i>
-                                            Adicionar
-                                        </button>
-                                    </form>
-                                {% else %}
-                                    <button class="btn-add-cart" disabled style="background:#9ca3af;">
-                                        Esgotado
-                                    </button>
-                                {% endif %}
-
-                                <a href="{% url 'products:detail' product.slug %}" class="btn-view-home">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-
-        {% elif demo_products %}
-            <div class="row g-4">
-                {% for product in demo_products %}
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <div class="product-card-home">
-                            <div class="product-img-home">
-                                <img src="{{ product.image }}" alt="{{ product.name }}">
-                                <span class="product-badge-home">Novo</span>
-                            </div>
-
-                            <div class="product-body-home">
-                                <div class="product-name-home">{{ product.name }}</div>
-
-                                <div class="product-producer-home">
-                                    <i class="fas fa-store me-1"></i>
-                                    {{ product.producer }}
-                                </div>
-
-                                <div class="product-rating-home">
-                                    ★★★★☆
-                                    <span class="text-muted">(0)</span>
-                                </div>
-
-                                <div class="product-price-home">
-                                    {{ product.price }} €
-                                    <span>/ {{ product.unit }}</span>
-                                </div>
-                            </div>
-
-                            <div class="product-actions-home">
-                                <a href="{% url 'users:login' %}" class="btn-add-cart text-center text-decoration-none">
-                                    <i class="fas fa-cart-plus me-1"></i>
-                                    Comprar
-                                </a>
-
-                                <a href="{% url 'products:list' %}" class="btn-view-home">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-
-        {% else %}
-            <div class="empty-market">
-                <div class="mb-3">
-                    <img src="/media/products/logo.png" alt="COVERDE" style="width:90px; height:90px; object-fit:contain;">
-                </div>
-
-                <h3 class="fw-bold text-success">O marketplace está pronto para crescer.</h3>
-
-                <p class="text-muted">
-                    Ainda não existem produtos registados. Adicione produtos pelo painel de administração
-                    ou use a pasta <strong>media/products</strong> para pré-visualização.
-                </p>
-
-                <div class="d-flex justify-content-center gap-3 flex-wrap mt-4">
-                    <a href="/admin/" class="btn-market btn-market-yellow">
-                        <i class="fas fa-plus-circle"></i>
-                        Adicionar produtos
-                    </a>
-
-                    <a href="{% url 'users:register_producer' %}" class="btn-coverde text-decoration-none">
-                        <i class="fas fa-tractor me-1"></i>
-                        Registar produtor
-                    </a>
-                </div>
-            </div>
-        {% endif %}
-    </div>
-</section>
-
-<section class="home-section pt-0">
-    <div class="container">
-        <div class="how-card">
-            <h2 class="section-title text-center text-success mb-4">Como funciona o COVERDE</h2>
-
-            <div class="row g-4 text-center">
-                <div class="col-md-3">
-                    <div class="step-number">1</div>
-                    <h5 class="fw-bold text-success">Crie a sua conta</h5>
-                    <p class="text-muted mb-0">Registo simples para cliente ou produtor.</p>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="step-number">2</div>
-                    <h5 class="fw-bold text-success">Escolha produtos</h5>
-                    <p class="text-muted mb-0">Pesquise e filtre produtos frescos.</p>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="step-number">3</div>
-                    <h5 class="fw-bold text-success">Faça a encomenda</h5>
-                    <p class="text-muted mb-0">Adicione ao carrinho e confirme a compra.</p>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="step-number">4</div>
-                    <h5 class="fw-bold text-success">Receba em casa</h5>
-                    <p class="text-muted mb-0">Entrega organizada diretamente ao cliente.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-{% endblock %}
-
-{% block extra_js %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const csrfToken = document.querySelector('#csrf-form input[name="csrfmiddlewaretoken"]')?.value || '';
-
-    document.querySelectorAll('.add-to-cart').forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-
-            const productId = this.dataset.productId;
-            if (!productId) {
-                showCoverdeToast('ID do produto não encontrado.', 'danger');
-                return;
-            }
-
-            const originalHTML = this.innerHTML;
-            this.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>A adicionar...';
-            this.disabled = true;
-
-            fetch('/carrinho/adicionar/' + productId + '/', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': csrfToken,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ quantity: 1 })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erro no servidor');
-                }
-                return response.json();
-            })
-            .then(data => {
-                this.innerHTML = originalHTML;
-                this.disabled = false;
-
-                if (data.success) {
-                    updateCartBadge(data.cart_count || 0);
-                    showCoverdeToast('Produto adicionado ao carrinho.', 'success');
-                } else {
-                    showCoverdeToast(data.message || 'Não foi possível adicionar ao carrinho.', 'danger');
-                }
-            })
-            .catch(() => {
-                this.innerHTML = originalHTML;
-                this.disabled = false;
-                showCoverdeToast('Não foi possível comunicar com o servidor.', 'danger');
-            });
-        });
-    });
-
-    function updateCartBadge(count) {
-        const badge = document.querySelector('.cart-badge .badge');
-        if (badge) {
-            badge.textContent = count;
-        }
-    }
-
-    function showCoverdeToast(message, type) {
-        let container = document.querySelector('.messages-container');
-
-        if (!container) {
-            container = document.createElement('div');
-            container.className = 'messages-container';
-            document.body.appendChild(container);
-        }
-
-        const alert = document.createElement('div');
-        alert.className = `alert alert-${type} alert-coverde alert-dismissible fade show`;
-        alert.innerHTML = `
-            ${message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        `;
-
-        container.appendChild(alert);
-
-        setTimeout(() => {
-            if (window.bootstrap) {
-                bootstrap.Alert.getOrCreateInstance(alert).close();
-            } else {
-                alert.remove();
-            }
-        }, 4500);
-    }
-});
-</script>
-{% endblock %}
+    .trust-grid {
+      grid-template-columns: 1fr;
+     }
+   }
+ </style>
+ {% endblock %}
+ 
+ {% block content %}
+ <div class="home-page">
+   <section class="home-hero">
+     <div class="container">
+       <div class="hero-panel">
+         <div class="row g-0 align-items-stretch">
+           <div class="col-lg-7">
+             <div class="hero-copy">
+               <span class="badge rounded-pill text-bg-light border mb-2">Marketplace agricola COVERDE</span>
+               <h1>Produtos frescos, locais e de confianca</h1>
+               <p>Compre frutas, horticolas e produtos selecionados diretamente de produtores locais.</p>
+ 
+               <div class="hero-cta">
+                 <a href="{% url 'products:list' %}" class="btn btn-success">
+                   <i class="fa-solid fa-basket-shopping me-1"></i>Comprar agora
+                 </a>
+                 <a href="{% url 'products:list' %}" class="btn btn-outline-success">Ver produtos</a>
+                 <a href="{% url 'users:register_producer' %}" class="btn btn-outline-dark">Registar como produtor</a>
+               </div>
+             </div>
+           </div>
+ 
+           <div class="col-lg-5 hero-visual">
+             <div class="hero-visual-card">
+              <img src="{% static 'images/placeholders/producers/hero-bg.jpg' %}" alt="Produtos frescos COVERDE" loading="lazy">
+               <div class="hero-mini-kpis">
+                 <div class="kpi">
+                   <strong>{{ recent_products|length }}</strong>
+                   <small>produtos</small>
+                 </div>
+                 <div class="kpi">
+                   <strong>{{ categories|length }}</strong>
+                   <small>categorias</small>
+                 </div>
+                 <div class="kpi">
+                   <strong>24/7</strong>
+                   <small>online</small>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </section>
+ 
+   <section class="home-section" id="categorias">
+     <div class="container">
+       <div class="section-head">
+         <h2>Comprar por categoria</h2>
+         <p>Selecione uma categoria e encontre rapidamente o que precisa.</p>
+       </div>
+ 
+       <div class="row g-3">
+         {% for cat in categories|slice:":6" %}
+           <div class="col-6 col-md-4 col-lg-2">
+             <a href="{% url 'products:list' %}?categoria={{ cat.slug }}" class="category-card">
+               <div class="category-media">
+                 {% if cat.image %}
+                   <img src="{{ cat.image }}" alt="{{ cat.name }}" loading="lazy">
+                 {% else %}
+                   <i class="fa-solid fa-{{ cat.icon|default:'leaf' }}"></i>
+                 {% endif %}
+               </div>
+               <div class="category-title">{{ cat.name }}</div>
+             </a>
+           </div>
+         {% endfor %}
+         <div class="col-6 col-md-4 col-lg-2">
+           <a href="{% url 'products:list' %}" class="category-card">
+             <div class="category-media"><i class="fa-solid fa-box-open"></i></div>
+             <div class="category-title">Ver todas</div>
+           </a>
+         </div>
+       </div>
+     </div>
+   </section>
+ 
+   <section class="home-section pt-0" id="produtos">
+     <div class="container">
+       <div class="d-flex justify-content-between align-items-end flex-wrap gap-2 mb-3">
+         <div class="section-head mb-0">
+           <h2>Produtos em destaque</h2>
+           <p>Cards claros, imagens proporcionais e compra rapida.</p>
+         </div>
+         <a href="{% url 'products:list' %}" class="btn btn-outline-success btn-sm">Ver todos</a>
+       </div>
+ 
+       {% if recent_products %}
+         <div class="row g-3">
+           {% for product in recent_products|slice:":8" %}
+             <div class="col-6 col-md-4 col-lg-3">
+               <article class="market-product">
+                 <a href="{% url 'products:detail' product.slug %}" class="text-decoration-none text-dark">
+                   {% if product.main_image %}
+                     <img src="{{ product.main_image.url }}" alt="{{ product.name }}" class="market-product-img" loading="lazy">
+                   {% else %}
+                     <img src="{% static 'images/placeholders/products/hero-bg.jpg' %}" alt="{{ product.name }}" class="market-product-img" loading="lazy">
+                   {% endif %}
+                 </a>
+                 <div class="market-product-body">
+                   <div class="market-product-name">{{ product.name }}</div>
+                   <div class="market-product-meta">{{ product.producer.name|default:'Produtor COVERDE' }}</div>
+                   <div class="market-product-meta">{{ product.category.name|default:'Sem categoria' }}</div>
+                   <div class="market-product-price">€{{ product.price|floatformat:2 }} <small>/ {{ product.unit|default:'kg' }}</small></div>
+ 
+                   <div class="market-product-actions">
+                     {% if product.stock > 0 %}
+                       <form method="post" action="{% url 'orders:add_to_cart' product.id %}">
+                         {% csrf_token %}
+                         <input type="hidden" name="quantity" value="1">
+                         <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                         <button type="submit" class="btn btn-success btn-sm w-100">Adicionar</button>
+                       </form>
+                     {% else %}
+                       <button class="btn btn-secondary btn-sm w-100" disabled>Esgotado</button>
+                     {% endif %}
+                     <a href="{% url 'products:detail' product.slug %}" class="btn btn-outline-success btn-sm" aria-label="Ver produto">
+                       <i class="fa-solid fa-eye"></i>
+                     </a>
+                   </div>
+                 </div>
+               </article>
+             </div>
+           {% endfor %}
+         </div>
+       {% elif demo_products %}
+         <div class="row g-3">
+           {% for product in demo_products|slice:":8" %}
+             <div class="col-6 col-md-4 col-lg-3">
+               <article class="market-product">
+                 <img src="{{ product.image }}" alt="{{ product.name }}" class="market-product-img" loading="lazy">
+                 <div class="market-product-body">
+                   <div class="market-product-name">{{ product.name }}</div>
+                   <div class="market-product-meta">{{ product.producer }}</div>
+                   <div class="market-product-price">€{{ product.price }} <small>/ {{ product.unit }}</small></div>
+                   <div class="market-product-actions">
+                     <a href="{% url 'users:login' %}" class="btn btn-success btn-sm w-100">Adicionar</a>
+                     <a href="{% url 'products:list' %}" class="btn btn-outline-success btn-sm"><i class="fa-solid fa-eye"></i></a>
+                   </div>
+                 </div>
+               </article>
+             </div>
+           {% endfor %}
+         </div>
+       {% else %}
+         <div class="alert alert-light border mb-0">Ainda nao existem produtos publicados no marketplace.</div>
+       {% endif %}
+     </div>
+   </section>
+ 
+   <section class="home-section pt-0" id="produtores">
+     <div class="container">
+       <div class="producer-cta">
+         <div class="row g-3 align-items-center">
+           <div class="col-lg-8">
+             <h2 class="h4 fw-bold mb-2">E produtor? Venda os seus produtos na COVERDE.</h2>
+             <p class="text-muted mb-0">Crie conta, publique produtos e receba encomendas com um fluxo simples.</p>
+           </div>
+           <div class="col-lg-4 text-lg-end">
+             <a href="{% url 'users:register_producer' %}" class="btn btn-success">
+               <i class="fa-solid fa-tractor me-1"></i>Registar como produtor
+             </a>
+           </div>
+         </div>
+       </div>
+     </div>
+   </section>
+ 
+   <section class="home-section pt-0">
+     <div class="container">
+       <div class="section-head">
+         <h2>Porque comprar na COVERDE</h2>
+         <p>Uma experiencia simples e confiavel para consumidores e produtores.</p>
+       </div>
+ 
+       <div class="trust-grid">
+         <article class="trust-item">
+           <i class="fa-solid fa-apple-whole"></i>
+           <h3>Produtos frescos</h3>
+           <p>Selecao cuidada para manter qualidade e sabor.</p>
+         </article>
+         <article class="trust-item">
+           <i class="fa-solid fa-people-group"></i>
+           <h3>Produtores locais</h3>
+           <p>Apoio direto a quem produz com proximidade.</p>
+         </article>
+         <article class="trust-item">
+           <i class="fa-solid fa-cart-shopping"></i>
+           <h3>Compra simples</h3>
+           <p>Pesquisa rapida, carrinho facil e checkout claro.</p>
+         </article>
+         <article class="trust-item">
+           <i class="fa-solid fa-headset"></i>
+           <h3>Apoio ao cliente</h3>
+           <p>FAQ automatica e suporte para duvidas essenciais.</p>
+         </article>
+       </div>
+     </div>
+   </section>
+ </div>
+ {% endblock %}

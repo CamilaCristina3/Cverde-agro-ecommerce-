@@ -7,14 +7,17 @@
 <style>
   .market-shell {
     display: grid;
-    gap: 1.5rem;
+    gap: 1.25rem;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 1.1rem .75rem 2rem;
   }
 
   .market-header {
-    background:
-      radial-gradient(circle at top right, rgba(255,255,255,.18), transparent 32%),
-      linear-gradient(135deg, #0f5132, #198754 55%, #3aa76d);
+    background: linear-gradient(135deg, #f4faf6, #ffffff);
+    border: 1px solid #dbe7df;
     border-radius: 1.25rem;
+    color: #1f2937;
   }
 
   .market-kpis {
@@ -24,25 +27,45 @@
   }
 
   .market-kpi {
-    background: rgba(255,255,255,.12);
-    border: 1px solid rgba(255,255,255,.16);
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
     border-radius: 1rem;
-    padding: 1rem;
-    backdrop-filter: blur(10px);
+    padding: .85rem;
   }
 
   .market-kpi strong {
     display: block;
-    font-size: 1.35rem;
+    font-size: 1.2rem;
+    color: #166534;
   }
 
   .market-kpi span {
-    font-size: .85rem;
-    color: rgba(255,255,255,.86);
+    font-size: .8rem;
+    color: #6b7280;
   }
 
   .filter-card {
-    border-left: 4px solid #198754;
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem;
+  }
+
+  .filter-card .form-control,
+  .filter-card .form-select {
+    border-radius: .75rem;
+    border-color: #d1d5db;
+  }
+
+  .filter-card .form-control:focus,
+  .filter-card .form-select:focus {
+    border-color: #15803d;
+    box-shadow: 0 0 0 .2rem rgba(21, 128, 61, .12);
+  }
+
+  .filter-actions {
+    display: flex;
+    gap: .5rem;
+    justify-content: flex-end;
+    flex-wrap: wrap;
   }
 
   .market-toolbar {
@@ -77,37 +100,40 @@
   }
 
   .product-card {
-    border: 0;
+    border: 1px solid #e5e7eb;
     border-radius: 1rem;
-    transition: all .2s ease;
+    transition: all .18s ease;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, .07);
   }
 
   .product-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 35px rgba(15, 23, 42, .12);
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(15, 23, 42, .12);
   }
 
   .product-image {
-    height: 190px;
-    object-fit: contain;
-    background: linear-gradient(180deg, #f5f7f2, #eef4ee);
-    padding: .6rem;
+    height: 180px;
+    object-fit: cover;
+    background: #f8fafc;
+    padding: .2rem;
     border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;
   }
 
   .product-title {
-    min-height: 44px;
-    font-size: 1rem;
-    font-weight: 700;
+    min-height: 40px;
+    font-size: .98rem;
+    font-weight: 800;
+    line-height: 1.3;
   }
 
   .product-description {
-    min-height: 40px;
+    min-height: 36px;
+    line-height: 1.35;
   }
 
   .price {
-    font-size: 1.35rem;
+    font-size: 1.15rem;
     font-weight: 800;
     color: #198754;
   }
@@ -161,11 +187,33 @@
 
   .page-link {
     color: #0f5132;
+    border-radius: .6rem;
+    margin: 0 .15rem;
   }
 
   .page-item.active .page-link {
     background-color: #198754;
     border-color: #198754;
+  }
+
+  .trust-strip {
+    border: 1px solid #dbe7df;
+    background: linear-gradient(135deg, #f4faf6, #ffffff);
+    border-radius: 1rem;
+    padding: .9rem;
+  }
+
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    color: #374151;
+    font-size: .86rem;
+    font-weight: 600;
+  }
+
+  .trust-item i {
+    color: #15803d;
   }
 
   @media (max-width: 991.98px) {
@@ -176,16 +224,40 @@
     .product-image {
       height: 170px;
     }
+
+    .filter-actions {
+      justify-content: stretch;
+    }
+
+    .filter-actions .btn {
+      flex: 1;
+    }
   }
 
   @media (max-width: 575.98px) {
-    .market-header .display-6 {
-      font-size: 1.65rem;
+    .market-shell {
+      padding: .7rem .45rem 1.5rem;
+    }
+
+    .market-header .h3 {
+      font-size: 1.35rem;
+    }
+
+    .market-header .lead {
+      font-size: .95rem;
     }
 
     .product-image {
-      height: 160px;
-      padding: .5rem;
+      height: 165px;
+    }
+
+    .chip-row {
+      width: 100%;
+    }
+
+    .pagination {
+      flex-wrap: wrap;
+      row-gap: .35rem;
     }
   }
 </style>
@@ -193,15 +265,15 @@
 
 {% block content %}
 <div class="market-shell">
-  <div class="market-header text-white p-4 p-md-5 shadow-sm">
+  <div class="market-header p-4 p-md-4 shadow-sm">
     <div class="row align-items-center g-4">
       <div class="col-lg-7">
-        <span class="text-uppercase small fw-semibold" style="letter-spacing:.12em; color:rgba(255,255,255,.8);">
+        <span class="text-uppercase small fw-semibold text-success" style="letter-spacing:.1em;">
           Marketplace COVERDE
         </span>
-        <h1 class="display-6 fw-bold mb-2 mt-2">Produtos frescos com padrão de marketplace profissional</h1>
-        <p class="lead mb-0">
-          Descubra frutas, legumes e mercearia agrícola com pesquisa, filtros claros e navegação orientada à conversão.
+        <h1 class="h3 fw-bold mb-2 mt-2">Produtos frescos no marketplace</h1>
+        <p class="lead mb-0 text-muted">
+          Escolha frutas, hortícolas e produtos selecionados diretamente de produtores locais.
         </p>
       </div>
 
@@ -282,11 +354,11 @@
         </div>
 
         <div class="col-md-6 col-lg-12">
-          <div class="d-flex gap-2 flex-wrap justify-content-lg-end">
-            <a href="{% url 'products:list' %}" class="btn btn-light border">Limpar</a>
+          <div class="filter-actions">
+            <a href="{% url 'products:list' %}" class="btn btn-light border">Limpar filtros</a>
             <button type="submit" class="btn btn-success px-4">
               <i class="fa-solid fa-magnifying-glass me-1"></i>
-              Aplicar filtros
+              Filtrar
             </button>
           </div>
         </div>
@@ -441,7 +513,7 @@
             <div class="mt-auto d-grid gap-2">
               <a class="btn btn-outline-success btn-sm"
                  href="{% url 'products:detail' product.slug %}?back={{ current_path|urlencode }}">
-                Ver detalhes
+                Ver produto
               </a>
 
               {% if product.stock > 0 %}
@@ -454,7 +526,7 @@
 
                   <button type="submit" class="btn btn-success btn-sm w-100">
                     <i class="fa-solid fa-basket-shopping me-1"></i>
-                    Adicionar ao carrinho
+                    Adicionar
                   </button>
                 </form>
               {% else %}
@@ -485,11 +557,17 @@
           </li>
         {% endif %}
 
-        <li class="page-item active">
-          <span class="page-link">
-            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
-          </span>
-        </li>
+        {% for num in page_obj.paginator.page_range %}
+          {% if num == page_obj.number %}
+            <li class="page-item active">
+              <span class="page-link">{{ num }}</span>
+            </li>
+          {% elif num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %}
+            <li class="page-item">
+              <a class="page-link" href="?{% if current_query %}{{ current_query }}&{% endif %}page={{ num }}">{{ num }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
 
         {% if page_obj.has_next %}
           <li class="page-item">
@@ -505,6 +583,23 @@
     </nav>
   {% endif %}
 
+  <div class="trust-strip">
+    <div class="row g-2">
+      <div class="col-6 col-md-3">
+        <div class="trust-item"><i class="fa-solid fa-apple-whole"></i>Produtos frescos</div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="trust-item"><i class="fa-solid fa-people-group"></i>Produtores locais</div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="trust-item"><i class="fa-solid fa-cart-shopping"></i>Compra simples</div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="trust-item"><i class="fa-solid fa-headset"></i>Apoio ao cliente</div>
+      </div>
+    </div>
+  </div>
+
 {% else %}
 
   <div class="empty-state bg-white p-5 text-center shadow-sm">
@@ -512,22 +607,15 @@
       <i class="fa-solid fa-basket-shopping"></i>
     </div>
 
-    <h2 class="h4 fw-bold mb-2">Ainda não existem produtos disponíveis</h2>
+    <h2 class="h4 fw-bold mb-2">Nenhum produto encontrado.</h2>
 
     <p class="text-muted mb-4">
-      {% if filters.q or selected_category or filters.availability or filters.min_price or filters.max_price %}
-        Nenhum produto corresponde aos filtros aplicados. Ajuste os critérios e tente novamente.
-      {% else %}
-        Assim que os produtores publicarem produtos, estes serão apresentados nesta página.
-      {% endif %}
+      Tente limpar os filtros ou pesquisar por outra categoria.
     </p>
 
     <div class="d-flex justify-content-center gap-2 flex-wrap">
       <a href="{% url 'products:list' %}" class="btn btn-outline-success">
-        Ver catálogo completo
-      </a>
-      <a href="{% url 'home' %}" class="btn btn-success">
-        Voltar ao início
+        Ver todos os produtos
       </a>
     </div>
   </div>

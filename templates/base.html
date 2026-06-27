@@ -44,10 +44,10 @@
         }
 
         .coverde-navbar {
-            min-height: 78px;
+            min-height: 74px;
             background: #ffffff;
             border-bottom: 1px solid var(--coverde-border);
-            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
             z-index: 1050;
         }
 
@@ -74,9 +74,20 @@
 
         .coverde-navbar .nav-link {
             color: #374151;
-            font-weight: 750;
+            font-weight: 700;
             border-radius: 999px;
-            padding: 9px 14px;
+            padding: 8px 12px;
+        }
+
+        .coverde-navbar .navbar-toggler {
+            border: 1px solid var(--coverde-border);
+            border-radius: 12px;
+            padding: 6px 10px;
+            color: #374151;
+        }
+
+        .coverde-navbar .navbar-toggler:focus {
+            box-shadow: 0 0 0 0.2rem rgba(21, 128, 61, 0.14);
         }
 
         .coverde-navbar .nav-link:hover,
@@ -86,8 +97,8 @@
         }
 
         .coverde-search {
-            min-width: 280px;
-            max-width: 430px;
+            min-width: 210px;
+            max-width: 350px;
             width: 100%;
             display: flex;
             align-items: center;
@@ -175,7 +186,7 @@
         .coverde-footer {
             background: #ffffff;
             border-top: 1px solid var(--coverde-border);
-            padding: 42px 0 24px;
+            padding: 36px 0 20px;
             margin-top: 40px;
         }
 
@@ -221,8 +232,14 @@
                 margin: 12px 0;
             }
 
+            .coverde-navbar .navbar-collapse {
+                border-top: 1px solid #eef2f7;
+                margin-top: 10px;
+                padding-top: 10px;
+            }
+
             .navbar-actions {
-                padding-bottom: 10px;
+                padding-bottom: 8px;
             }
         }
 
@@ -283,6 +300,7 @@
                 <h5>Marketplace</h5>
                 <p><a href="{% url 'home' %}">Início</a></p>
                 <p><a href="{% url 'products:list' %}">Produtos</a></p>
+                <p><a href="{% url 'home' %}#categorias">Categorias</a></p>
                 <p><a href="{% url 'orders:cart' %}">Carrinho</a></p>
             </div>
 
@@ -291,6 +309,7 @@
                 <p><a href="{% url 'users:login' %}">Entrar</a></p>
                 <p><a href="{% url 'users:register' %}">Criar Conta</a></p>
                 <p><a href="{% url 'users:register_producer' %}">Vender</a></p>
+                <p><a href="{% url 'reviews:my_reviews' %}">Minhas Avaliações</a></p>
             </div>
 
             <div class="col-md-4">
@@ -301,6 +320,13 @@
                         suporte@coverde.pt
                     </a>
                 </p>
+
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    <button type="button" class="btn btn-sm btn-outline-success rounded-pill" data-open-coverde-chat="1">
+                        Apoio / FAQ
+                    </button>
+                    <a href="{% url 'users:register_producer' %}" class="btn btn-sm btn-outline-secondary rounded-pill">Sou produtor</a>
+                </div>
 
                 <div class="d-flex gap-2 mt-3">
                     <a href="#" class="btn btn-outline-secondary btn-sm rounded-circle">
