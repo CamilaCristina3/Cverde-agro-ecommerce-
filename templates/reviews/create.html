@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Criar Avaliacao | COVERDE{% endblock %}
+
+{% block content %}
+<section class="py-5">
+  <div class="container" style="max-width: 760px;">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-4 p-md-5">
+        <h1 class="h4 fw-bold mb-2">Partilhar avaliacao</h1>
+
+        {% if product %}
+          <p class="text-muted mb-4">Vai avaliar o produto <strong>{{ product.name }}</strong>.</p>
+        {% elif producer %}
+          <p class="text-muted mb-4">Vai avaliar o produtor <strong>{{ producer.name }}</strong>.</p>
+        {% endif %}
+
+        {% if has_purchased %}
+          <div class="alert alert-success py-2">Compra verificada para esta avaliacao.</div>
+        {% else %}
+          <div class="alert alert-warning py-2">Avaliacao sem compra verificada.</div>
+        {% endif %}
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label fw-semibold" for="{{ form.rating.id_for_label }}">{{ form.rating.label }}</label>
+            {{ form.rating }}
+            {% if form.rating.errors %}<div class="invalid-feedback d-block">{{ form.rating.errors.0 }}</div>{% endif %}
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-semibold" for="{{ form.comment.id_for_label }}">{{ form.comment.label }}</label>
+            {{ form.comment }}
+            {% if form.comment.errors %}<div class="invalid-feedback d-block">{{ form.comment.errors.0 }}</div>{% endif %}
+          </div>
+
+          <div class="d-flex gap-2 flex-wrap">
+            <button type="submit" class="btn btn-success px-4">Guardar avaliacao</button>
+            {% if product %}
+              <a href="{% url 'products:detail' product.slug %}" class="btn btn-outline-secondary">Cancelar</a>
+            {% elif producer %}
+              <a href="{% url 'reviews:producer_list_uuid' producer.id %}" class="btn btn-outline-secondary">Cancelar</a>
+            {% else %}
+              <a href="{% url 'home' %}" class="btn btn-outline-secondary">Cancelar</a>
+            {% endif %}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

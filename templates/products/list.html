@@ -88,22 +88,22 @@
   }
 
   .product-image {
-    height: 210px;
-    object-fit: cover;
+    height: 190px;
+    object-fit: contain;
     background: linear-gradient(180deg, #f5f7f2, #eef4ee);
-    padding: 1rem;
+    padding: .6rem;
     border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;
   }
 
   .product-title {
-    min-height: 42px;
+    min-height: 44px;
     font-size: 1rem;
     font-weight: 700;
   }
 
   .product-description {
-    min-height: 44px;
+    min-height: 40px;
   }
 
   .price {
@@ -171,6 +171,21 @@
   @media (max-width: 991.98px) {
     .market-kpis {
       grid-template-columns: 1fr;
+    }
+
+    .product-image {
+      height: 170px;
+    }
+  }
+
+  @media (max-width: 575.98px) {
+    .market-header .display-6 {
+      font-size: 1.65rem;
+    }
+
+    .product-image {
+      height: 160px;
+      padding: .5rem;
     }
   }
 </style>

@@ -188,11 +188,17 @@ def product_detail(request, slug):
         category=product.category,
         is_active=True,
         status='active'
-    ).exclude(id=product.id)[:4]
+    ).select_related('producer', 'category').exclude(id=product.id)[:4]
+
+    back_url = (request.GET.get('back') or request.META.get('HTTP_REFERER') or '').strip()
+    if not back_url:
+        back_url = '/produtos/'
 
     return render(request, 'products/detail.html', {
         'product': product,
         'related': related,
+        'related_products': related,
+        'back_url': back_url,
         'title': product.name
     })
 

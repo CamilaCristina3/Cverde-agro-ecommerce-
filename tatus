@@ -1,0 +1,16 @@
+warning: in the working copy of 'templates/base.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/products/detail.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/products/list.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/users/producer_panel.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/users/profile.html', LF will be replaced by CRLF the next time Git touches it
+ apps/products/views.py                |  8 [32m++[m[31m-[m
+ apps/reviews/urls.py                  |  4 [32m++[m
+ apps/reviews/views.py                 | 45 [32m++++++++[m[31m--------[m
+ apps/users/views.py                   | 16 [32m++++++[m
+ templates/base.html                   |  2 [32m+[m
+ templates/chatbot/chatbot_widget.html | 39 [32m++++++++++[m[31m----[m
+ templates/products/detail.html        | 26 [32m++++++++[m[31m--[m
+ templates/products/list.html          | 25 [32m+++++++[m[31m--[m
+ templates/users/producer_panel.html   | 96 [32m++++++++++++++++++++++++++++++++[m[31m---[m
+ templates/users/profile.html          | 72 [32m++++++++++++++++++++++++[m[31m--[m
+ 10 files changed, 278 insertions(+), 55 deletions(-)

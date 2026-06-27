@@ -1,9 +1,44 @@
 {% extends "base.html" %}
 {% block title %}Perfil | Cverde{% endblock %}
 
+{% block extra_css %}
+<style>
+  .profile-hero {
+    border-radius: 1.25rem;
+    background: linear-gradient(135deg, #14532d, #198754);
+    color: #fff;
+  }
+
+  .profile-hero .muted {
+    color: rgba(255,255,255,.82);
+  }
+
+  .quick-link {
+    display: block;
+    border: 1px solid #e5e7eb;
+    border-radius: .9rem;
+    padding: .85rem 1rem;
+    text-decoration: none;
+    color: #1f2937;
+    font-weight: 600;
+  }
+
+  .quick-link:hover {
+    border-color: #198754;
+    color: #14532d;
+    background: #f0fdf4;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 <section class="py-5">
   <div class="container">
+    <div class="profile-hero p-4 p-md-5 mb-4 shadow-sm">
+      <h1 class="h4 mb-1">Area do Consumidor</h1>
+      <p class="mb-0 muted">Acompanhe conta, carrinho e proximas compras num so lugar.</p>
+    </div>
+
     <div class="row gy-4">
       <div class="col-lg-5">
         <div class="card shadow-sm h-100">
@@ -38,13 +73,40 @@
         <div class="card shadow-sm h-100">
           <div class="card-body">
             <h2 class="h5 mb-3">Ações rápidas</h2>
-            <ul class="list-unstyled mb-0">
-              <li class="mb-2"><a href="{% url 'products:list' %}">Ver produtos</a></li>
-              <li class="mb-2"><a href="{% url 'orders:cart' %}">Ver carrinho</a></li>
+
+            <div class="row g-2 mb-3">
+              <div class="col-sm-6">
+                <a class="quick-link" href="{% url 'products:list' %}">
+                  <i class="fas fa-seedling me-2 text-success"></i>Ver produtos
+                </a>
+              </div>
+              <div class="col-sm-6">
+                <a class="quick-link" href="{% url 'orders:cart' %}">
+                  <i class="fas fa-shopping-cart me-2 text-success"></i>Ver carrinho
+                </a>
+              </div>
+              <div class="col-sm-6">
+                <a class="quick-link" href="{% url 'reviews:my_reviews' %}">
+                  <i class="fas fa-star me-2 text-success"></i>Minhas avaliacoes
+                </a>
+              </div>
+              <div class="col-sm-6">
+                <button type="button" class="quick-link text-start w-100" data-open-coverde-chat="1">
+                  <i class="fas fa-headset me-2 text-success"></i>Ajuda e FAQ
+                </button>
+              </div>
               {% if is_producer %}
-                <li><a href="{% url 'users:producer_panel' %}">Aceder ao painel de produtor</a></li>
+                <div class="col-12">
+                  <a class="quick-link" href="{% url 'users:producer_panel' %}">
+                    <i class="fas fa-store me-2 text-success"></i>Aceder ao painel de produtor
+                  </a>
+                </div>
               {% endif %}
-            </ul>
+            </div>
+
+            <div class="alert alert-light border mb-0">
+              Dica: para comprar, escolha produtos, adicione ao carrinho e conclua no checkout.
+            </div>
           </div>
         </div>
       </div>

@@ -26,13 +26,11 @@
                     <i class="fas fa-robot"></i>
                 </div>
                 <div class="message-content">
-                    Olá! 👋 Sou a assistente virtual da Coverde.<br>
-                    Posso ajudar com:
+                    Olá! Sou a assistente virtual da Coverde.<br>
+                    FAQ rápida para consumidor e produtor:
                     <ul class="help-suggestions">
-                        <li>📦 Produtos e encomendas</li>
-                        <li>🚚 Entregas e prazos</li>
-                        <li>💰 Pagamentos</li>
-                        <li>🌱 Como ser produtor</li>
+                        <li>Consumidor: criar conta, comprar, carrinho, encomendas, avaliar, suporte</li>
+                        <li>Produtor: criar conta, completar perfil, criar/editar produto, vendas e avaliacoes</li>
                     </ul>
                     Como posso ajudá-lo hoje?
                 </div>
@@ -41,10 +39,10 @@
 
         <div class="chatbot-input-area">
             <div class="suggestions quick-replies" id="quickReplies">
-                <button class="suggestion-chip" data-message="Como faço uma encomenda?">📦 Como encomendar?</button>
-                <button class="suggestion-chip" data-message="Quanto tempo demora a entrega?">🚚 Prazo de entrega</button>
-                <button class="suggestion-chip" data-message="Como posso ser produtor?">🌱 Ser produtor</button>
-                <button class="suggestion-chip" data-message="Formas de pagamento">💰 Pagamentos</button>
+                <button class="suggestion-chip" data-message="Como criar conta?">Como criar conta?</button>
+                <button class="suggestion-chip" data-message="Como comprar produtos?">Como comprar?</button>
+                <button class="suggestion-chip" data-message="Como criar produto?">Criar produto</button>
+                <button class="suggestion-chip" data-message="Como acompanhar uma encomenda?">Acompanhar encomenda</button>
             </div>
             <div class="input-group">
                 <input type="text" id="chatbotInput" placeholder="Escreva a sua mensagem..." autocomplete="off">
@@ -348,6 +346,19 @@ document.addEventListener('DOMContentLoaded', function() {
     let isTyping = false;
 
     const botResponses = {
+        'como criar conta': 'Para criar conta: 1) Clique em Criar Conta 2) Escolha consumidor ou produtor 3) Preencha nome, email e palavra-passe 4) Submeta o formulario.',
+        'como comprar produtos': 'Para comprar: 1) Abra o catalogo 2) Adicione produtos ao carrinho 3) Confirme a quantidade 4) Avance para checkout 5) Finalize o pagamento.',
+        'como adicionar produtos ao carrinho': 'No detalhe do produto clique em Adicionar ao carrinho. Depois pode ajustar quantidades no carrinho.',
+        'como acompanhar uma encomenda': 'Acompanhe no detalhe da encomenda e nas notificacoes apos o pagamento e envio.',
+        'como avaliar um produto': 'Depois da compra, abra o produto e clique em Avaliar produto. Escolha estrelas e escreva um comentario.',
+        'como contactar suporte': 'Use este chat para FAQ rapida ou contacte suporte@coverde.pt.',
+        'como criar conta de produtor': 'No registo, escolha a opcao produtor e preencha os dados da exploracao.',
+        'como completar o perfil': 'Abra o perfil, clique em Editar perfil e complete os dados pessoais e de contacto.',
+        'como criar produto': 'No painel do produtor clique em Adicionar produto, preencha dados, stock e preco, e guarde.',
+        'como editar produto': 'No painel do produtor abra Meus produtos e use o botao Editar no produto desejado.',
+        'como acompanhar encomendas': 'No painel do produtor veja Encomendas recentes para estado e valor das vendas.',
+        'como receber avaliações': 'As avaliacoes aparecem no perfil/produtos assim que os consumidores submetem feedback.',
+        'o que preciso fazer para começar a vender': 'Complete perfil de produtor, publique produtos ativos com stock e aguarde validacao interna quando aplicavel.',
         'olá': 'Olá! 👋 Como posso ajudá-lo hoje?',
         'oi': 'Oi! 😊 Em que posso ser útil?',
         'bom dia': 'Bom dia! 🌞 Como posso ajudar?',
@@ -480,6 +491,14 @@ document.addEventListener('DOMContentLoaded', function() {
             if (message) {
                 processUserMessage(message);
             }
+        });
+    });
+
+    document.querySelectorAll('[data-open-coverde-chat="1"]').forEach((el) => {
+        el.addEventListener('click', (event) => {
+            event.preventDefault();
+            container.classList.add('active');
+            input.focus();
         });
     });
 });

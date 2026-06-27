@@ -428,6 +428,21 @@ def producer_panel(request):
         {"label": "Avaliação", "value": f"{producer.rating:.1f}/5", "detail": f"{producer.total_ratings} avaliações", "icon": "⭐"},
     ]
 
+    readiness_steps = [
+        {
+            "label": "Perfil do produtor preenchido",
+            "done": bool((producer.name or "").strip() and (producer.location or "").strip()),
+        },
+        {
+            "label": "Pelo menos 1 produto ativo",
+            "done": active_products > 0,
+        },
+        {
+            "label": "Conta aprovada para vender",
+            "done": producer.status == Producer.Status.APPROVED,
+        },
+    ]
+
     return render(
         request,
         "users/producer_panel.html",
@@ -438,6 +453,7 @@ def producer_panel(request):
             "stats": stats,
             "recent_orders": recent_orders,
             "top_products": top_products,
+            "readiness_steps": readiness_steps,
             "require_producer_verification": producer.status != Producer.Status.APPROVED,
         },
     )

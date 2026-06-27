@@ -70,7 +70,7 @@
                     <div class="mb-4">
                         {% if product.total_reviews > 0 %}
                             <span class="has-text-warning has-text-weight-semibold">
-                                ★ {{ product.average_rating|floatformat:1 }}/5
+                                ★ {{ product.rating|floatformat:1 }}/5
                             </span>
                             <span class="has-text-grey is-size-7">
                                 ({{ product.total_reviews }} avaliação{{ product.total_reviews|pluralize:"ão,ões" }})
@@ -166,6 +166,17 @@
                             Produto indisponível
                         </button>
                     {% endif %}
+
+                    <div class="buttons mb-5">
+                        <a href="{% url 'reviews:create_product_uuid' product.id %}" class="button is-success is-light is-fullwidth">
+                            <span class="icon"><i class="fas fa-star"></i></span>
+                            <span>Avaliar produto</span>
+                        </a>
+                        <a href="{% url 'reviews:product_list_uuid' product.id %}" class="button is-light is-fullwidth">
+                            <span class="icon"><i class="fas fa-comments"></i></span>
+                            <span>Ver todas as avaliações</span>
+                        </a>
+                    </div>
 
                     <div class="trust-box">
                         <div>
@@ -318,12 +329,13 @@
     border-radius: 18px;
     overflow: hidden;
     background: #f0fdf4;
+    min-height: 360px;
 }
 
 .product-main-image img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: 360px;
+    object-fit: contain;
 }
 
 .placeholder-svg {
@@ -505,6 +517,14 @@
 
     .title.is-3 {
         font-size: 1.6rem;
+    }
+
+    .product-main-image {
+        min-height: 260px;
+    }
+
+    .product-main-image img {
+        height: 260px;
     }
 }
 </style>

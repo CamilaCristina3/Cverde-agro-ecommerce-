@@ -2,17 +2,74 @@
 
 {% block title %}Painel do Produtor | Cverde{% endblock %}
 
+{% block extra_css %}
+<style>
+  .producer-hero {
+    border-radius: 1.25rem;
+    background: linear-gradient(135deg, #14532d, #198754);
+    color: #fff;
+  }
+
+  .quick-actions .btn {
+    border-radius: 999px;
+    font-weight: 700;
+  }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .35rem .7rem;
+    border-radius: 999px;
+    font-size: .8rem;
+    font-weight: 700;
+  }
+
+  .status-pill.pending {
+    background: #fff3cd;
+    color: #946200;
+  }
+
+  .status-pill.approved {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .status-pill.rejected,
+  .status-pill.suspended {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 <section class="py-5">
   <div class="container">
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-4">
-      <div>
-        <h1 class="h4 mb-1">Painel do Produtor</h1>
-        <p class="text-muted mb-0">Gerir os seus produtos e encomendas.</p>
+    <div class="producer-hero p-4 p-md-5 mb-4 shadow-sm">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+        <div>
+          <h1 class="h4 mb-1">Painel do Produtor</h1>
+          <p class="mb-2 text-white-50">Gerir os seus produtos, encomendas e progresso da loja.</p>
+          {% if producer %}
+            <span class="status-pill {{ producer.status }}">
+              <i class="fas fa-circle"></i>
+              Estado do perfil: {{ producer.get_status_display }}
+            </span>
+          {% endif %}
+        </div>
+        <div class="quick-actions d-flex flex-wrap gap-2">
+          <a href="{% url 'users:product_create' %}" class="btn btn-light text-success">
+            <i class="fas fa-plus me-2"></i>Adicionar produto
+          </a>
+          <a href="{% url 'users:producer_products' %}" class="btn btn-outline-light">
+            <i class="fas fa-box me-2"></i>Gerir produtos
+          </a>
+          <button type="button" class="btn btn-outline-light" data-open-coverde-chat="1">
+            <i class="fas fa-headset me-2"></i>Ajuda rápida
+          </button>
+        </div>
       </div>
-      <a href="{% url 'users:product_create' %}" class="btn btn-primary">
-        <i class="fas fa-plus me-2"></i>Adicionar produto
-      </a>
     </div>
 
     {% if not producer %}
@@ -50,6 +107,22 @@
           </div>
         </div>
       {% endfor %}
+    </div>
+
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h2 class="h5 mb-3">Checklist para começar a vender</h2>
+        <div class="row g-2">
+          {% for step in readiness_steps %}
+            <div class="col-12 col-md-4">
+              <div class="border rounded-3 p-3 h-100 {% if step.done %}bg-success-subtle border-success{% else %}bg-light{% endif %}">
+                <div class="fw-semibold mb-1">{{ step.label }}</div>
+                <small class="text-muted">{% if step.done %}Concluído{% else %}Pendente{% endif %}</small>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
     </div>
 
     <div class="row g-4 mb-4">
@@ -100,7 +173,10 @@
 
     <div class="card shadow-sm">
       <div class="card-body">
-        <h2 class="h5 mb-3">Meus produtos</h2>
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+          <h2 class="h5 mb-0">Meus produtos</h2>
+          <a href="{% url 'users:producer_products' %}" class="btn btn-sm btn-outline-success">Ver todos</a>
+        </div>
         {% if producer %}
           {% if products %}
             <div class="table-responsive">
@@ -112,6 +188,7 @@
                     <th>Unidade</th>
                     <th>Stock</th>
                     <th class="text-end">Preço</th>
+                    <th class="text-end">Ações</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -128,6 +205,9 @@
                         {% endif %}
                       </td>
                       <td class="text-end text-success fw-semibold">€{{ product.price }}</td>
+                      <td class="text-end">
+                        <a href="{% url 'users:product_edit' product.id %}" class="btn btn-sm btn-outline-success">Editar</a>
+                      </td>
                     </tr>
                   {% endfor %}
                 </tbody>
