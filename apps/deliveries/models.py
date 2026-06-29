@@ -29,4 +29,5 @@ class Delivery(models.Model):
         verbose_name_plural = 'Deliveries'
     
     def __str__(self):
-        return f'Delivery for {self.order.order_number}'
+        order_ref = self.order.reference or str(self.order_id)
+        return f'Delivery for order #{order_ref}'
