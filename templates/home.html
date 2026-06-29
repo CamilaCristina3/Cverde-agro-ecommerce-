@@ -392,7 +392,7 @@
                    {% if product.main_image %}
                      <img src="{{ product.main_image.url }}" alt="{{ product.name }}" class="market-product-img" loading="lazy">
                    {% else %}
-                     <img src="{% static 'images/placeholders/products/hero-bg.jpg' %}" alt="{{ product.name }}" class="market-product-img" loading="lazy">
+                     <img src="{% static 'images/placeholders/products/product_placeholder.svg' %}" alt="{{ product.name }}" class="market-product-img" loading="lazy">
                    {% endif %}
                  </a>
                  <div class="market-product-body">
