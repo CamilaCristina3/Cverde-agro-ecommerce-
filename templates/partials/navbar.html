@@ -3,74 +3,127 @@
 <nav class="navbar navbar-expand-lg coverde-navbar sticky-top">
     <div class="container">
 
-        <a class="navbar-brand coverde-brand" href="{% url 'home' %}">
-            <img src="/media/products/logo.png" alt="COVERDE">
-            <span>COVERDE</span>
+        <!-- Logo -->
+        <a class="navbar-brand coverde-brand d-flex align-items-center gap-2" href="{% url 'home' %}">
+            <img src="{% static 'products/logo.png' %}" alt="COVERDE" height="38">
+            <span class="brand-text">COVERDE</span>
         </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
-                aria-controls="mainNavbar" aria-expanded="false" aria-label="Abrir menu">
+        <!-- Mobile button -->
+        <button class="navbar-toggler border-0" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mainNavbar"
+                aria-controls="mainNavbar"
+                aria-expanded="false"
+                aria-label="Abrir menu">
             <i class="fa-solid fa-bars"></i>
         </button>
 
         <div class="collapse navbar-collapse" id="mainNavbar">
 
-            <form class="coverde-search my-3 my-lg-0" action="{% url 'products:list' %}" method="get">
-                <input type="search" name="q" placeholder="Pesquisar frutas, legumes, verduras...">
-                <button type="submit" aria-label="Pesquisar">
-                    <i class="fa-solid fa-search"></i>
-                </button>
-            </form>
+            <!-- Main links -->
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
 
-            <ul class="navbar-nav nav-core ms-lg-3 mb-2 mb-lg-0 align-items-lg-center gap-lg-1">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'home' %}">
+                    <a class="nav-link {% if request.path == '/' %}active{% endif %}"
+                       href="{% url 'home' %}">
                         Início
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'products:list' %}">
+                    <a class="nav-link {% if '/produtos/' in request.path %}active{% endif %}"
+                       href="{% url 'products:list' %}">
                         Produtos
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'home' %}#categorias">
-                        Categorias
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'home' %}#produtores">
-                        Produtores
-                    </a>
-                </li>
             </ul>
 
-            <div class="navbar-actions d-flex flex-wrap gap-2 align-items-center ms-lg-auto">
-                <a class="nav-link cart-badge px-2" href="{% url 'orders:cart' %}" aria-label="Carrinho">
+            <!-- Search only desktop -->
+            <form class="coverde-search d-none d-lg-flex me-3"
+                  action="{% url 'products:list' %}"
+                  method="get"
+                  role="search">
+                <div class="input-group input-group-sm">
+                    <input type="search"
+                           name="q"
+                           class="form-control"
+                           placeholder="Pesquisar produtos..."
+                           aria-label="Pesquisar produtos">
+                    <button class="btn btn-outline-success" type="submit">
+                        <i class="fa-solid fa-search"></i>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Right actions -->
+            <div class="d-flex align-items-center gap-2">
+
+                <!-- Cart -->
+                <a class="btn btn-light position-relative coverde-cart-btn"
+                   href="{% url 'orders:cart' %}"
+                   aria-label="Carrinho">
                     <i class="fa-solid fa-cart-shopping"></i>
-                    <span class="badge rounded-pill bg-warning text-dark">0</span>
+
+                    {% if cart_count %}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
+                            {{ cart_count }}
+                        </span>
+                    {% endif %}
                 </a>
 
                 {% if request.user.is_authenticated %}
-                    <a href="{% url 'users:profile' %}" class="btn-coverde-outline text-decoration-none">
-                        Perfil
-                    </a>
 
-                    <a href="{% url 'users:logout' %}" class="btn-coverde text-decoration-none">
-                        Sair
-                    </a>
+                    <!-- User dropdown -->
+                    <div class="dropdown">
+                        <button class="btn btn-coverde-outline dropdown-toggle"
+                                type="button"
+                                id="userDropdown"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            <i class="fa-solid fa-user me-1"></i>
+                            {{ request.user.get_short_name|default:request.user.username }}
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+
+                            <li>
+                                <a class="dropdown-item" href="{% url 'users:profile' %}">
+                                    <i class="fa-solid fa-id-card me-2"></i>
+                                    Perfil
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item" href="{% url 'users:orders' %}">
+                                    <i class="fa-solid fa-bag-shopping me-2"></i>
+                                    Minhas encomendas
+                                </a>
+                            </li>
+
+                            <li><hr class="dropdown-divider"></li>
+
+                            <li>
+                                <a class="dropdown-item text-danger" href="{% url 'users:logout' %}">
+                                    <i class="fa-solid fa-right-from-bracket me-2"></i>
+                                    Sair
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+
                 {% else %}
-                    <a href="{% url 'users:login' %}" class="btn-coverde-outline text-decoration-none">
+
+                    <!-- Login only -->
+                    <a href="{% url 'users:login' %}" class="btn btn-coverde">
+                        <i class="fa-solid fa-right-to-bracket me-1"></i>
                         Entrar
                     </a>
 
-                    <a href="{% url 'users:register' %}" class="btn-coverde text-decoration-none">
-                        Criar conta
-                    </a>
                 {% endif %}
+
             </div>
         </div>
     </div>

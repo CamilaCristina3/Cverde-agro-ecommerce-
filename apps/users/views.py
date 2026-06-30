@@ -390,6 +390,23 @@ def product_list_redirect(request):
 
 
 @login_required
+def user_orders(request):
+    """Lista as encomendas do utilizador autenticado."""
+    orders = Order.objects.filter(customer=request.user).order_by('-created_at')
+    
+    paginator = Paginator(orders, 10)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        'title': 'Minhas Encomendas',
+        'page_obj': page_obj,
+        'orders': page_obj.object_list,
+    }
+    return render(request, 'users/user_orders.html', context)
+
+
+@login_required
 def producer_panel(request):
     producer = _get_current_producer(request)
     if producer is None:

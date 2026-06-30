@@ -35,6 +35,8 @@ urlpatterns = [
     path('profile/edit/', views.profile_edit),
     path('perfil/eliminar/', views.delete_account, name='delete_account'),
     path('profile/delete/', views.delete_account),
+    path('perfil/encomendas/', views.user_orders, name='orders'),
+    path('profile/orders/', views.user_orders),
     path('perfil/moradas/adicionar/', views.add_address, name='add_address'),  # ← Portugal: moradas
     path('profile/addresses/add/', views.add_address),
 

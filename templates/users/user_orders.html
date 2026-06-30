@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Minhas Encomendas | COVERDE{% endblock %}
+
+{% block content %}
+<section class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="h4 fw-bold mb-0">Minhas Encomendas</h1>
+      <a href="{% url 'products:list' %}" class="btn btn-outline-success btn-sm">
+        <i class="fas fa-plus me-1"></i>Continuar comprando
+      </a>
+    </div>
+
+    {% if orders %}
+      <div class="row g-3">
+        {% for order in orders %}
+          <div class="col-12">
+            <div class="card shadow-sm border-0">
+              <div class="card-body">
+                <!-- Header da encomenda -->
+                <div class="row align-items-center mb-3 pb-3 border-bottom">
+                  <div class="col-md-8">
+                    <div class="mb-2">
+                      <small class="text-muted">Referência: <code>{{ order.reference }}</code></small>
+                    </div>
+                    <h5 class="mb-1">
+                      {% if order.status == 'pending' %}
+                        <span class="badge bg-warning text-dark">Pendente de pagamento</span>
+                      {% elif order.status == 'confirmed' %}
+                        <span class="badge bg-info text-white">Confirmada</span>
+                      {% elif order.status == 'processing' %}
+                        <span class="badge bg-primary text-white">Em preparação</span>
+                      {% elif order.status == 'shipped' %}
+                        <span class="badge bg-primary text-white">Enviada</span>
+                      {% elif order.status == 'delivered' %}
+                        <span class="badge bg-success text-white">Entregue</span>
+                      {% elif order.status == 'cancelled' %}
+                        <span class="badge bg-danger text-white">Cancelada</span>
+                      {% elif order.status == 'refunded' %}
+                        <span class="badge bg-danger text-white">Reembolsada</span>
+                      {% endif %}
+                    </h5>
+                    <small class="text-muted">
+                      <i class="fas fa-calendar me-1"></i>
+                      {{ order.created_at|date:"d/m/Y H:i" }}
+                    </small>
+                  </div>
+                  <div class="col-md-4 text-md-end">
+                    <div class="mb-2">
+                      <small class="text-muted">Total</small>
+                    </div>
+                    <h5 class="mb-0 text-success fw-bold">€{{ order.total }}</h5>
+                  </div>
+                </div>
+
+                <!-- Itens da encomenda -->
+                <div class="mb-3">
+                  <h6 class="mb-2 fw-bold">Itens:</h6>
+                  <ul class="list-unstyled">
+                    {% for item in order.items.all %}
+                      <li class="py-2 border-bottom">
+                        <div class="d-flex justify-content-between align-items-start">
+                          <div>
+                            <p class="mb-1 fw-500">{{ item.product.name }}</p>
+                            <small class="text-muted">
+                              Produtor: <strong>{{ item.product.producer.name }}</strong>
+                            </small>
+                          </div>
+                          <div class="text-end">
+                            <p class="mb-1">
+                              <small class="text-muted">{{ item.quantity }} {{ item.product.unit }}</small>
+                            </p>
+                            <p class="mb-0 fw-bold">€{{ item.total }}</p>
+                          </div>
+                        </div>
+                      </li>
+                    {% empty %}
+                      <li class="py-2">
+                        <small class="text-muted">Nenhum item</small>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+
+                <!-- Resumo de preços -->
+                <div class="row mb-3">
+                  <div class="col-md-6 offset-md-6">
+                    <dl class="row small mb-0">
+                      <dt class="col-6 text-muted">Subtotal:</dt>
+                      <dd class="col-6 text-end">€{{ order.subtotal }}</dd>
+                      {% if order.delivery_fee %}
+                        <dt class="col-6 text-muted">Entrega:</dt>
+                        <dd class="col-6 text-end">€{{ order.delivery_fee }}</dd>
+                      {% endif %}
+                      {% if order.discount %}
+                        <dt class="col-6 text-muted">Desconto:</dt>
+                        <dd class="col-6 text-end">-€{{ order.discount }}</dd>
+                      {% endif %}
+                      <dt class="col-6 fw-bold">Total:</dt>
+                      <dd class="col-6 text-end fw-bold text-success">€{{ order.total }}</dd>
+                    </dl>
+                  </div>
+                </div>
+
+                <!-- Endereço de entrega -->
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6 class="fw-bold mb-2">Endereço de entrega:</h6>
+                    <address class="mb-0">
+                      <small>
+                        {{ order.delivery_name }}<br>
+                        {{ order.delivery_street }}<br>
+                        {{ order.delivery_city }} - {{ order.delivery_district }}<br>
+                        {{ order.delivery_country }}
+                      </small>
+                    </address>
+                  </div>
+                  <div class="col-md-6">
+                    <h6 class="fw-bold mb-2">Contacto de entrega:</h6>
+                    <address class="mb-0">
+                      <small>
+                        <i class="fas fa-phone me-1"></i>{{ order.delivery_phone }}<br>
+                      </small>
+                    </address>
+                  </div>
+                </div>
+
+                <!-- Ações -->
+                <div class="mt-3 pt-3 border-top">
+                  <a href="{% url 'orders:detail' order.id %}" class="btn btn-sm btn-outline-success">
+                    <i class="fas fa-eye me-1"></i>Ver detalhes
+                  </a>
+                  {% if order.status == 'pending' %}
+                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#cancelModal{{ order.id }}">
+                      <i class="fas fa-times me-1"></i>Cancelar
+                    </button>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- Paginação -->
+      {% if page_obj.has_other_pages %}
+        <nav aria-label="Paginação" class="mt-4">
+          <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page=1">Primeira</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+              </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+              {% if page_obj.number == num %}
+                <li class="page-item active">
+                  <span class="page-link">{{ num }}</span>
+                </li>
+              {% else %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Próxima</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Última</a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+      {% endif %}
+
+    {% else %}
+      <div class="alert alert-info text-center py-5" role="alert">
+        <i class="fas fa-inbox fa-3x mb-3 d-block opacity-75"></i>
+        <h5 class="mb-2">Nenhuma encomenda ainda</h5>
+        <p class="mb-3 text-muted">Você não fez nenhuma encomenda. Comece a explorar os produtos agora!</p>
+        <a href="{% url 'products:list' %}" class="btn btn-success">
+          <i class="fas fa-shopping-cart me-1"></i>Ver produtos
+        </a>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+{% endblock %}
