@@ -75,7 +75,7 @@ ALLOWED_HOSTS=localhost,127.0.0.1,testserver
 
 ## Restaurar a base de dados MySQL entregue
 
-O ficheiro de entrega da base de dados esta em `database/coverde_db_full.sql` e inclui estrutura + dados.
+O ficheiro oficial de entrega da base de dados esta em `database/coverde_db.sql` e inclui estrutura + dados.
 
 ### 1) Criar `.env` para MySQL
 
@@ -98,7 +98,7 @@ ALLOWED_HOSTS=localhost,127.0.0.1,testserver
 Como o dump foi gerado com `--databases`, ele contem criacao da base, `CREATE TABLE` e `INSERT INTO`.
 
 ```bash
-mysql -u root -p < database/coverde_db_full.sql
+mysql -u root -p < database/coverde_db.sql
 ```
 
 ### 3) Confirmar tabelas e arrancar o projeto
@@ -132,7 +132,7 @@ python manage.py check
 ### Verificar se o dump inclui estrutura
 
 ```powershell
-Select-String -Path database/coverde_db_full.sql -Pattern "CREATE TABLE"
+Select-String -Path database/coverde_db.sql -Pattern "CREATE TABLE"
 ```
 
 ### Criar superutilizador
