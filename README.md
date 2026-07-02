@@ -44,7 +44,11 @@ pip install -r requirements.txt
 
 ### 2) Configurar variaveis de ambiente
 
-Crie um ficheiro `.env` na raiz do projeto.
+Crie um ficheiro `.env` na raiz do projeto a partir de `.env.example`.
+
+```bash
+copy .env.example .env
+```
 
 Exemplo para usar SQLite (mais rapido para desenvolvimento):
 
@@ -69,6 +73,43 @@ DB_PORT=3306
 ALLOWED_HOSTS=localhost,127.0.0.1,testserver
 ```
 
+## Restaurar a base de dados MySQL entregue
+
+O ficheiro de entrega da base de dados esta em `database/coverde_db_full.sql` e inclui estrutura + dados.
+
+### 1) Criar `.env` para MySQL
+
+Use estas variaveis no ficheiro `.env`:
+
+```env
+DEBUG=true
+SECRET_KEY=change-me-dev-coverde
+DB_USE_SQLITE=false
+DB_NAME=coverde_db
+DB_USER=root
+DB_PASSWORD=0000
+DB_HOST=localhost
+DB_PORT=3306
+ALLOWED_HOSTS=localhost,127.0.0.1,testserver
+```
+
+### 2) Restaurar o dump completo
+
+Como o dump foi gerado com `--databases`, ele contem criacao da base, `CREATE TABLE` e `INSERT INTO`.
+
+```bash
+mysql -u root -p < database/coverde_db_full.sql
+```
+
+### 3) Confirmar tabelas e arrancar o projeto
+
+```bash
+python manage.py migrate
+python manage.py runserver
+```
+
+Se a base foi restaurada corretamente, o admin Django deve conseguir visualizar e gerir os registos existentes.
+
 ### 3) Aplicar migracoes e arrancar servidor
 
 ```bash
@@ -86,6 +127,12 @@ Aplicacao disponivel em:
 
 ```bash
 python manage.py check
+```
+
+### Verificar se o dump inclui estrutura
+
+```powershell
+Select-String -Path database/coverde_db_full.sql -Pattern "CREATE TABLE"
 ```
 
 ### Criar superutilizador
