@@ -375,56 +375,6 @@ INSERT INTO `django_migrations` VALUES (1,'contenttypes','0001_initial','2026-06
 UNLOCK TABLES;
 
 --
--- Table structure for table `django_migrations_backup_20260626`
---
-
-DROP TABLE IF EXISTS `django_migrations_backup_20260626`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `django_migrations_backup_20260626` (
-  `id` bigint NOT NULL DEFAULT '0',
-  `app` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `applied` datetime(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `django_migrations_backup_20260626`
---
-
-LOCK TABLES `django_migrations_backup_20260626` WRITE;
-/*!40000 ALTER TABLE `django_migrations_backup_20260626` DISABLE KEYS */;
-INSERT INTO `django_migrations_backup_20260626` VALUES (1,'contenttypes','0001_initial','2026-06-25 18:37:18.151650'),(2,'contenttypes','0002_remove_content_type_name','2026-06-25 18:37:18.241829'),(3,'auth','0001_initial','2026-06-25 18:37:18.630503'),(4,'auth','0002_alter_permission_name_max_length','2026-06-25 18:37:18.720741'),(5,'auth','0003_alter_user_email_max_length','2026-06-25 18:37:18.727743'),(6,'auth','0004_alter_user_username_opts','2026-06-25 18:37:18.734809'),(7,'auth','0005_alter_user_last_login_null','2026-06-25 18:37:18.741645'),(8,'auth','0006_require_contenttypes_0002','2026-06-25 18:37:18.752009'),(9,'auth','0007_alter_validators_add_error_messages','2026-06-25 18:37:18.758801'),(10,'auth','0008_alter_user_username_max_length','2026-06-25 18:37:18.765025'),(11,'auth','0009_alter_user_last_name_max_length','2026-06-25 18:37:18.769372'),(12,'auth','0010_alter_group_name_max_length','2026-06-25 18:37:18.790584'),(13,'auth','0011_update_proxy_permissions','2026-06-25 18:37:18.797314'),(14,'auth','0012_alter_user_first_name_max_length','2026-06-25 18:37:18.806197'),(15,'users_auth','0001_initial','2026-06-25 18:37:19.790030'),(16,'admin','0001_initial','2026-06-25 18:37:20.021503'),(17,'admin','0002_logentry_remove_auto_add','2026-06-25 18:37:20.033205'),(18,'admin','0003_logentry_add_action_flag_choices','2026-06-25 18:37:20.049260'),(19,'products','0001_initial','2026-06-25 18:37:20.345833'),(20,'cart','0001_initial','2026-06-25 18:37:20.498255'),(21,'cart','0002_initial','2026-06-25 18:37:20.637096'),(22,'categories','0001_initial','2026-06-25 18:37:20.775063'),(23,'orders_mgmt','0001_initial','2026-06-25 18:37:20.914911'),(24,'deliveries','0001_initial','2026-06-25 18:37:20.949240'),(25,'deliveries','0002_initial','2026-06-25 18:37:21.046922'),(26,'inventory','0001_initial','2026-06-25 18:37:21.101977'),(27,'inventory','0002_initial','2026-06-25 18:37:21.188003'),(28,'inventory','0003_initial','2026-06-25 18:37:21.366268'),(29,'orders_mgmt','0002_initial','2026-06-25 18:37:21.484127'),(30,'orders_mgmt','0003_initial','2026-06-25 18:37:21.574970'),(31,'payments','0001_initial','2026-06-25 18:37:21.680131'),(32,'producers','0001_initial','2026-06-25 18:37:21.824148'),(33,'producers','0002_initial','2026-06-25 18:37:22.018746'),(34,'products','0002_initial','2026-06-25 18:37:22.344639'),(35,'reports','0001_initial','2026-06-25 18:37:22.608488'),(36,'sessions','0001_initial','2026-06-25 18:37:22.657035'),(37,'stores','0001_initial','2026-06-25 18:37:22.799442'),(38,'support','0001_initial','2026-06-25 18:37:22.941968'),(39,'support','0002_initial','2026-06-25 18:37:23.308950'),(40,'orders','0001_initial','2026-06-26 23:40:51.000000');
-/*!40000 ALTER TABLE `django_migrations_backup_20260626` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `django_migrations_backup_20260627`
---
-
-DROP TABLE IF EXISTS `django_migrations_backup_20260627`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `django_migrations_backup_20260627` (
-  `id` bigint NOT NULL DEFAULT '0',
-  `app` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `applied` datetime(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `django_migrations_backup_20260627`
---
-
-LOCK TABLES `django_migrations_backup_20260627` WRITE;
-/*!40000 ALTER TABLE `django_migrations_backup_20260627` DISABLE KEYS */;
-INSERT INTO `django_migrations_backup_20260627` VALUES (1,'contenttypes','0001_initial','2026-06-25 18:37:18.151650'),(2,'contenttypes','0002_remove_content_type_name','2026-06-25 18:37:18.241829'),(3,'auth','0001_initial','2026-06-25 18:37:18.630503'),(4,'auth','0002_alter_permission_name_max_length','2026-06-25 18:37:18.720741'),(5,'auth','0003_alter_user_email_max_length','2026-06-25 18:37:18.727743'),(6,'auth','0004_alter_user_username_opts','2026-06-25 18:37:18.734809'),(7,'auth','0005_alter_user_last_login_null','2026-06-25 18:37:18.741645'),(8,'auth','0006_require_contenttypes_0002','2026-06-25 18:37:18.752009'),(9,'auth','0007_alter_validators_add_error_messages','2026-06-25 18:37:18.758801'),(10,'auth','0008_alter_user_username_max_length','2026-06-25 18:37:18.765025'),(11,'auth','0009_alter_user_last_name_max_length','2026-06-25 18:37:18.769372'),(12,'auth','0010_alter_group_name_max_length','2026-06-25 18:37:18.790584'),(13,'auth','0011_update_proxy_permissions','2026-06-25 18:37:18.797314'),(14,'auth','0012_alter_user_first_name_max_length','2026-06-25 18:37:18.806197'),(15,'users_auth','0001_initial','2026-06-25 18:37:19.790030'),(16,'admin','0001_initial','2026-06-25 18:37:20.021503'),(17,'admin','0002_logentry_remove_auto_add','2026-06-25 18:37:20.033205'),(18,'admin','0003_logentry_add_action_flag_choices','2026-06-25 18:37:20.049260'),(19,'products','0001_initial','2026-06-25 18:37:20.345833'),(20,'cart','0001_initial','2026-06-25 18:37:20.498255'),(21,'cart','0002_initial','2026-06-25 18:37:20.637096'),(22,'categories','0001_initial','2026-06-25 18:37:20.775063'),(23,'orders_mgmt','0001_initial','2026-06-25 18:37:20.914911'),(26,'inventory','0001_initial','2026-06-25 18:37:21.101977'),(27,'inventory','0002_initial','2026-06-25 18:37:21.188003'),(28,'inventory','0003_initial','2026-06-25 18:37:21.366268'),(29,'orders_mgmt','0002_initial','2026-06-25 18:37:21.484127'),(30,'orders_mgmt','0003_initial','2026-06-25 18:37:21.574970'),(31,'payments','0001_initial','2026-06-25 18:37:21.680131'),(32,'producers','0001_initial','2026-06-25 18:37:21.824148'),(33,'producers','0002_initial','2026-06-25 18:37:22.018746'),(34,'products','0002_initial','2026-06-25 18:37:22.344639'),(35,'reports','0001_initial','2026-06-25 18:37:22.608488'),(36,'sessions','0001_initial','2026-06-25 18:37:22.657035'),(37,'stores','0001_initial','2026-06-25 18:37:22.799442'),(38,'support','0001_initial','2026-06-25 18:37:22.941968'),(39,'support','0002_initial','2026-06-25 18:37:23.308950');
-/*!40000 ALTER TABLE `django_migrations_backup_20260627` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `django_session`
 --
 
@@ -1762,4 +1712,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-07-02 18:44:35
+-- Dump completed on 2026-07-02 21:05:40
